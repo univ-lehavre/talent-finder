@@ -39,7 +39,12 @@ export default defineConfig(
 		}
 	},
 	{
-		files: ['**/routes/repository/+page.svelte', '**/routes/+page.svelte'],
+		files: [
+			'**/routes/repository/+page.svelte',
+			'**/routes/+page.svelte',
+			'**/routes/+layout.svelte',
+			'**/routes/dashboard/+page.svelte'
+		],
 		rules: {
 			// External links and static navigation don't need resolve()
 			'svelte/no-navigation-without-resolve': 'off'

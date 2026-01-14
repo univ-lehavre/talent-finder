@@ -30,6 +30,22 @@ describe('isEmail', () => {
 		it('should return true for email with mixed characters', () => {
 			expect(isEmail('user.name-123_test@sub.example.org')).toBe(true);
 		});
+
+		it('should return true for email with long TLD', () => {
+			expect(isEmail('test@example.museum')).toBe(true);
+		});
+
+		it('should return true for email with plus sign', () => {
+			expect(isEmail('user+tag@example.com')).toBe(true);
+		});
+
+		it('should return true for email with special RFC 5322 characters', () => {
+			expect(isEmail("user!#$%&'*+/=?^`{|}~@example.com")).toBe(true);
+		});
+
+		it('should return true for IP address domain', () => {
+			expect(isEmail('user@[192.168.1.1]')).toBe(true);
+		});
 	});
 
 	describe('invalid emails', () => {
@@ -57,17 +73,20 @@ describe('isEmail', () => {
 			expect(isEmail('test@example.c')).toBe(false);
 		});
 
-		it('should return false for email with TLD longer than 6 chars', () => {
-			expect(isEmail('test@example.abcdefg')).toBe(false);
-		});
-
 		it('should return false for email with spaces', () => {
 			expect(isEmail('test @example.com')).toBe(false);
 		});
 
-		it('should accept email with double dots (current behavior)', () => {
-			// Note: RFC 5321 technically forbids consecutive dots, but current regex allows it
-			expect(isEmail('test..user@example.com')).toBe(true);
+		it('should return false for email with consecutive dots in local part', () => {
+			expect(isEmail('test..user@example.com')).toBe(false);
+		});
+
+		it('should return false for email starting with dot', () => {
+			expect(isEmail('.test@example.com')).toBe(false);
+		});
+
+		it('should return false for email ending with dot before @', () => {
+			expect(isEmail('test.@example.com')).toBe(false);
 		});
 
 		it('should return false for email exceeding 254 characters', () => {
@@ -77,6 +96,25 @@ describe('isEmail', () => {
 
 		it('should return false for just text', () => {
 			expect(isEmail('not an email')).toBe(false);
+		});
+
+		it('should return false for domain starting with hyphen', () => {
+			expect(isEmail('test@-example.com')).toBe(false);
+		});
+
+		it('should return false for domain ending with hyphen', () => {
+			expect(isEmail('test@example-.com')).toBe(false);
+		});
+	});
+
+	describe('ReDoS protection', () => {
+		it('should handle malicious input quickly', () => {
+			const start = performance.now();
+			// This pattern could cause catastrophic backtracking in vulnerable regexes
+			const maliciousInput = 'a'.repeat(50) + '@' + 'a'.repeat(50);
+			isEmail(maliciousInput);
+			const elapsed = performance.now() - start;
+			expect(elapsed).toBeLessThan(100); // Should complete in under 100ms
 		});
 	});
 });
