@@ -1,4 +1,5 @@
 import { isEmail } from '$lib/validators';
+import { normalizeEmail } from '$lib/normalizers';
 import { SessionError, InvalidContentTypeError, InvalidJsonBodyError } from '$lib/server/http';
 import {
 	NotAnEmailError,
@@ -22,8 +23,9 @@ const isHexadecimal = (str: string): boolean => {
 /**
  * Validates an email address for signup.
  * Checks format and domain against allowed domains.
+ * Returns normalized email (lowercase, subaddressing removed).
  * @param email - The email to validate
- * @returns The validated email string
+ * @returns The validated and normalized email string
  * @throws NotAnEmailError if validation fails
  */
 export const validateSignupEmail = async (email?: unknown): Promise<string> => {
@@ -43,7 +45,7 @@ export const validateSignupEmail = async (email?: unknown): Promise<string> => {
 			cause: 'Your professional email domain is unknown'
 		});
 	}
-	return email;
+	return normalizeEmail(email);
 };
 
 /**

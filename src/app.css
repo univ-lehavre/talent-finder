@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* Enable dark mode with class selector */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /*
  * Talent Finder - Design System
  * =============================
@@ -108,16 +111,35 @@
 	--transition-slow: 300ms ease;
 }
 
+/* Theme CSS Variables - Applied dynamically via layout */
+:root {
+	--theme-primary: oklch(48% 0.15 250);
+	--theme-accent: oklch(52% 0.12 180);
+	--theme-background: oklch(98% 0.005 260);
+	--theme-surface: oklch(100% 0 0);
+	--theme-text: oklch(22% 0.01 260);
+	--theme-text-muted: oklch(45% 0.02 260);
+	--theme-border: oklch(91% 0.01 260);
+	--font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
+	--font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+	--font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
 /* Base Styles */
 @layer base {
 	html {
-		font-family: var(--font-sans);
+		font-family: var(--font-body);
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
+		color-scheme: light;
+	}
+
+	html.dark {
+		color-scheme: dark;
 	}
 
 	body {
-		@apply bg-secondary-50 text-secondary-900;
+		@apply bg-secondary-50 dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 transition-colors duration-200;
 		line-height: 1.6;
 	}
 
@@ -128,7 +150,8 @@
 	h4,
 	h5,
 	h6 {
-		@apply font-semibold text-secondary-900;
+		@apply font-semibold text-secondary-900 dark:text-secondary-100;
+		font-family: var(--font-heading);
 		line-height: 1.25;
 	}
 
@@ -153,7 +176,7 @@
 
 	/* Links */
 	a {
-		@apply text-primary-600 hover:text-primary-700 transition-colors;
+		@apply text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors;
 	}
 
 	/* Focus styles for accessibility */
@@ -206,18 +229,18 @@
 
 	/* Cards */
 	.card {
-		@apply bg-white rounded-xl shadow-md p-6;
+		@apply bg-white dark:bg-secondary-800 rounded-xl shadow-md dark:shadow-lg dark:shadow-black/20 p-6 transition-colors duration-200;
 	}
 
 	.card-bordered {
-		@apply bg-white rounded-xl p-6 border border-secondary-200 shadow-none;
+		@apply bg-white dark:bg-secondary-800 rounded-xl p-6 border border-secondary-200 dark:border-secondary-700 shadow-none transition-colors duration-200;
 	}
 
 	/* Inputs */
 	.input {
-		@apply w-full px-4 py-2 border border-secondary-300 rounded-lg;
+		@apply w-full px-4 py-2 border border-secondary-300 dark:border-secondary-600 rounded-lg bg-white dark:bg-secondary-800 dark:text-secondary-100;
 		@apply focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none;
-		@apply placeholder:text-secondary-400 transition-all;
+		@apply placeholder:text-secondary-400 dark:placeholder:text-secondary-500 transition-all;
 	}
 
 	.input-error {
@@ -226,7 +249,7 @@
 
 	/* Labels */
 	.label {
-		@apply block text-sm font-medium text-secondary-700 mb-1;
+		@apply block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1;
 	}
 
 	/* Badges */

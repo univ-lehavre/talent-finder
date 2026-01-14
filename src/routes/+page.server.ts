@@ -1,55 +1,42 @@
 import { fail } from '@sveltejs/kit';
 
-import type { TUser } from '$lib/server/user';
-import type { PageServerLoad, Actions } from './$types';
-
-/**
- * Load function to fetch user profile if authenticated.
- */
-export const load: PageServerLoad = async ({ fetch, locals }) => {
-	const userId = locals.userId;
-	if (!userId) {
-		return { user: null };
-	}
-
-	try {
-		const response = await fetch('/api/v1/me');
-		if (!response.ok) return { user: null };
-		const user = (await response.json()) as TUser;
-		return { user };
-	} catch {
-		return { user: null };
-	}
-};
+import type { Actions } from './$types';
+import { signupWithEmail, logout } from '$lib/server/auth';
+import { ApplicationError } from '$lib/server/http';
 
 /**
  * Form actions for authentication.
  */
 export const actions = {
-	signup: async ({ request, fetch }) => {
+	signup: async ({ request }) => {
 		const data: FormData = await request.formData();
-		const email: string | undefined = data.get('email')?.toString().trim();
+		const email: unknown = data.get('email')?.toString().trim();
 
-		const response = await fetch('/api/v1/auth/signup', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email })
-		});
-
-		if (!response.ok) {
-			const error = await response.json();
-			return fail(response.status, {
+		try {
+			await signupWithEmail(email);
+			return { success: true };
+		} catch (error: unknown) {
+			if (error instanceof ApplicationError) {
+				return fail(error.httpStatus, {
+					error: true,
+					message: error.message,
+					cause: error.cause ?? 'Unknown error'
+				});
+			}
+			return fail(500, {
 				error: true,
-				message: error.message ?? 'Signup failed',
-				cause: error.cause ?? 'Unknown error'
+				message: 'Signup failed',
+				cause: 'An unexpected error occurred'
 			});
 		}
-
-		return { success: true };
 	},
 
-	logout: async ({ fetch }) => {
-		await fetch('/api/v1/auth/logout', { method: 'POST' });
+	logout: async ({ locals, cookies }) => {
+		try {
+			await logout(locals.userId, cookies);
+		} catch {
+			// Ignore logout errors - we'll clear the cookie anyway
+		}
 		return { loggedOut: true };
 	}
 } satisfies Actions;

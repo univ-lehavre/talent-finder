@@ -5,6 +5,11 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
 	plugins: [sveltekit(), tailwindcss()],
 
+	build: {
+		// Swagger UI is ~1.6MB but loaded dynamically only on /api/docs
+		chunkSizeWarningLimit: 1700
+	},
+
 	test: {
 		expect: { requireAssertions: true },
 

@@ -60,12 +60,12 @@
 	>
 		<div class="flex min-h-full items-center justify-center p-4">
 			<!-- Modal Content -->
+			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div
 				class="relative bg-white rounded-lg shadow-xl overflow-hidden"
 				style="width: min(28rem, calc(100vw - 2rem));"
 				onclick={(e) => e.stopPropagation()}
 				onkeydown={(e) => e.stopPropagation()}
-				role="document"
 			>
 				<!-- Header -->
 				<div class="flex items-center justify-between p-4 border-b border-secondary-200">

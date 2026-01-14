@@ -7,7 +7,7 @@
 export { User, type TUser, type UserRepository } from './types';
 
 // Service
-export { getProfile } from './service';
+export { getProfile, isAdmin } from './service';
 
 // Repository
 export { AppwriteUserRepository } from './repository';
