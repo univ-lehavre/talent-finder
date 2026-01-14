@@ -99,28 +99,22 @@
 		}
 	]);
 
-	/** Font URL for current font pairing */
+	/** Google Fonts URL for current font pairing */
 	const fontUrl = $derived(themeStore.font.googleFontsUrl);
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<!-- Load selected font pairing -->
+	<!-- Load selected font pairing from Google Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-	{#key themeStore.font.name}
+	{#key themeStore.fontName}
 		<link href={fontUrl} rel="stylesheet" />
 	{/key}
 </svelte:head>
 
-<div
-	class="min-h-screen flex flex-col"
-	style="
-		--font-heading-family: '{themeStore.font.heading}';
-		--font-body: '{themeStore.font.body}';
-		--font-mono-family: '{themeStore.font.mono}';
-	"
->
+<!-- Font families are defined in CSS via [data-font="name"] selectors -->
+<div class="min-h-screen flex flex-col">
 	<!-- Navigation -->
 	<nav
 		class="bg-white dark:bg-secondary-800 border-b border-secondary-200 dark:border-secondary-700 sticky top-0 z-50 transition-colors duration-200"

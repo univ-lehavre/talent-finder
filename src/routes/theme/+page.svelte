@@ -13,13 +13,7 @@
 		ThemeToggle
 	} from '$lib/ui';
 	import { paletteCategories, palettesByCategory, type PaletteName } from '$lib/palettes';
-	import {
-		createThemeStore,
-		initTheme,
-		fontCategories,
-		getFontsByCategory,
-		type FontPairing
-	} from '$lib/stores';
+	import { createThemeStore, initTheme, fontCategories, getFontsByCategory } from '$lib/stores';
 
 	const themeStore = createThemeStore();
 
@@ -45,8 +39,8 @@
 		paletteDropdownOpen = false;
 	};
 
-	const selectFont = (pairing: FontPairing): void => {
-		themeStore.font = pairing;
+	const selectFont = (fontName: string): void => {
+		themeStore.fontName = fontName;
 		fontDropdownOpen = false;
 	};
 
@@ -115,9 +109,7 @@
 						aria-haspopup="listbox"
 					>
 						<Icon icon="lucide:type" width="16" height="16" />
-						<span style="font-family: '{themeStore.font.heading}', sans-serif">
-							{themeStore.font.name}
-						</span>
+						<span class="capitalize">{themeStore.fontName}</span>
 						<Icon icon="lucide:chevron-down" width="16" height="16" />
 					</button>
 
@@ -147,27 +139,26 @@
 									{#each getFontsByCategory(category.id) as pairing (pairing.name)}
 										<button
 											type="button"
-											class="w-full px-4 py-2.5 flex items-center gap-3 transition-colors text-left hover:bg-secondary-50 dark:hover:bg-secondary-700 {themeStore
-												.font.name === pairing.name
+											class="w-full px-4 py-2.5 flex items-center gap-3 transition-colors text-left hover:bg-secondary-50 dark:hover:bg-secondary-700 {themeStore.fontName ===
+											pairing.name
 												? 'bg-secondary-100 dark:bg-secondary-700'
 												: ''}"
-											onclick={() => selectFont(pairing)}
+											onclick={() => selectFont(pairing.name)}
 											role="option"
-											aria-selected={themeStore.font.name === pairing.name}
-											data-selected={themeStore.font.name === pairing.name}
+											aria-selected={themeStore.fontName === pairing.name}
+											data-selected={themeStore.fontName === pairing.name}
 										>
 											<div class="flex-1 min-w-0">
 												<div
-													class="text-sm font-medium truncate text-secondary-900 dark:text-secondary-100"
-													style="font-family: '{pairing.heading}', sans-serif"
+													class="text-sm font-medium truncate capitalize text-secondary-900 dark:text-secondary-100"
 												>
 													{pairing.name}
 												</div>
 												<div class="text-xs truncate text-secondary-500 dark:text-secondary-400">
-													{pairing.heading} + {pairing.body}
+													{pairing.description}
 												</div>
 											</div>
-											{#if themeStore.font.name === pairing.name}
+											{#if themeStore.fontName === pairing.name}
 												<Icon icon="lucide:check" width="16" height="16" class="text-primary-500" />
 											{/if}
 										</button>
@@ -323,7 +314,7 @@
 
 		<!-- Font Pairing -->
 		<div class="card">
-			<h3 class="text-lg font-semibold mb-4">{themeStore.font.name}</h3>
+			<h3 class="text-lg font-semibold mb-4 capitalize">{themeStore.fontName}</h3>
 			<p class="mb-4 text-secondary-600 dark:text-secondary-400">
 				{themeStore.font.description}
 			</p>
@@ -332,28 +323,19 @@
 					<span class="text-xs uppercase tracking-wide text-secondary-500 dark:text-secondary-400"
 						>Heading</span
 					>
-					<p
-						class="text-xl font-semibold"
-						style="font-family: '{themeStore.font.heading}', sans-serif"
-					>
-						{themeStore.font.heading}
-					</p>
+					<p class="text-xl font-semibold font-heading">The quick brown fox jumps</p>
 				</div>
 				<div>
 					<span class="text-xs uppercase tracking-wide text-secondary-500 dark:text-secondary-400"
 						>Body</span
 					>
-					<p style="font-family: '{themeStore.font.body}', sans-serif">
-						{themeStore.font.body}
-					</p>
+					<p>The quick brown fox jumps over the lazy dog. This text demonstrates the body font.</p>
 				</div>
 				<div>
 					<span class="text-xs uppercase tracking-wide text-secondary-500 dark:text-secondary-400"
 						>Mono</span
 					>
-					<p style="font-family: '{themeStore.font.mono}', monospace">
-						{themeStore.font.mono}
-					</p>
+					<p class="font-mono">const example = "code";</p>
 				</div>
 			</div>
 		</div>

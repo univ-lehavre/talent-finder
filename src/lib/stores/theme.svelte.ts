@@ -1,10 +1,11 @@
 /**
  * Theme store for managing UI palette, font pairing, and dark mode
  * Persists preferences in cookies for server-side access
+ * Applies themes via data attributes: data-palette and data-font
  */
 
 import { paletteNames, type PaletteName } from '$lib/palettes';
-import { fontPairings, type FontPairing } from './fonts.svelte.ts';
+import { fontPairings, getFontByName, type FontPairing } from './fonts.svelte.ts';
 
 /** Dark mode options */
 export type DarkMode = 'light' | 'dark' | 'system';
@@ -20,8 +21,8 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 /** Current palette state */
 let currentPalette = $state<PaletteName>('default');
 
-/** Current font pairing state */
-let currentFont = $state<FontPairing>(fontPairings[0]);
+/** Current font name state */
+let currentFontName = $state<string>('interface');
 
 /** Current dark mode preference */
 let currentDarkMode = $state<DarkMode>('system');
@@ -52,6 +53,14 @@ const applyPalette = (palette: PaletteName): void => {
 };
 
 /**
+ * Apply the current font to the document
+ */
+const applyFont = (fontName: string): void => {
+	if (typeof document === 'undefined') return;
+	document.documentElement.dataset.font = fontName;
+};
+
+/**
  * Apply the current dark mode setting to the document
  */
 const applyDarkMode = (mode: DarkMode): void => {
@@ -79,17 +88,27 @@ export const setPalette = (palette: PaletteName): void => {
 };
 
 /**
- * Get the current font pairing
+ * Get the current font name
  */
-export const getFont = (): FontPairing => currentFont;
+export const getFontName = (): string => currentFontName;
 
 /**
- * Set the current font pairing and persist to cookie
+ * Get the current font pairing object
  */
-export const setFont = (font: FontPairing): void => {
-	currentFont = font;
-	setCookie(COOKIE_FONT, font.name);
-	// Font application is handled via CSS variables in layout
+export const getFont = (): FontPairing => {
+	return getFontByName(currentFontName) ?? fontPairings[0];
+};
+
+/**
+ * Set the current font and persist to cookie
+ */
+export const setFont = (fontName: string): void => {
+	const font = getFontByName(fontName);
+	if (!font) return;
+
+	currentFontName = fontName;
+	setCookie(COOKIE_FONT, fontName);
+	applyFont(fontName);
 };
 
 /**
@@ -121,9 +140,10 @@ export const initTheme = (): void => {
 	// Initialize font
 	const savedFontName = getCookie(COOKIE_FONT);
 	if (savedFontName) {
-		const found = fontPairings.find((f) => f.name === savedFontName);
+		const found = getFontByName(savedFontName);
 		if (found) {
-			currentFont = found;
+			currentFontName = savedFontName;
+			applyFont(savedFontName);
 		}
 	}
 
@@ -155,11 +175,14 @@ export const createThemeStore = () => {
 		set palette(value: PaletteName) {
 			setPalette(value);
 		},
-		get font() {
-			return currentFont;
+		get fontName() {
+			return currentFontName;
 		},
-		set font(value: FontPairing) {
+		set fontName(value: string) {
 			setFont(value);
+		},
+		get font() {
+			return getFont();
 		},
 		get darkMode() {
 			return currentDarkMode;

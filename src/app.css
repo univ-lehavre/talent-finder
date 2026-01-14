@@ -335,6 +335,261 @@
 }
 
 /* ============================================
+   FONT PAIRINGS
+   Each font defines heading, body, and mono families
+   Google Fonts loaded dynamically in +layout.svelte
+   ============================================ */
+
+/* === Sans-Serif Fonts === */
+
+/* Interface - Default (values in :root) */
+:root {
+	--font-heading-family: 'Inter';
+	--font-body: 'Inter';
+	--font-mono-family: 'JetBrains Mono';
+}
+
+[data-font='modern'] {
+	--font-heading-family: 'Poppins';
+	--font-body: 'Open Sans';
+	--font-mono-family: 'Roboto Mono';
+}
+
+[data-font='humanist'] {
+	--font-heading-family: 'Nunito';
+	--font-body: 'Nunito Sans';
+	--font-mono-family: 'Fira Code';
+}
+
+[data-font='geometric'] {
+	--font-heading-family: 'Outfit';
+	--font-body: 'DM Sans';
+	--font-mono-family: 'DM Mono';
+}
+
+[data-font='minimal'] {
+	--font-heading-family: 'Manrope';
+	--font-body: 'Karla';
+	--font-mono-family: 'Space Mono';
+}
+
+[data-font='startup'] {
+	--font-heading-family: 'Plus Jakarta Sans';
+	--font-body: 'Plus Jakarta Sans';
+	--font-mono-family: 'Inconsolata';
+}
+
+[data-font='professional'] {
+	--font-heading-family: 'Lexend';
+	--font-body: 'Work Sans';
+	--font-mono-family: 'Source Code Pro';
+}
+
+[data-font='friendly'] {
+	--font-heading-family: 'Quicksand';
+	--font-body: 'Rubik';
+	--font-mono-family: 'Fira Code';
+}
+
+[data-font='rounded'] {
+	--font-heading-family: 'Comfortaa';
+	--font-body: 'Varela Round';
+	--font-mono-family: 'Ubuntu Mono';
+}
+
+[data-font='nordic'] {
+	--font-heading-family: 'Albert Sans';
+	--font-body: 'Figtree';
+	--font-mono-family: 'JetBrains Mono';
+}
+
+/* === Serif Fonts === */
+
+[data-font='editorial'] {
+	--font-heading-family: 'Source Serif 4';
+	--font-body: 'Source Sans 3';
+	--font-mono-family: 'Source Code Pro';
+}
+
+[data-font='classic'] {
+	--font-heading-family: 'Playfair Display';
+	--font-body: 'Lato';
+	--font-mono-family: 'Inconsolata';
+}
+
+[data-font='literary'] {
+	--font-heading-family: 'Merriweather';
+	--font-body: 'Merriweather';
+	--font-mono-family: 'Fira Code';
+}
+
+[data-font='magazine'] {
+	--font-heading-family: 'Libre Baskerville';
+	--font-body: 'Libre Franklin';
+	--font-mono-family: 'Roboto Mono';
+}
+
+[data-font='academic'] {
+	--font-heading-family: 'Crimson Pro';
+	--font-body: 'Crimson Pro';
+	--font-mono-family: 'JetBrains Mono';
+}
+
+[data-font='elegant'] {
+	--font-heading-family: 'Cormorant Garamond';
+	--font-body: 'Proza Libre';
+	--font-mono-family: 'Source Code Pro';
+}
+
+[data-font='news'] {
+	--font-heading-family: 'PT Serif';
+	--font-body: 'PT Sans';
+	--font-mono-family: 'PT Mono';
+}
+
+[data-font='typewriter'] {
+	--font-heading-family: 'Courier Prime';
+	--font-body: 'Spectral';
+	--font-mono-family: 'Courier Prime';
+}
+
+[data-font='transitional'] {
+	--font-heading-family: 'Lora';
+	--font-body: 'Roboto';
+	--font-mono-family: 'Roboto Mono';
+}
+
+[data-font='contemporary'] {
+	--font-heading-family: 'Fraunces';
+	--font-body: 'Commissioner';
+	--font-mono-family: 'Fira Code';
+}
+
+/* === Display Fonts === */
+
+[data-font='bold-statement'] {
+	--font-heading-family: 'Bebas Neue';
+	--font-body: 'Montserrat';
+	--font-mono-family: 'Space Mono';
+}
+
+[data-font='creative'] {
+	--font-heading-family: 'Abril Fatface';
+	--font-body: 'Raleway';
+	--font-mono-family: 'Fira Code';
+}
+
+[data-font='luxe'] {
+	--font-heading-family: 'Bodoni Moda';
+	--font-body: 'Josefin Sans';
+	--font-mono-family: 'Inconsolata';
+}
+
+[data-font='vintage'] {
+	--font-heading-family: 'Archivo Black';
+	--font-body: 'Archivo';
+	--font-mono-family: 'IBM Plex Mono';
+}
+
+[data-font='urban'] {
+	--font-heading-family: 'Oswald';
+	--font-body: 'Source Sans 3';
+	--font-mono-family: 'Source Code Pro';
+}
+
+[data-font='playful'] {
+	--font-heading-family: 'Fredoka';
+	--font-body: 'Nunito';
+	--font-mono-family: 'Ubuntu Mono';
+}
+
+[data-font='art-deco'] {
+	--font-heading-family: 'Poiret One';
+	--font-body: 'Quicksand';
+	--font-mono-family: 'Space Mono';
+}
+
+[data-font='condensed'] {
+	--font-heading-family: 'Barlow Condensed';
+	--font-body: 'Barlow';
+	--font-mono-family: 'Fira Code';
+}
+
+[data-font='contrast'] {
+	--font-heading-family: 'Yeseva One';
+	--font-body: 'Noto Sans';
+	--font-mono-family: 'Noto Sans Mono';
+}
+
+[data-font='slab'] {
+	--font-heading-family: 'Alfa Slab One';
+	--font-body: 'Public Sans';
+	--font-mono-family: 'JetBrains Mono';
+}
+
+/* === Technical Fonts === */
+
+[data-font='technical'] {
+	--font-heading-family: 'IBM Plex Sans';
+	--font-body: 'IBM Plex Sans';
+	--font-mono-family: 'IBM Plex Mono';
+}
+
+[data-font='developer'] {
+	--font-heading-family: 'JetBrains Mono';
+	--font-body: 'Inter';
+	--font-mono-family: 'JetBrains Mono';
+}
+
+[data-font='terminal'] {
+	--font-heading-family: 'Fira Code';
+	--font-body: 'Fira Sans';
+	--font-mono-family: 'Fira Code';
+}
+
+[data-font='data'] {
+	--font-heading-family: 'Roboto';
+	--font-body: 'Roboto';
+	--font-mono-family: 'Roboto Mono';
+}
+
+[data-font='science'] {
+	--font-heading-family: 'STIX Two Text';
+	--font-body: 'STIX Two Text';
+	--font-mono-family: 'Source Code Pro';
+}
+
+[data-font='engineering'] {
+	--font-heading-family: 'Share Tech';
+	--font-body: 'Exo 2';
+	--font-mono-family: 'Share Tech Mono';
+}
+
+[data-font='system'] {
+	--font-heading-family: 'Ubuntu';
+	--font-body: 'Ubuntu';
+	--font-mono-family: 'Ubuntu Mono';
+}
+
+[data-font='console'] {
+	--font-heading-family: 'VT323';
+	--font-body: 'Anonymous Pro';
+	--font-mono-family: 'VT323';
+}
+
+[data-font='monospace'] {
+	--font-heading-family: 'Space Mono';
+	--font-body: 'Space Grotesk';
+	--font-mono-family: 'Space Mono';
+}
+
+[data-font='documentation'] {
+	--font-heading-family: 'Atkinson Hyperlegible';
+	--font-body: 'Atkinson Hyperlegible';
+	--font-mono-family: 'JetBrains Mono';
+}
+
+/* ============================================
    BASE STYLES
    ============================================ */
 @layer base {
