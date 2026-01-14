@@ -34,7 +34,7 @@
 	<section class="container-app py-16">
 		<h2 class="text-3xl font-bold text-center mb-12">Why Talent Finder?</h2>
 		<div class="grid md:grid-cols-3 gap-8">
-			{#each features as feature}
+			{#each features as feature (feature.title)}
 				<div class="card hover:shadow-lg transition-shadow">
 					<h3 class="text-xl font-semibold mb-2 text-primary-700">{feature.title}</h3>
 					<p class="text-secondary-600">{feature.description}</p>
