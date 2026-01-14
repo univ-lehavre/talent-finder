@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Icon from './Icon.svelte';
+	import { createThemeStore, setDarkMode, type DarkMode } from '$lib/stores';
 
-	type StoredMode = 'light' | 'dark' | 'system';
 	type DisplayMode = 'light' | 'dark';
 
 	interface Props {
@@ -11,7 +11,7 @@
 
 	let { class: className = '' }: Props = $props();
 
-	let storedMode = $state<StoredMode>('system');
+	const themeStore = createThemeStore();
 
 	const icons: Record<DisplayMode, string> = {
 		light: 'lucide:sun',
@@ -30,19 +30,7 @@
 
 	/** Get the currently displayed theme (resolved from system if needed) */
 	const getCurrentDisplayMode = (): DisplayMode => {
-		return storedMode === 'system' ? getSystemTheme() : storedMode;
-	};
-
-	const applyTheme = (theme: DisplayMode): void => {
-		if (theme === 'dark') {
-			document.documentElement.classList.add('dark');
-		} else {
-			document.documentElement.classList.remove('dark');
-		}
-	};
-
-	const updateTheme = (): void => {
-		applyTheme(getCurrentDisplayMode());
+		return themeStore.darkMode === 'system' ? getSystemTheme() : themeStore.darkMode;
 	};
 
 	/**
@@ -56,35 +44,19 @@
 		const systemTheme = getSystemTheme();
 
 		// Store 'system' if the new choice matches system preference
-		const newStored: StoredMode = newDisplay === systemTheme ? 'system' : newDisplay;
+		const newStored: DarkMode = newDisplay === systemTheme ? 'system' : newDisplay;
 
-		storedMode = newStored;
-		localStorage.setItem('theme-mode', newStored);
-		applyTheme(newDisplay);
+		setDarkMode(newStored);
 	};
 
+	let mounted = $state(false);
+
 	onMount(() => {
-		const savedMode = localStorage.getItem('theme-mode') as StoredMode | null;
-		if (savedMode && ['light', 'dark', 'system'].includes(savedMode)) {
-			storedMode = savedMode;
-		}
-		updateTheme();
-
-		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-		const handleChange = (): void => {
-			if (storedMode === 'system') {
-				updateTheme();
-			}
-		};
-		mediaQuery.addEventListener('change', handleChange);
-
-		return () => {
-			mediaQuery.removeEventListener('change', handleChange);
-		};
+		mounted = true;
 	});
 
 	/** Current display mode for the UI */
-	const displayMode = $derived(getCurrentDisplayMode());
+	const displayMode = $derived(mounted ? getCurrentDisplayMode() : 'light');
 </script>
 
 <button

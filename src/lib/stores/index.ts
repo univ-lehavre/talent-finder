@@ -3,23 +3,21 @@
  */
 export {
 	createThemeStore,
-	getCurrentColors,
-	getPreviewMode,
-	getTheme,
+	getDarkMode,
+	getFont,
+	getPalette,
 	initTheme,
-	setPreviewMode,
-	setTheme
-} from './theme.svelte';
+	setDarkMode,
+	setFont,
+	setPalette,
+	type DarkMode
+} from './theme.svelte.ts';
 
 export {
-	createFontStore,
 	fontCategories,
 	fontPairings,
-	getFontPairing,
 	getFontsByCategory,
-	initFontPairing,
-	setFontPairing,
 	type FontCategory,
 	type FontCategoryInfo,
 	type FontPairing
-} from './fonts.svelte';
+} from './fonts.svelte.ts';

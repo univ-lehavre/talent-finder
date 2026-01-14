@@ -4,41 +4,12 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import { Icon, Signup, ThemeToggle } from '$lib/ui';
 	import { page } from '$app/stores';
-	import { createThemeStore, createFontStore, initTheme, initFontPairing } from '$lib/stores';
+	import { createThemeStore, initTheme } from '$lib/stores';
 
 	const themeStore = createThemeStore();
-	const fontStore = createFontStore();
-
-	/** Track if dark mode is active (based on .dark class on html element) */
-	let isDarkMode = $state(false);
-
-	/** Current theme colors - reactive to both theme changes and dark mode toggle */
-	let currentColors = $derived.by(() => {
-		const theme = themeStore.theme;
-		return isDarkMode ? theme.dark : theme.light;
-	});
 
 	onMount(() => {
 		initTheme();
-		initFontPairing();
-
-		// Check initial dark mode state from DOM
-		const updateDarkMode = (): void => {
-			isDarkMode = document.documentElement.classList.contains('dark');
-		};
-		updateDarkMode();
-
-		// Observe class changes on html element to detect theme toggle
-		const observer = new MutationObserver((mutations) => {
-			for (const mutation of mutations) {
-				if (mutation.attributeName === 'class') {
-					updateDarkMode();
-				}
-			}
-		});
-		observer.observe(document.documentElement, { attributes: true });
-
-		return () => observer.disconnect();
 	});
 
 	const isCurrentPage = (href: string): boolean => {
@@ -127,6 +98,9 @@
 			external: true
 		}
 	]);
+
+	/** Font URL for current font pairing */
+	const fontUrl = $derived(themeStore.font.googleFontsUrl);
 </script>
 
 <svelte:head>
@@ -134,24 +108,17 @@
 	<!-- Load selected font pairing -->
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-	{#key fontStore.pairing.name}
-		<link href={fontStore.pairing.googleFontsUrl} rel="stylesheet" />
+	{#key themeStore.font.name}
+		<link href={fontUrl} rel="stylesheet" />
 	{/key}
 </svelte:head>
 
 <div
 	class="min-h-screen flex flex-col"
 	style="
-		--theme-primary: {currentColors.primary};
-		--theme-accent: {currentColors.accent};
-		--theme-background: {currentColors.background};
-		--theme-surface: {currentColors.surface};
-		--theme-text: {currentColors.text};
-		--theme-text-muted: {currentColors.textMuted};
-		--theme-border: {currentColors.border};
-		--font-heading: '{fontStore.pairing.heading}', sans-serif;
-		--font-body: '{fontStore.pairing.body}', sans-serif;
-		--font-mono: '{fontStore.pairing.mono}', monospace;
+		--font-heading-family: '{themeStore.font.heading}';
+		--font-body: '{themeStore.font.body}';
+		--font-mono-family: '{themeStore.font.mono}';
 	"
 >
 	<!-- Navigation -->

@@ -1,5 +1,5 @@
 ---
-"talent-finder": minor
+'talent-finder': minor
 ---
 
 Add theme customization system with admin-only access

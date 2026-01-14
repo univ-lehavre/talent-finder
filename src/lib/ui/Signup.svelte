@@ -3,17 +3,6 @@
 	import { enhance } from '$app/forms';
 	import Icon from './Icon.svelte';
 
-	interface ThemeColors {
-		primary: string;
-		accent: string;
-		background: string;
-		surface: string;
-		text: string;
-		textMuted: string;
-		border: string;
-		[key: string]: string;
-	}
-
 	interface Props {
 		form: {
 			error?: boolean;
@@ -23,20 +12,13 @@
 		} | null;
 		open?: boolean;
 		onclose?: () => void;
-		/** Optional theme colors for custom palette styling */
-		colors?: ThemeColors;
-		/** Optional heading font family */
-		headingFont?: string;
 	}
 
-	let { form, open = $bindable(false), onclose, colors, headingFont }: Props = $props();
+	let { form, open = $bindable(false), onclose }: Props = $props();
 
 	let email = $state('');
 	let signuping = $state(false);
 	let dismissed = $state(false);
-
-	/** Use theme colors when provided */
-	const useThemeColors = $derived(!!colors);
 
 	const isDisabled = $derived(!isEmail(email) || signuping);
 
@@ -81,37 +63,24 @@
 			<!-- Modal Content -->
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div
-				class="relative rounded-lg shadow-xl overflow-hidden {useThemeColors
-					? ''
-					: 'bg-white dark:bg-secondary-800'}"
-				style="width: min(28rem, calc(100vw - 2rem)); {useThemeColors && colors
-					? `background-color: ${colors.surface}; color: ${colors.text}`
-					: ''}"
+				class="relative rounded-lg shadow-xl overflow-hidden bg-white dark:bg-secondary-800"
+				style="width: min(28rem, calc(100vw - 2rem))"
 				onclick={(e) => e.stopPropagation()}
 				onkeydown={(e) => e.stopPropagation()}
 			>
 				<!-- Header -->
 				<div
-					class="flex items-center justify-between p-4 {useThemeColors
-						? ''
-						: 'border-b border-secondary-200 dark:border-secondary-700'}"
-					style={useThemeColors && colors ? `border-bottom: 1px solid ${colors.border}` : undefined}
+					class="flex items-center justify-between p-4 border-b border-secondary-200 dark:border-secondary-700"
 				>
 					<h2
 						id="signup-modal-title"
-						class="text-lg font-semibold {useThemeColors
-							? ''
-							: 'text-secondary-900 dark:text-white'}"
-						style={headingFont ? `font-family: ${headingFont}, sans-serif` : undefined}
+						class="text-lg font-semibold text-secondary-900 dark:text-white"
 					>
 						Authentification à votre compte
 					</h2>
 					<button
 						type="button"
-						class="transition-colors p-1 {useThemeColors
-							? ''
-							: 'text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300'}"
-						style={useThemeColors && colors ? `color: ${colors.textMuted}` : undefined}
+						class="transition-colors p-1 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300"
 						onclick={closeModal}
 						aria-label="Fermer"
 					>
@@ -121,12 +90,7 @@
 
 				<!-- Body -->
 				<div class="p-4">
-					<p
-						class="text-sm mb-4 {useThemeColors
-							? ''
-							: 'text-secondary-600 dark:text-secondary-400'}"
-						style={useThemeColors && colors ? `color: ${colors.textMuted}` : undefined}
-					>
+					<p class="text-sm mb-4 text-secondary-600 dark:text-secondary-400">
 						Pour accéder à mes demandes, je vais m'authentifier. Cette action déposera un cookie
 						nécessaire au bon fonctionnement du site dans votre navigateur. Pour le supprimer après
 						l'authentification, il suffira que je me déconnecte.
@@ -146,46 +110,22 @@
 						}}
 					>
 						<div>
-							<label
-								for="email"
-								class="label {useThemeColors ? '' : ''}"
-								style={useThemeColors && colors ? `color: ${colors.text}` : undefined}
-							>
-								Courriel
-							</label>
+							<label for="email" class="label">Courriel</label>
 							<input
 								id="email"
 								name="email"
 								type="email"
-								class="input {useThemeColors ? '' : ''}"
-								style={useThemeColors && colors
-									? `background-color: ${colors.background}; border-color: ${colors.border}; color: ${colors.text}`
-									: undefined}
+								class="input"
 								placeholder="prenom.nom@univ-lehavre.fr"
 								aria-describedby="email-help"
 								bind:value={email}
 							/>
-							<p
-								id="email-help"
-								class="text-xs mt-1 {useThemeColors
-									? ''
-									: 'text-secondary-500 dark:text-secondary-400'}"
-								style={useThemeColors && colors ? `color: ${colors.textMuted}` : undefined}
-							>
+							<p id="email-help" class="text-xs mt-1 text-secondary-500 dark:text-secondary-400">
 								Entrez votre adresse email universitaire
 							</p>
 						</div>
 
-						<button
-							type="submit"
-							class="w-full px-4 py-2 rounded-lg font-medium transition-colors {useThemeColors
-								? ''
-								: 'btn-primary'}"
-							style={useThemeColors && colors
-								? `background-color: ${colors.primary}; color: white`
-								: undefined}
-							disabled={isDisabled}
-						>
+						<button type="submit" class="w-full btn-primary" disabled={isDisabled}>
 							{#if signuping}
 								<span class="inline-flex items-center gap-2">
 									<span
@@ -242,19 +182,9 @@
 
 				<!-- Footer -->
 				<div
-					class="p-4 {useThemeColors
-						? ''
-						: 'border-t border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-900'}"
-					style={useThemeColors && colors
-						? `border-top: 1px solid ${colors.border}; background-color: ${colors.background}`
-						: undefined}
+					class="p-4 border-t border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-900"
 				>
-					<p
-						class="text-xs text-center {useThemeColors
-							? ''
-							: 'text-secondary-500 dark:text-secondary-400'}"
-						style={useThemeColors && colors ? `color: ${colors.textMuted}` : undefined}
-					>
+					<p class="text-xs text-center text-secondary-500 dark:text-secondary-400">
 						En vous authentifiant, vous acceptez nos conditions d'utilisation.
 					</p>
 				</div>

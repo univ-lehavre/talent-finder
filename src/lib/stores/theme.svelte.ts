@@ -1,84 +1,171 @@
 /**
- * Global theme store for managing the selected color palette
- * Provides reactive state for theme selection across the entire application
+ * Theme store for managing UI palette, font pairing, and dark mode
+ * Persists preferences in cookies for server-side access
  */
-import { themePalettes, type ThemePalette } from '$lib/palettes';
 
-/** Current theme state - writable store pattern using Svelte 5 module-level state */
-let currentTheme = $state<ThemePalette>(themePalettes[0]);
+import { paletteNames, type PaletteName } from '$lib/palettes';
+import { fontPairings, type FontPairing } from './fonts.svelte.ts';
 
-/** Preview mode state for the theme page */
-let currentPreviewMode = $state<'light' | 'dark'>('light');
+/** Dark mode options */
+export type DarkMode = 'light' | 'dark' | 'system';
+
+/** Cookie names for theme preferences */
+const COOKIE_PALETTE = 'theme-palette';
+const COOKIE_FONT = 'theme-font';
+const COOKIE_DARK_MODE = 'theme-dark-mode';
+
+/** Cookie max age: 1 year */
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
+
+/** Current palette state */
+let currentPalette = $state<PaletteName>('default');
+
+/** Current font pairing state */
+let currentFont = $state<FontPairing>(fontPairings[0]);
+
+/** Current dark mode preference */
+let currentDarkMode = $state<DarkMode>('system');
 
 /**
- * Get the current selected theme
+ * Set a cookie with standard options
  */
-export const getTheme = (): ThemePalette => currentTheme;
-
-/**
- * Set the current theme
- */
-export const setTheme = (theme: ThemePalette): void => {
-	currentTheme = theme;
-	if (typeof localStorage !== 'undefined') {
-		localStorage.setItem('selected-theme', theme.name);
-	}
+const setCookie = (name: string, value: string): void => {
+	if (typeof document === 'undefined') return;
+	document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax`;
 };
 
 /**
- * Get the current preview mode
+ * Get a cookie value by name
  */
-export const getPreviewMode = (): 'light' | 'dark' => currentPreviewMode;
-
-/**
- * Set the preview mode
- */
-export const setPreviewMode = (mode: 'light' | 'dark'): void => {
-	currentPreviewMode = mode;
+const getCookie = (name: string): string | null => {
+	if (typeof document === 'undefined') return null;
+	const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+	return match ? decodeURIComponent(match[2]) : null;
 };
 
 /**
- * Initialize theme from localStorage
+ * Apply the current palette to the document
+ */
+const applyPalette = (palette: PaletteName): void => {
+	if (typeof document === 'undefined') return;
+	document.documentElement.dataset.palette = palette;
+};
+
+/**
+ * Apply the current dark mode setting to the document
+ */
+const applyDarkMode = (mode: DarkMode): void => {
+	if (typeof document === 'undefined' || typeof window === 'undefined') return;
+
+	const isDark =
+		mode === 'dark' ||
+		(mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+	document.documentElement.classList.toggle('dark', isDark);
+};
+
+/**
+ * Get the current palette
+ */
+export const getPalette = (): PaletteName => currentPalette;
+
+/**
+ * Set the current palette and persist to cookie
+ */
+export const setPalette = (palette: PaletteName): void => {
+	currentPalette = palette;
+	setCookie(COOKIE_PALETTE, palette);
+	applyPalette(palette);
+};
+
+/**
+ * Get the current font pairing
+ */
+export const getFont = (): FontPairing => currentFont;
+
+/**
+ * Set the current font pairing and persist to cookie
+ */
+export const setFont = (font: FontPairing): void => {
+	currentFont = font;
+	setCookie(COOKIE_FONT, font.name);
+	// Font application is handled via CSS variables in layout
+};
+
+/**
+ * Get the current dark mode setting
+ */
+export const getDarkMode = (): DarkMode => currentDarkMode;
+
+/**
+ * Set the dark mode preference and persist to cookie
+ */
+export const setDarkMode = (mode: DarkMode): void => {
+	currentDarkMode = mode;
+	setCookie(COOKIE_DARK_MODE, mode);
+	applyDarkMode(mode);
+};
+
+/**
+ * Initialize theme from cookies
+ * Call this on client-side mount
  */
 export const initTheme = (): void => {
-	if (typeof localStorage !== 'undefined') {
-		const savedThemeName = localStorage.getItem('selected-theme');
-		if (savedThemeName) {
-			const found = themePalettes.find((p) => p.name === savedThemeName);
-			if (found) {
-				currentTheme = found;
-			}
+	// Initialize palette
+	const savedPalette = getCookie(COOKIE_PALETTE) as PaletteName | null;
+	if (savedPalette && paletteNames.includes(savedPalette)) {
+		currentPalette = savedPalette;
+		applyPalette(savedPalette);
+	}
+
+	// Initialize font
+	const savedFontName = getCookie(COOKIE_FONT);
+	if (savedFontName) {
+		const found = fontPairings.find((f) => f.name === savedFontName);
+		if (found) {
+			currentFont = found;
 		}
+	}
+
+	// Initialize dark mode
+	const savedDarkMode = getCookie(COOKIE_DARK_MODE) as DarkMode | null;
+	if (savedDarkMode && ['light', 'dark', 'system'].includes(savedDarkMode)) {
+		currentDarkMode = savedDarkMode;
+	}
+	applyDarkMode(currentDarkMode);
+
+	// Listen for system preference changes
+	if (typeof window !== 'undefined') {
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+			if (currentDarkMode === 'system') {
+				applyDarkMode('system');
+			}
+		});
 	}
 };
 
 /**
- * Get current colors based on preview mode
- */
-export const getCurrentColors = (): ThemePalette['light'] => {
-	return currentPreviewMode === 'light' ? currentTheme.light : currentTheme.dark;
-};
-
-/**
- * Create a reactive theme store that can be used in components
- * Returns functions to access reactive state
+ * Create a reactive theme store for use in components
  */
 export const createThemeStore = () => {
 	return {
-		get theme() {
-			return currentTheme;
+		get palette() {
+			return currentPalette;
 		},
-		set theme(value: ThemePalette) {
-			setTheme(value);
+		set palette(value: PaletteName) {
+			setPalette(value);
 		},
-		get previewMode() {
-			return currentPreviewMode;
+		get font() {
+			return currentFont;
 		},
-		set previewMode(value: 'light' | 'dark') {
-			currentPreviewMode = value;
+		set font(value: FontPairing) {
+			setFont(value);
 		},
-		get colors() {
-			return currentPreviewMode === 'light' ? currentTheme.light : currentTheme.dark;
+		get darkMode() {
+			return currentDarkMode;
+		},
+		set darkMode(value: DarkMode) {
+			setDarkMode(value);
 		}
 	};
 };
