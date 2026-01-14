@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { makeResponseSchema } from './common';
 
 /**
  * Schema for user data.
@@ -11,16 +10,6 @@ export const User = z
 		labels: z.array(z.string())
 	})
 	.strict();
-
-/**
- * Schema for listing multiple users response.
- */
-export const ListUsersResponse = makeResponseSchema(z.array(User));
-
-/**
- * Schema for current user profile response.
- */
-export const MeResponse = makeResponseSchema(User);
 
 export type TUser = z.infer<typeof User>;
 

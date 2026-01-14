@@ -1,7 +1,7 @@
 import { Client, Account, Users } from 'node-appwrite';
 import type { Cookies } from '@sveltejs/kit';
 
-import { SessionError } from '$lib/errors';
+import { SessionError } from '$lib/server/http';
 import { SESSION_COOKIE } from '$lib/constants';
 import { APPWRITE_KEY } from '$env/static/private';
 import { PUBLIC_APPWRITE_ENDPOINT, PUBLIC_APPWRITE_PROJECT } from '$env/static/public';

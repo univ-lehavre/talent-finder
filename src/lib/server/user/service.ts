@@ -1,5 +1,5 @@
-import { AppwriteUserRepository } from '$lib/server/appwrite/userRepository';
-import type { TUser } from '$lib/types/api/user';
+import { AppwriteUserRepository } from './repository';
+import type { TUser } from './types';
 
 const userRepo = new AppwriteUserRepository();
 

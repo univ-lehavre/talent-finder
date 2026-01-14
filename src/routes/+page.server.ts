@@ -1,6 +1,6 @@
 import { fail } from '@sveltejs/kit';
 
-import type { TUser } from '$lib/types/api/user';
+import type { TUser } from '$lib/server/user';
 import type { PageServerLoad, Actions } from './$types';
 
 /**
@@ -14,8 +14,9 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
 
 	try {
 		const response = await fetch('/api/v1/me');
-		const result = (await response.json()) as { data: TUser | null };
-		return { user: result.data };
+		if (!response.ok) return { user: null };
+		const user = (await response.json()) as TUser;
+		return { user };
 	} catch {
 		return { user: null };
 	}
@@ -35,13 +36,12 @@ export const actions = {
 			body: JSON.stringify({ email })
 		});
 
-		const result = await response.json();
-
-		if (!response.ok || result.error) {
+		if (!response.ok) {
+			const error = await response.json();
 			return fail(response.status, {
 				error: true,
-				message: result.error?.message ?? 'Signup failed',
-				cause: result.error?.cause ?? 'Unknown error'
+				message: error.message ?? 'Signup failed',
+				cause: error.cause ?? 'Unknown error'
 			});
 		}
 

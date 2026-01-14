@@ -1,7 +1,7 @@
 import type { Handle } from '@sveltejs/kit';
 import { AppwriteException } from 'node-appwrite';
 
-import { SessionError } from '$lib/errors';
+import { SessionError } from '$lib/server/http';
 import { createSessionClient } from '$lib/server/appwrite';
 
 /**

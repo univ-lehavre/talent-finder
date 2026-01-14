@@ -1,17 +1,23 @@
 import { isEmail } from '$lib/validators';
+import { SessionError, InvalidContentTypeError, InvalidJsonBodyError } from '$lib/server/http';
 import {
-	MagicUrlLoginValidationError,
-	RequestBodyValidationError,
-	UserIdValidationError
-} from '$lib/errors/auth';
-import { isHexadecimal } from '$lib/server/validators';
-import {
-	InvalidContentTypeError,
-	InvalidJsonBodyError,
 	NotAnEmailError,
-	SessionError
-} from '$lib/errors';
+	MagicUrlLoginValidationError,
+	UserIdValidationError,
+	RequestBodyValidationError
+} from './errors';
 import { ALLOWED_DOMAINS_REGEXP } from '$env/static/private';
+
+/**
+ * Validates if a string contains only hexadecimal characters.
+ * Used for validating Appwrite IDs and secrets.
+ * @param str - The string to validate
+ * @returns True if the string is valid hexadecimal, false otherwise
+ */
+const isHexadecimal = (str: string): boolean => {
+	const HEX_RE = /^[0-9a-fA-F]+$/;
+	return HEX_RE.test(str);
+};
 
 /**
  * Validates an email address for signup.

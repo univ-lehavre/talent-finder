@@ -1,0 +1,486 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "Talent Finder API",
+		"description": "API REST pour l'application Talent Finder",
+		"version": "0.1.0"
+	},
+	"servers": [
+		{
+			"url": "/api/v1",
+			"description": "API v1"
+		}
+	],
+	"tags": [
+		{
+			"name": "auth",
+			"description": "Authentification par magic link"
+		},
+		{
+			"name": "user",
+			"description": "Gestion des utilisateurs"
+		},
+		{
+			"name": "repository",
+			"description": "Statistiques du dépôt git"
+		},
+		{
+			"name": "github",
+			"description": "Intégration GitHub"
+		}
+	],
+	"paths": {
+		"/auth/signup": {
+			"post": {
+				"operationId": "signupWithEmail",
+				"summary": "Inscription par email",
+				"description": "Envoie un magic link à l'adresse email fournie pour créer un compte.",
+				"tags": ["auth"],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["email"],
+								"properties": {
+									"email": {
+										"type": "string",
+										"format": "email",
+										"description": "Adresse email de l'utilisateur"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Magic link envoyé",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SignupSuccess"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Email invalide",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "loginWithMagicLink",
+				"summary": "Connexion avec magic link",
+				"description": "Valide le magic link et crée une session utilisateur.",
+				"tags": ["auth"],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["userId", "secret"],
+								"properties": {
+									"userId": {
+										"type": "string",
+										"description": "ID utilisateur du magic link"
+									},
+									"secret": {
+										"type": "string",
+										"description": "Secret du magic link"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Connexion réussie",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginSuccess"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Paramètres invalides",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/logout": {
+			"post": {
+				"operationId": "logout",
+				"summary": "Déconnexion",
+				"description": "Termine la session utilisateur courante.",
+				"tags": ["auth"],
+				"responses": {
+					"200": {
+						"description": "Déconnexion réussie",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LogoutSuccess"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Non authentifié",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/me": {
+			"get": {
+				"operationId": "getCurrentUser",
+				"summary": "Profil utilisateur courant",
+				"description": "Retourne les informations du profil de l'utilisateur authentifié.",
+				"tags": ["user"],
+				"responses": {
+					"200": {
+						"description": "Profil utilisateur",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Non authentifié",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/repository": {
+			"get": {
+				"operationId": "getRepositoryStats",
+				"summary": "Statistiques du dépôt",
+				"description": "Retourne les statistiques complètes du dépôt git : commits, code, tests, GitHub.",
+				"tags": ["repository"],
+				"responses": {
+					"200": {
+						"description": "Statistiques du dépôt",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RepositoryStats"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erreur serveur",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/github": {
+			"get": {
+				"operationId": "getGitHubInfo",
+				"summary": "Informations GitHub",
+				"description": "Retourne les statistiques GitHub (issues, PRs) et les URLs du dépôt.",
+				"tags": ["github"],
+				"responses": {
+					"200": {
+						"description": "Informations GitHub",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GitHubInfo"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erreur serveur",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"ApiError": {
+				"type": "object",
+				"required": ["code", "message"],
+				"properties": {
+					"code": {
+						"type": "string",
+						"description": "Code d'erreur machine"
+					},
+					"message": {
+						"type": "string",
+						"description": "Message d'erreur lisible"
+					},
+					"cause": {
+						"type": "string",
+						"description": "Cause technique (optionnel)"
+					}
+				}
+			},
+			"SignupSuccess": {
+				"type": "object",
+				"properties": {
+					"signedUp": {
+						"type": "boolean"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			},
+			"LoginSuccess": {
+				"type": "object",
+				"properties": {
+					"loggedIn": {
+						"type": "boolean"
+					}
+				}
+			},
+			"LogoutSuccess": {
+				"type": "object",
+				"properties": {
+					"loggedOut": {
+						"type": "boolean"
+					}
+				}
+			},
+			"User": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string",
+						"format": "email",
+						"nullable": true
+					},
+					"labels": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"CodeStats": {
+				"type": "object",
+				"properties": {
+					"files": {
+						"type": "integer"
+					},
+					"constants": {
+						"type": "integer"
+					},
+					"functions": {
+						"type": "integer"
+					},
+					"types": {
+						"type": "integer"
+					}
+				}
+			},
+			"TestStats": {
+				"type": "object",
+				"properties": {
+					"files": {
+						"type": "integer"
+					},
+					"describes": {
+						"type": "integer"
+					},
+					"tests": {
+						"type": "integer"
+					}
+				}
+			},
+			"GitHubItemStats": {
+				"type": "object",
+				"properties": {
+					"open": {
+						"type": "integer"
+					},
+					"closed": {
+						"type": "integer"
+					}
+				}
+			},
+			"PeriodStats": {
+				"type": "object",
+				"properties": {
+					"period": {
+						"type": "string",
+						"description": "Format ISO: YYYY-MM-DDTHH"
+					},
+					"commits": {
+						"type": "integer"
+					},
+					"additions": {
+						"type": "integer"
+					},
+					"deletions": {
+						"type": "integer"
+					},
+					"filesChanged": {
+						"type": "integer"
+					},
+					"authors": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"RepositoryStats": {
+				"type": "object",
+				"properties": {
+					"totalCommits": {
+						"type": "integer"
+					},
+					"totalAdditions": {
+						"type": "integer"
+					},
+					"totalDeletions": {
+						"type": "integer"
+					},
+					"firstCommitDate": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"lastCommitDate": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"currentCode": {
+						"$ref": "#/components/schemas/CodeStats"
+					},
+					"currentTests": {
+						"$ref": "#/components/schemas/TestStats"
+					},
+					"hourlyStats": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PeriodStats"
+						}
+					},
+					"github": {
+						"type": "object",
+						"properties": {
+							"issues": {
+								"$ref": "#/components/schemas/GitHubItemStats"
+							},
+							"pullRequests": {
+								"$ref": "#/components/schemas/GitHubItemStats"
+							},
+							"repoUrl": {
+								"type": "string",
+								"nullable": true
+							}
+						}
+					}
+				}
+			},
+			"GitHubUrls": {
+				"type": "object",
+				"properties": {
+					"repository": {
+						"type": "string",
+						"nullable": true
+					},
+					"issues": {
+						"type": "string",
+						"nullable": true
+					},
+					"newIssue": {
+						"type": "string",
+						"nullable": true
+					},
+					"pullRequests": {
+						"type": "string",
+						"nullable": true
+					},
+					"discussions": {
+						"type": "string",
+						"nullable": true
+					}
+				}
+			},
+			"GitHubInfo": {
+				"type": "object",
+				"properties": {
+					"stats": {
+						"type": "object",
+						"properties": {
+							"issues": {
+								"$ref": "#/components/schemas/GitHubItemStats"
+							},
+							"pullRequests": {
+								"$ref": "#/components/schemas/GitHubItemStats"
+							}
+						}
+					},
+					"urls": {
+						"$ref": "#/components/schemas/GitHubUrls"
+					}
+				}
+			}
+		}
+	}
+}

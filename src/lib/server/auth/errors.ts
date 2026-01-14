@@ -1,4 +1,13 @@
-import { ApplicationError } from '$lib/errors';
+import { ApplicationError } from '$lib/server/http';
+
+/**
+ * Error thrown when provided email is invalid or not allowed.
+ */
+export class NotAnEmailError extends ApplicationError {
+	constructor(message = 'Registration not possible', opts?: { cause?: string; details?: unknown }) {
+		super('invalid_email', 400, message, opts);
+	}
+}
 
 /**
  * Error thrown when magic link URL parameters are invalid.

@@ -37,5 +37,12 @@ export default defineConfig(
 				svelteConfig
 			}
 		}
+	},
+	{
+		files: ['**/routes/repository/+page.svelte', '**/routes/+page.svelte'],
+		rules: {
+			// External links and static navigation don't need resolve()
+			'svelte/no-navigation-without-resolve': 'off'
+		}
 	}
 );

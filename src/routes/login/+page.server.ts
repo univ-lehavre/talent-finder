@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-import { validateMagicUrlLogin } from '$lib/server/validators/auth';
+import { validateMagicUrlLogin } from '$lib/server/auth';
 
 /**
  * Handles magic link login by extracting URL parameters
