@@ -1,6 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Alert, Badge, Icon, Modal, StatCard, ThemeSection } from '$lib/ui';
+	import {
+		Alert,
+		Badge,
+		Card,
+		Icon,
+		LoadingSpinner,
+		Modal,
+		Signup,
+		StatCard,
+		ThemeSection,
+		ThemeToggle
+	} from '$lib/ui';
 	import {
 		themeCategories,
 		getThemesByCategory,
@@ -24,6 +35,7 @@
 	const fontStore = createFontStore();
 
 	let modalOpen = $state(false);
+	let signupOpen = $state(false);
 	let themeDropdownOpen = $state(false);
 	let fontDropdownOpen = $state(false);
 	let appliedFeedback = $state(false);
@@ -390,10 +402,12 @@
 					<!-- Apply Button -->
 					<button
 						type="button"
-						class="px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2"
-						style="background-color: {appliedFeedback
-							? '#16a34a'
-							: currentColors.primary}; color: white"
+						class="px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 {appliedFeedback
+							? 'bg-success-600'
+							: ''}"
+						style={appliedFeedback
+							? 'color: white'
+							: `background-color: ${currentColors.primary}; color: white`}
 						onclick={applySettings}
 						disabled={appliedFeedback}
 					>
@@ -922,133 +936,308 @@
 		</div>
 	</ThemeSection>
 
-	<!-- Gradient Palettes Section -->
+	<!-- Card Section -->
 	<ThemeSection
-		title="Gradient Palettes"
-		icon="lucide:blend"
+		title="Card"
+		icon="lucide:square"
 		variant="background"
 		colors={currentColors}
 		{headingFont}
 	>
-		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-			{#each gradientPalettes as gradient (gradient.name)}
-				<div
-					class="rounded-xl overflow-hidden transition-colors duration-300"
-					style="border: 1px solid {currentColors.border}"
-				>
-					<div class="h-24" style="background: {gradient.css}"></div>
-					<div class="p-3" style="background-color: {currentColors.surface}">
-						<p class="font-medium text-sm">{gradient.name}</p>
-						<p class="text-xs mt-1" style="color: {currentColors.textMuted}">
-							{gradient.description}
-						</p>
-					</div>
-				</div>
-			{/each}
+		<div class="grid md:grid-cols-2 gap-6">
+			<Card>
+				<h3 class="text-lg font-semibold mb-2">Card Component</h3>
+				<p class="text-secondary-600 dark:text-secondary-400 mb-4">
+					This is a reusable Card component with default shadow styling.
+				</p>
+				<button class="btn-primary">Action</button>
+			</Card>
+			<Card class="border-2 border-primary-500">
+				<h3 class="text-lg font-semibold mb-2">Card with Custom Class</h3>
+				<p class="text-secondary-600 dark:text-secondary-400 mb-4">
+					Cards accept a <code class="px-1 bg-secondary-100 dark:bg-secondary-700 rounded"
+						>class</code
+					> prop for customization.
+				</p>
+				<button class="btn-accent">Custom Action</button>
+			</Card>
 		</div>
 	</ThemeSection>
 
-	<!-- Sequential Palettes Section -->
+	<!-- LoadingSpinner Section -->
 	<ThemeSection
-		title="Sequential Palettes"
-		description="Single hue progressions for ordered data, quantities, and progression."
-		icon="lucide:arrow-right"
+		title="Loading Spinner"
+		icon="lucide:loader"
 		variant="surface"
 		colors={currentColors}
 		{headingFont}
 	>
-		<div class="space-y-4">
-			{#each sequentialPalettes as palette (palette.name)}
-				<div
-					class="rounded-xl p-4 transition-colors duration-300"
-					style="background-color: {currentColors.background}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-				>
-					<div class="flex items-center justify-between mb-2">
-						<p class="font-medium">{palette.name}</p>
-						<p class="text-xs" style="color: {currentColors.textMuted}">{palette.description}</p>
-					</div>
-					<div class="flex rounded-lg overflow-hidden">
-						{#each palette.colors as color (color)}
-							<div class="flex-1 h-10" style="background-color: {color}" title={color}></div>
-						{/each}
-					</div>
+		<div
+			class="rounded-xl p-6 transition-colors duration-300"
+			style="background-color: {currentColors.background}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
+		>
+			<h3 class="text-lg font-semibold mb-4">Size Variants</h3>
+			<div class="flex flex-wrap items-center gap-8 mb-6">
+				<div class="flex flex-col items-center gap-2">
+					<LoadingSpinner size="sm" />
+					<span class="text-xs" style="color: {currentColors.textMuted}">Small</span>
 				</div>
-			{/each}
+				<div class="flex flex-col items-center gap-2">
+					<LoadingSpinner size="md" />
+					<span class="text-xs" style="color: {currentColors.textMuted}">Medium</span>
+				</div>
+				<div class="flex flex-col items-center gap-2">
+					<LoadingSpinner size="lg" />
+					<span class="text-xs" style="color: {currentColors.textMuted}">Large</span>
+				</div>
+			</div>
+
+			<h3 class="text-lg font-semibold mb-4">Color Variants</h3>
+			<div class="flex flex-wrap items-center gap-8">
+				<div class="flex flex-col items-center gap-2">
+					<LoadingSpinner variant="primary" />
+					<span class="text-xs" style="color: {currentColors.textMuted}">Primary</span>
+				</div>
+				<div class="flex flex-col items-center gap-2">
+					<LoadingSpinner variant="accent" />
+					<span class="text-xs" style="color: {currentColors.textMuted}">Accent</span>
+				</div>
+				<div class="flex flex-col items-center gap-2">
+					<LoadingSpinner variant="secondary" />
+					<span class="text-xs" style="color: {currentColors.textMuted}">Secondary</span>
+				</div>
+			</div>
 		</div>
 	</ThemeSection>
 
-	<!-- Diverging Palettes Section -->
+	<!-- ThemeToggle Section -->
 	<ThemeSection
-		title="Diverging Palettes"
-		description="Two hues with neutral midpoint for data with meaningful center (positive/negative, above/below average)."
-		icon="lucide:arrow-left-right"
+		title="Theme Toggle"
+		icon="lucide:moon"
 		variant="background"
 		colors={currentColors}
 		{headingFont}
 	>
-		<div class="space-y-4">
-			{#each divergingPalettes as palette (palette.name)}
-				<div
-					class="rounded-xl p-4 transition-colors duration-300"
-					style="background-color: {currentColors.surface}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
+		<div
+			class="rounded-xl p-6 transition-colors duration-300"
+			style="background-color: {currentColors.surface}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
+		>
+			<p class="mb-4" style="color: {currentColors.textMuted}">
+				The ThemeToggle component allows users to switch between light and dark modes. It persists
+				the selection in localStorage.
+			</p>
+			<div class="flex items-center gap-4">
+				<ThemeToggle />
+				<span class="text-sm" style="color: {currentColors.textMuted}"
+					>Click to toggle between light and dark modes</span
 				>
-					<div class="flex items-center justify-between mb-2">
-						<p class="font-medium">{palette.name}</p>
-						<p class="text-xs" style="color: {currentColors.textMuted}">{palette.description}</p>
-					</div>
-					<div class="flex rounded-lg overflow-hidden">
-						{#each palette.colors as color (color)}
-							<div class="flex-1 h-10" style="background-color: {color}" title={color}></div>
-						{/each}
-					</div>
-				</div>
-			{/each}
+			</div>
 		</div>
 	</ThemeSection>
 
-	<!-- Qualitative Palettes Section -->
+	<!-- Signup Section -->
 	<ThemeSection
-		title="Qualitative Palettes"
-		description="Distinct colors for categorical/nominal data, different groups, and labels."
-		icon="lucide:shapes"
+		title="Signup Modal"
+		icon="lucide:user-plus"
 		variant="surface"
 		colors={currentColors}
 		{headingFont}
 	>
-		<div class="space-y-4">
-			{#each qualitativePalettes as palette (palette.name)}
-				<div
-					class="rounded-xl p-4 transition-colors duration-300"
-					style="background-color: {currentColors.background}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
+		<div
+			class="rounded-xl p-6 transition-colors duration-300"
+			style="background-color: {currentColors.background}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
+		>
+			<p class="mb-4" style="color: {currentColors.textMuted}">
+				The Signup component is a modal form for user authentication. It includes email validation,
+				loading states, and success/error alerts.
+			</p>
+			<button
+				type="button"
+				class="px-4 py-2 rounded-lg font-medium text-white transition-colors"
+				style="background-color: {currentColors.primary}"
+				onclick={() => (signupOpen = true)}
+			>
+				Open Signup Modal
+			</button>
+		</div>
+	</ThemeSection>
+
+	<!-- Color Palettes Section - 4 columns -->
+	<ThemeSection
+		title="Color Palettes"
+		description="Click any color to copy its value to clipboard."
+		icon="lucide:palette"
+		variant="background"
+		colors={currentColors}
+		{headingFont}
+	>
+		<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+			<!-- Gradient Palettes Column -->
+			<div class="space-y-4">
+				<h3
+					class="text-lg font-semibold flex items-center gap-2"
+					style="font-family: {headingFont}, sans-serif"
 				>
-					<div class="flex items-center justify-between mb-2">
-						<p class="font-medium">{palette.name}</p>
-						<p class="text-xs" style="color: {currentColors.textMuted}">{palette.description}</p>
-					</div>
-					<div class="flex gap-1">
-						{#each palette.colors as color (color)}
-							<div
-								class="flex-1 h-10 rounded"
-								style="background-color: {color}"
-								title={color}
-							></div>
-						{/each}
-					</div>
+					<Icon icon="lucide:blend" width="20" height="20" style="color: {currentColors.primary}" />
+					Gradients
+				</h3>
+				<p class="text-sm" style="color: {currentColors.textMuted}">CSS gradient backgrounds</p>
+				<div class="space-y-3">
+					{#each gradientPalettes as gradient (gradient.name)}
+						<div
+							class="rounded-lg overflow-hidden transition-colors duration-300"
+							style="border: 1px solid {currentColors.border}"
+						>
+							<div class="h-8" style="background: {gradient.css}" title={gradient.css}></div>
+							<div class="p-2" style="background-color: {currentColors.surface}">
+								<p class="font-medium text-sm">{gradient.name}</p>
+							</div>
+						</div>
+					{/each}
 				</div>
-			{/each}
+			</div>
+
+			<!-- Sequential Palettes Column -->
+			<div class="space-y-4">
+				<h3
+					class="text-lg font-semibold flex items-center gap-2"
+					style="font-family: {headingFont}, sans-serif"
+				>
+					<Icon
+						icon="lucide:arrow-right"
+						width="20"
+						height="20"
+						style="color: {currentColors.primary}"
+					/>
+					Sequential
+				</h3>
+				<p class="text-sm" style="color: {currentColors.textMuted}">
+					Single hue progressions for ordered data
+				</p>
+				<div class="space-y-3">
+					{#each sequentialPalettes as palette (palette.name)}
+						<div
+							class="rounded-lg overflow-hidden transition-colors duration-300"
+							style="border: 1px solid {currentColors.border}"
+						>
+							<div class="flex h-8">
+								{#each palette.colors as color (color)}
+									<button
+										type="button"
+										class="flex-1 cursor-pointer hover:opacity-80 transition-opacity"
+										style="background-color: {color}"
+										title={color}
+										onclick={() => navigator.clipboard.writeText(color)}
+									></button>
+								{/each}
+							</div>
+							<div class="p-2" style="background-color: {currentColors.surface}">
+								<p class="font-medium text-sm">{palette.name}</p>
+							</div>
+						</div>
+					{/each}
+				</div>
+			</div>
+
+			<!-- Diverging Palettes Column -->
+			<div class="space-y-4">
+				<h3
+					class="text-lg font-semibold flex items-center gap-2"
+					style="font-family: {headingFont}, sans-serif"
+				>
+					<Icon
+						icon="lucide:arrow-left-right"
+						width="20"
+						height="20"
+						style="color: {currentColors.primary}"
+					/>
+					Diverging
+				</h3>
+				<p class="text-sm" style="color: {currentColors.textMuted}">
+					Two hues with neutral midpoint
+				</p>
+				<div class="space-y-3">
+					{#each divergingPalettes as palette (palette.name)}
+						<div
+							class="rounded-lg overflow-hidden transition-colors duration-300"
+							style="border: 1px solid {currentColors.border}"
+						>
+							<div class="flex h-8">
+								{#each palette.colors as color (color)}
+									<button
+										type="button"
+										class="flex-1 cursor-pointer hover:opacity-80 transition-opacity"
+										style="background-color: {color}"
+										title={color}
+										onclick={() => navigator.clipboard.writeText(color)}
+									></button>
+								{/each}
+							</div>
+							<div class="p-2" style="background-color: {currentColors.surface}">
+								<p class="font-medium text-sm">{palette.name}</p>
+							</div>
+						</div>
+					{/each}
+				</div>
+			</div>
+
+			<!-- Qualitative Palettes Column -->
+			<div class="space-y-4">
+				<h3
+					class="text-lg font-semibold flex items-center gap-2"
+					style="font-family: {headingFont}, sans-serif"
+				>
+					<Icon
+						icon="lucide:shapes"
+						width="20"
+						height="20"
+						style="color: {currentColors.primary}"
+					/>
+					Qualitative
+				</h3>
+				<p class="text-sm" style="color: {currentColors.textMuted}">
+					Distinct colors for categorical data
+				</p>
+				<div class="space-y-3">
+					{#each qualitativePalettes as palette (palette.name)}
+						<div
+							class="rounded-lg overflow-hidden transition-colors duration-300"
+							style="border: 1px solid {currentColors.border}"
+						>
+							<div class="flex h-8 gap-0.5 p-0.5" style="background-color: {currentColors.surface}">
+								{#each palette.colors as color (color)}
+									<button
+										type="button"
+										class="flex-1 rounded cursor-pointer hover:opacity-80 transition-opacity"
+										style="background-color: {color}"
+										title={color}
+										onclick={() => navigator.clipboard.writeText(color)}
+									></button>
+								{/each}
+							</div>
+							<div class="p-2" style="background-color: {currentColors.surface}">
+								<p class="font-medium text-sm">{palette.name}</p>
+							</div>
+						</div>
+					{/each}
+				</div>
+			</div>
 		</div>
 	</ThemeSection>
 </div>
 
 <!-- Demo Modal -->
-<Modal bind:open={modalOpen} title="Example Modal">
-	<p class="text-secondary-600 mb-4">
+<Modal bind:open={modalOpen} title="Example Modal" colors={currentColors} {headingFont}>
+	<p class="mb-4">
 		This is a reusable modal component. It handles backdrop click, escape key, and focus management.
 	</p>
-	<p class="text-secondary-600">
-		You can pass any content as children and optionally provide a footer snippet.
-	</p>
+	<p>You can pass any content as children and optionally provide a footer snippet.</p>
 	{#snippet footer()}
-		<p class="text-xs text-secondary-500 text-center">Press Escape or click outside to close.</p>
+		<p class="text-xs text-center" style="color: {currentColors.textMuted}">
+			Press Escape or click outside to close.
+		</p>
 	{/snippet}
 </Modal>
+
+<!-- Demo Signup Modal -->
+<Signup form={null} bind:open={signupOpen} colors={currentColors} {headingFont} />

@@ -170,6 +170,36 @@ export const sequentialPalettes: ColorPalette[] = [
 			'#b10026'
 		],
 		description: 'Heat map colors, good for intensity/temperature'
+	},
+	{
+		name: 'Pink-Purple',
+		type: 'sequential',
+		colors: [
+			'#fff7f3',
+			'#fde0dd',
+			'#fcc5c0',
+			'#fa9fb5',
+			'#f768a1',
+			'#dd3497',
+			'#ae017e',
+			'#7a0177'
+		],
+		description: 'Pink to purple, good for feminine/creative themes'
+	},
+	{
+		name: 'Green-Blue',
+		type: 'sequential',
+		colors: [
+			'#f7fcf0',
+			'#e0f3db',
+			'#ccebc5',
+			'#a8ddb5',
+			'#7bccc4',
+			'#4eb3d3',
+			'#2b8cbe',
+			'#08589e'
+		],
+		description: 'Green to blue, good for depth/water themes'
 	}
 ];
 
@@ -297,6 +327,66 @@ export const divergingPalettes: ColorPalette[] = [
 			'#3288bd'
 		],
 		description: 'Rainbow-like diverging, highly visible'
+	},
+	{
+		name: 'Pink-Yellow-Green',
+		type: 'diverging',
+		colors: [
+			'#8e0152',
+			'#c51b7d',
+			'#de77ae',
+			'#f1b6da',
+			'#d9f0a3',
+			'#addd8e',
+			'#78c679',
+			'#31a354'
+		],
+		description: 'Warm pink to fresh green, good for sentiment'
+	},
+	{
+		name: 'Blue-Yellow-Red',
+		type: 'diverging',
+		colors: [
+			'#2166ac',
+			'#4393c3',
+			'#92c5de',
+			'#fee090',
+			'#fdb863',
+			'#f4a582',
+			'#d6604d',
+			'#b2182b'
+		],
+		description: 'Cool to warm transition via yellow'
+	},
+	{
+		name: 'Cyan-Magenta',
+		type: 'diverging',
+		colors: [
+			'#01665e',
+			'#35978f',
+			'#80cdc1',
+			'#c7eae5',
+			'#f1b6da',
+			'#de77ae',
+			'#c51b7d',
+			'#8e0152'
+		],
+		description: 'Print-inspired colors, good for comparison'
+	},
+	{
+		name: 'Green-Brown',
+		type: 'diverging',
+		colors: [
+			'#1b7837',
+			'#5aae61',
+			'#a6dba0',
+			'#d9f0d3',
+			'#f6e8c3',
+			'#dfc27d',
+			'#bf812d',
+			'#8c510a'
+		],
+		description: 'Nature-inspired, good for land use data'
 	}
 ];
 
@@ -454,6 +544,36 @@ export const qualitativePalettes: ColorPalette[] = [
 			'#7f7f7f'
 		],
 		description: 'D3.js default categorical palette'
+	},
+	{
+		name: 'Vivid',
+		type: 'qualitative',
+		colors: [
+			'#e60049',
+			'#0bb4ff',
+			'#50e991',
+			'#e6d800',
+			'#9b19f5',
+			'#ffa300',
+			'#dc0ab4',
+			'#00bfa0'
+		],
+		description: 'High saturation, maximum distinction'
+	},
+	{
+		name: 'Retro',
+		type: 'qualitative',
+		colors: [
+			'#ea5545',
+			'#f46a9b',
+			'#ef9b20',
+			'#edbf33',
+			'#ede15b',
+			'#bdcf32',
+			'#87bc45',
+			'#27aeef'
+		],
+		description: 'Vintage-inspired warm colors'
 	}
 ];
 

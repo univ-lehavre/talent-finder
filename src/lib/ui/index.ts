@@ -7,6 +7,7 @@ export { default as Badge } from './Badge.svelte';
 export { default as Card } from './Card.svelte';
 export { default as ColorPalette } from './ColorPalette.svelte';
 export { default as Icon } from './Icon.svelte';
+export { default as LoadingSpinner } from './LoadingSpinner.svelte';
 export { default as Modal } from './Modal.svelte';
 export { default as Signup } from './Signup.svelte';
 export { default as StatCard } from './StatCard.svelte';
