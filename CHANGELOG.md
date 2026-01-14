@@ -1,5 +1,39 @@
 # talent-finder
 
+## 0.2.0
+
+### Minor Changes
+
+- Add repository analytics, GitHub integration, and API documentation
+
+  New features:
+  - **git-stats module**: Analyze git commits, code metrics, and test coverage by time period
+  - **github module**: Fetch repository metadata, issues, and pull requests from GitHub API
+  - **Repository page** (`/repository`): Visual dashboard with commit history, code stats, and contributors
+  - **Swagger UI** (`/api/docs`): Interactive API documentation
+
+  API improvements:
+  - New REST endpoints: `/api/v1/repository`, `/api/v1/github`
+  - Migrate all API responses to pure REST format (remove envelope wrapper)
+  - Add OpenAPI 3.0 specification
+
+  Test coverage:
+  - Add 138 unit tests covering all exported functions
+  - Test files: validators, http, auth, user, git-stats, github modules
+
+  UI enhancements:
+  - Add logo and favicon with brand identity
+  - Add navigation links to Repository, API Docs, Design System, Archive
+  - Update README with comprehensive project documentation
+
+### Patch Changes
+
+- 8384d9d: Reorganize server code by domain with colocation of errors and types
+  - Restructure `/src/lib/server` from flat to domain-based organization
+  - Create `auth/`, `user/`, `http/` domains with colocated code
+  - Move errors and types near the code that uses them
+  - Add `index.ts` exports for module encapsulation
+
 ## 0.1.0
 
 ### Minor Changes
