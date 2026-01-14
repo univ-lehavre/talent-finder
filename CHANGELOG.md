@@ -1,5 +1,66 @@
 # talent-finder
 
+## 0.3.0
+
+### Minor Changes
+
+- 96c5c7e: Add navigation, dashboard and improve code architecture
+
+  **New features:**
+  - Responsive navbar with icons and mobile offcanvas menu
+  - Dashboard page for authenticated users
+  - University logos in footer (ULHN, EUNICoast)
+
+  **Code architecture:**
+  - Centralized icons module (`$lib/icons`)
+  - i18n-ready content module (`$lib/content`)
+  - Email normalizers module (`$lib/normalizers`) with subaddress removal
+  - RFC 5322 email validation with ReDoS protection
+  - Replace internal fetch calls with service functions
+  - Layout server load for user profile
+
+- 7436774: Add theme customization system with admin-only access
+  - Add theme page (/theme) with color palette and font pairing selection
+  - Restrict theme page access to admin users via Appwrite labels
+  - Add 36 theme palettes organized in 6 categories (professional, nature, vibrant, minimal, warm, cool)
+  - Add 40 font pairings organized in 4 categories (sans-serif, serif, display, technical)
+  - Create reusable UI components (Alert, Badge, Card, Icon, Modal, StatCard, ThemeSection, ThemeToggle)
+  - Add global theme CSS variables applied via layout
+  - Implement light/dark mode toggle with system preference detection
+  - Add Home link to main navigation
+  - Persist theme and font preferences in localStorage
+
+- a4f7a9b: UI and navigation improvements
+  - Add custom 404 error page with contextual icons and navigation buttons
+  - Restrict theme page access to admin users only (returns 404 for non-admins)
+  - Add icon-only links with tooltips for Archive and GitHub in navbar
+  - Move theme toggle to mobile navbar for better accessibility
+  - Remove repository and API docs links from mobile offcanvas menu
+  - Add logout redirect to force page reload after sign out
+  - Dashboard: rename "Quick Actions" card to "Pages", show "Customize" link only for admins
+  - Theme page: add Set/Reset buttons for bulk theme preference management
+
+- eae0657: Standardize UI components across all pages
+  - Add new `LoadingSpinner` component to `$lib/ui` with size and color variants
+  - Refactor login page to use `LoadingSpinner` component with dark mode support
+  - Refactor repository page:
+    - Replace hardcoded colors with semantic theme colors (success, error, primary, accent)
+    - Replace inline SVG with `Icon` component
+    - Use `.card` and `.alert-error` classes consistently
+  - Add theme support to `Modal` and `Signup` components (colors, headingFont props)
+  - Add demos for all UI components in theme page (Card, LoadingSpinner, ThemeToggle, Signup)
+  - Reorganize color palettes into 4 columns (Gradients, Sequential, Diverging, Qualitative)
+  - Expand each palette category to 12 options (added Pink-Purple, Green-Blue, Pink-Yellow-Green, Blue-Yellow-Red, Cyan-Magenta, Green-Brown, Vivid, Retro)
+
+### Patch Changes
+
+- d7bd88a: Amélioration des dropdowns de thème
+  - Dropdown des palettes : affiche les 6 couleurs correctes pour chaque palette avec des styles inline OKLCH
+  - Dropdown des fontes : affiche le nom de chaque fonte avec sa propre police
+  - Harmonisation des hauteurs de boutons dans la barre de thème
+  - Suppression du bouton ThemeToggle redondant dans la barre de paramètres de thème
+  - Table Color Scales : cellules vides pour les nuances non définies (success/warning/error)
+
 All notable changes to this project are documented here.
 
 ## [0.2.0](https://github.com/univ-lehavre/talent-finder/compare/v0.1.0...v0.2.0) - 2025-01-14
