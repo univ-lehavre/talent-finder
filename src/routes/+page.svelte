@@ -1,4 +1,23 @@
 <script lang="ts">
+	import Signup from '$lib/ui/Signup.svelte';
+
+	interface Props {
+		data: {
+			user: { email: string } | null;
+		};
+		form: {
+			error?: boolean;
+			message?: string;
+			cause?: string;
+			success?: boolean;
+			loggedOut?: boolean;
+		} | null;
+	}
+
+	let { data, form }: Props = $props();
+
+	let signupOpen = $state(false);
+
 	const features = [
 		{
 			title: 'Discover Talent',
@@ -13,6 +32,10 @@
 			description: 'Assemble the perfect team for your projects and research'
 		}
 	];
+
+	const openSignup = (): void => {
+		signupOpen = true;
+	};
 </script>
 
 <svelte:head>
@@ -30,7 +53,14 @@
 				<a href="/design-system" class="text-secondary-600 hover:text-primary-600 text-sm">
 					Design System
 				</a>
-				<button class="btn-primary btn-sm">Sign In</button>
+				{#if data.user}
+					<span class="text-sm text-secondary-600">{data.user.email}</span>
+					<form method="post" action="?/logout">
+						<button type="submit" class="btn-secondary btn-sm">Déconnexion</button>
+					</form>
+				{:else}
+					<button type="button" class="btn-primary btn-sm" onclick={openSignup}>Sign In</button>
+				{/if}
 			</div>
 		</div>
 	</nav>
@@ -47,9 +77,19 @@
 					your ideas to life.
 				</p>
 				<div class="flex flex-wrap gap-4">
-					<button class="btn-primary btn-lg bg-white text-primary-700 hover:bg-primary-50">
-						Get Started
-					</button>
+					{#if data.user}
+						<button class="btn-primary btn-lg bg-white text-primary-700 hover:bg-primary-50">
+							Dashboard
+						</button>
+					{:else}
+						<button
+							type="button"
+							class="btn-primary btn-lg bg-white text-primary-700 hover:bg-primary-50"
+							onclick={openSignup}
+						>
+							Get Started
+						</button>
+					{/if}
 					<button class="btn-outline btn-lg border-white text-white hover:bg-white/10">
 						Learn More
 					</button>
@@ -81,7 +121,12 @@
 				Join our platform today and start connecting with talented professionals from around the
 				world.
 			</p>
-			<button class="btn-primary btn-lg">Create Account</button>
+			{#if data.user}
+				<button class="btn-primary btn-lg">Access Dashboard</button>
+			{:else}
+				<button type="button" class="btn-primary btn-lg" onclick={openSignup}>Create Account</button
+				>
+			{/if}
 		</div>
 	</section>
 
@@ -93,3 +138,6 @@
 		</div>
 	</footer>
 </div>
+
+<!-- Signup Modal -->
+<Signup {form} bind:open={signupOpen} />
