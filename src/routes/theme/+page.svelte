@@ -12,7 +12,12 @@
 		ThemeSection,
 		ThemeToggle
 	} from '$lib/ui';
-	import { paletteCategories, palettesByCategory, type PaletteName } from '$lib/palettes';
+	import {
+		paletteCategories,
+		palettesByCategory,
+		getPalettePreviewColors,
+		type PaletteName
+	} from '$lib/palettes';
 	import { createThemeStore, initTheme, fontCategories, getFontsByCategory } from '$lib/stores';
 
 	const themeStore = createThemeStore();
@@ -96,20 +101,22 @@
 				</span>
 			</div>
 			<div class="flex flex-wrap items-center gap-4">
-				<!-- Dark mode toggle -->
-				<ThemeToggle />
-
 				<!-- Font Pairing Dropdown -->
 				<div class="relative">
 					<button
 						type="button"
-						class="flex items-center gap-3 px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-600 rounded-lg bg-white dark:bg-secondary-800 text-secondary-900 dark:text-secondary-100 transition-colors"
+						class="h-[52px] flex items-center gap-3 px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-600 rounded-lg bg-white dark:bg-secondary-800 text-secondary-900 dark:text-secondary-100 transition-colors"
 						onclick={toggleFontDropdown}
 						aria-expanded={fontDropdownOpen}
 						aria-haspopup="listbox"
 					>
 						<Icon icon="lucide:type" width="16" height="16" />
-						<span class="capitalize">{themeStore.fontName}</span>
+						<div class="flex flex-col items-start">
+							<span class="capitalize font-medium">{themeStore.fontName}</span>
+							<span class="text-xs text-secondary-500 dark:text-secondary-400">
+								{themeStore.font.headingFamily} / {themeStore.font.bodyFamily}
+							</span>
+						</div>
 						<Icon icon="lucide:chevron-down" width="16" height="16" />
 					</button>
 
@@ -122,7 +129,7 @@
 						></button>
 
 						<div
-							class="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto border border-secondary-200 dark:border-secondary-600 rounded-lg shadow-lg z-20 bg-white dark:bg-secondary-800"
+							class="absolute right-0 mt-2 w-96 max-h-[32rem] overflow-y-auto border border-secondary-200 dark:border-secondary-600 rounded-lg shadow-lg z-20 bg-white dark:bg-secondary-800"
 							use:scrollToSelected
 						>
 							{#each fontCategories as category, index (category.id)}
@@ -139,7 +146,7 @@
 									{#each getFontsByCategory(category.id) as pairing (pairing.name)}
 										<button
 											type="button"
-											class="w-full px-4 py-2.5 flex items-center gap-3 transition-colors text-left hover:bg-secondary-50 dark:hover:bg-secondary-700 {themeStore.fontName ===
+											class="w-full px-4 py-3 flex items-start gap-3 transition-colors text-left hover:bg-secondary-50 dark:hover:bg-secondary-700 {themeStore.fontName ===
 											pairing.name
 												? 'bg-secondary-100 dark:bg-secondary-700'
 												: ''}"
@@ -149,18 +156,60 @@
 											data-selected={themeStore.fontName === pairing.name}
 										>
 											<div class="flex-1 min-w-0">
-												<div
-													class="text-sm font-medium truncate capitalize text-secondary-900 dark:text-secondary-100"
-												>
-													{pairing.name}
+												<div class="flex items-center gap-2 mb-1">
+													<span
+														class="text-sm font-semibold capitalize text-secondary-900 dark:text-secondary-100"
+													>
+														{pairing.name}
+													</span>
+													{#if themeStore.fontName === pairing.name}
+														<Icon
+															icon="lucide:check"
+															width="14"
+															height="14"
+															class="text-primary-500"
+														/>
+													{/if}
 												</div>
-												<div class="text-xs truncate text-secondary-500 dark:text-secondary-400">
-													{pairing.description}
+												<div class="grid grid-cols-3 gap-2 text-xs">
+													<div class="flex flex-col">
+														<span
+															class="text-[10px] uppercase tracking-wider text-secondary-400 dark:text-secondary-500"
+															>Heading</span
+														>
+														<span
+															class="text-secondary-700 dark:text-secondary-300 truncate"
+															style="font-family: '{pairing.headingFamily}', sans-serif"
+														>
+															{pairing.headingFamily}
+														</span>
+													</div>
+													<div class="flex flex-col">
+														<span
+															class="text-[10px] uppercase tracking-wider text-secondary-400 dark:text-secondary-500"
+															>Body</span
+														>
+														<span
+															class="text-secondary-700 dark:text-secondary-300 truncate"
+															style="font-family: '{pairing.bodyFamily}', sans-serif"
+														>
+															{pairing.bodyFamily}
+														</span>
+													</div>
+													<div class="flex flex-col">
+														<span
+															class="text-[10px] uppercase tracking-wider text-secondary-400 dark:text-secondary-500"
+															>Mono</span
+														>
+														<span
+															class="text-secondary-700 dark:text-secondary-300 truncate"
+															style="font-family: '{pairing.monoFamily}', monospace"
+														>
+															{pairing.monoFamily}
+														</span>
+													</div>
 												</div>
 											</div>
-											{#if themeStore.fontName === pairing.name}
-												<Icon icon="lucide:check" width="16" height="16" class="text-primary-500" />
-											{/if}
 										</button>
 									{/each}
 								</div>
@@ -173,7 +222,7 @@
 				<div class="relative">
 					<button
 						type="button"
-						class="flex items-center gap-3 px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-600 rounded-lg bg-white dark:bg-secondary-800 text-secondary-900 dark:text-secondary-100 transition-colors"
+						class="h-[52px] flex items-center gap-3 px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-600 rounded-lg bg-white dark:bg-secondary-800 text-secondary-900 dark:text-secondary-100 transition-colors"
 						onclick={togglePaletteDropdown}
 						aria-expanded={paletteDropdownOpen}
 						aria-haspopup="listbox"
@@ -196,7 +245,7 @@
 						></button>
 
 						<div
-							class="absolute right-0 mt-2 w-72 max-h-96 overflow-y-auto border border-secondary-200 dark:border-secondary-600 rounded-lg shadow-lg z-20 bg-white dark:bg-secondary-800"
+							class="absolute right-0 mt-2 w-80 max-h-[32rem] overflow-y-auto border border-secondary-200 dark:border-secondary-600 rounded-lg shadow-lg z-20 bg-white dark:bg-secondary-800"
 							use:scrollToSelected
 						>
 							{#each paletteCategories as category, index (category.id)}
@@ -211,9 +260,10 @@
 										{category.name}
 									</div>
 									{#each palettesByCategory[category.id] as palette (palette)}
+										{@const colors = getPalettePreviewColors(palette)}
 										<button
 											type="button"
-											class="w-full px-4 py-2.5 flex items-center gap-3 transition-colors text-left hover:bg-secondary-50 dark:hover:bg-secondary-700 {themeStore.palette ===
+											class="w-full px-4 py-3 flex items-start gap-3 transition-colors text-left hover:bg-secondary-50 dark:hover:bg-secondary-700 {themeStore.palette ===
 											palette
 												? 'bg-secondary-100 dark:bg-secondary-700'
 												: ''}"
@@ -223,18 +273,55 @@
 											data-selected={themeStore.palette === palette}
 										>
 											<div class="flex-1 min-w-0">
-												<div
-													class="text-sm font-medium truncate capitalize text-secondary-900 dark:text-secondary-100"
-												>
-													{palette}
+												<div class="flex items-center gap-2 mb-2">
+													<span
+														class="text-sm font-semibold capitalize text-secondary-900 dark:text-secondary-100"
+													>
+														{palette}
+													</span>
+													{#if themeStore.palette === palette}
+														<Icon
+															icon="lucide:check"
+															width="14"
+															height="14"
+															class="text-primary-500"
+														/>
+													{/if}
 												</div>
-												<div class="text-xs truncate text-secondary-500 dark:text-secondary-400">
-													{category.description}
+												<!-- Color swatches with inline OKLCH colors -->
+												<div class="flex gap-0.5">
+													<div
+														class="w-6 h-6 rounded-l"
+														style="background-color: {colors.primary}"
+														title="Primary"
+													></div>
+													<div
+														class="w-6 h-6"
+														style="background-color: {colors.accent}"
+														title="Accent"
+													></div>
+													<div
+														class="w-6 h-6"
+														style="background-color: {colors.secondary}"
+														title="Secondary"
+													></div>
+													<div
+														class="w-6 h-6"
+														style="background-color: {colors.success}"
+														title="Success"
+													></div>
+													<div
+														class="w-6 h-6"
+														style="background-color: {colors.warning}"
+														title="Warning"
+													></div>
+													<div
+														class="w-6 h-6 rounded-r"
+														style="background-color: {colors.error}"
+														title="Error"
+													></div>
 												</div>
 											</div>
-											{#if themeStore.palette === palette}
-												<Icon icon="lucide:check" width="16" height="16" class="text-primary-500" />
-											{/if}
 										</button>
 									{/each}
 								</div>
@@ -246,7 +333,7 @@
 				<!-- Apply Button -->
 				<button
 					type="button"
-					class="px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 {appliedFeedback
+					class="h-[52px] px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 {appliedFeedback
 						? 'bg-success-600 text-white'
 						: 'btn-primary'}"
 					onclick={applySettings}
@@ -344,46 +431,450 @@
 
 <!-- Color Scale Section -->
 <ThemeSection title="Color Scales" icon="lucide:paintbrush" variant="default">
-	<div class="space-y-6">
-		<!-- Primary Scale -->
-		<div class="card">
-			<h3 class="text-lg font-semibold mb-4">Primary</h3>
-			<div class="flex rounded-lg overflow-hidden">
-				{#each [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as shade (shade)}
-					<div
-						class="flex-1 h-12 bg-primary-{shade}"
-						title="primary-{shade}"
-						style="background-color: var(--color-primary-{shade})"
-					></div>
-				{/each}
-			</div>
-		</div>
+	<div class="card overflow-x-auto">
+		<table class="w-full text-sm">
+			<thead>
+				<tr class="border-b border-secondary-200 dark:border-secondary-700">
+					<th class="py-3 px-2 text-left font-semibold text-secondary-700 dark:text-secondary-300"
+						>Scale</th
+					>
+					{#each [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as shade (shade)}
+						<th
+							class="py-3 px-1 text-center font-medium text-secondary-500 dark:text-secondary-400 text-xs"
+							>{shade}</th
+						>
+					{/each}
+				</tr>
+			</thead>
+			<tbody>
+				<!-- Primary -->
+				<tr class="border-b border-secondary-100 dark:border-secondary-800">
+					<td class="py-3 px-2">
+						<div class="font-medium text-secondary-900 dark:text-secondary-100">Primary</div>
+						<div class="text-xs text-secondary-500 dark:text-secondary-400 font-mono">
+							bg-primary-*
+						</div>
+					</td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-50)"
+							title="bg-primary-50"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-100)"
+							title="bg-primary-100"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-200)"
+							title="bg-primary-200"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-300)"
+							title="bg-primary-300"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-400)"
+							title="bg-primary-400"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto ring-2 ring-secondary-300 dark:ring-secondary-600"
+							style="background-color: var(--color-primary-500)"
+							title="bg-primary-500"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-600)"
+							title="bg-primary-600"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-700)"
+							title="bg-primary-700"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-800)"
+							title="bg-primary-800"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-900)"
+							title="bg-primary-900"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-950)"
+							title="bg-primary-950"
+						></div></td
+					>
+				</tr>
 
-		<!-- Accent Scale -->
-		<div class="card">
-			<h3 class="text-lg font-semibold mb-4">Accent</h3>
-			<div class="flex rounded-lg overflow-hidden">
-				{#each [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as shade (shade)}
-					<div
-						class="flex-1 h-12 bg-accent-{shade}"
-						title="accent-{shade}"
-						style="background-color: var(--color-accent-{shade})"
-					></div>
-				{/each}
-			</div>
-		</div>
+				<!-- Accent -->
+				<tr class="border-b border-secondary-100 dark:border-secondary-800">
+					<td class="py-3 px-2">
+						<div class="font-medium text-secondary-900 dark:text-secondary-100">Accent</div>
+						<div class="text-xs text-secondary-500 dark:text-secondary-400 font-mono">
+							bg-accent-*
+						</div>
+					</td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-50)"
+							title="bg-accent-50"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-100)"
+							title="bg-accent-100"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-200)"
+							title="bg-accent-200"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-300)"
+							title="bg-accent-300"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-400)"
+							title="bg-accent-400"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto ring-2 ring-secondary-300 dark:ring-secondary-600"
+							style="background-color: var(--color-accent-500)"
+							title="bg-accent-500"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-600)"
+							title="bg-accent-600"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-700)"
+							title="bg-accent-700"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-800)"
+							title="bg-accent-800"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-900)"
+							title="bg-accent-900"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-950)"
+							title="bg-accent-950"
+						></div></td
+					>
+				</tr>
 
-		<!-- Secondary Scale -->
-		<div class="card">
-			<h3 class="text-lg font-semibold mb-4">Secondary (Neutral)</h3>
-			<div class="flex rounded-lg overflow-hidden">
-				{#each [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as shade (shade)}
-					<div
-						class="flex-1 h-12 bg-secondary-{shade}"
-						title="secondary-{shade}"
-						style="background-color: var(--color-secondary-{shade})"
-					></div>
-				{/each}
+				<!-- Secondary -->
+				<tr class="border-b border-secondary-100 dark:border-secondary-800">
+					<td class="py-3 px-2">
+						<div class="font-medium text-secondary-900 dark:text-secondary-100">Secondary</div>
+						<div class="text-xs text-secondary-500 dark:text-secondary-400 font-mono">
+							bg-secondary-*
+						</div>
+					</td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-50)"
+							title="bg-secondary-50"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-100)"
+							title="bg-secondary-100"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-200)"
+							title="bg-secondary-200"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-300)"
+							title="bg-secondary-300"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-400)"
+							title="bg-secondary-400"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto ring-2 ring-secondary-300 dark:ring-secondary-600"
+							style="background-color: var(--color-secondary-500)"
+							title="bg-secondary-500"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-600)"
+							title="bg-secondary-600"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-700)"
+							title="bg-secondary-700"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-800)"
+							title="bg-secondary-800"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-900)"
+							title="bg-secondary-900"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-950)"
+							title="bg-secondary-950"
+						></div></td
+					>
+				</tr>
+
+				<!-- Success -->
+				<tr class="border-b border-secondary-100 dark:border-secondary-800">
+					<td class="py-3 px-2">
+						<div class="font-medium text-secondary-900 dark:text-secondary-100">Success</div>
+						<div class="text-xs text-secondary-500 dark:text-secondary-400 font-mono">
+							bg-success-*
+						</div>
+					</td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-success-50)"
+							title="bg-success-50"
+						></div></td
+					>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto ring-2 ring-secondary-300 dark:ring-secondary-600"
+							style="background-color: var(--color-success-500)"
+							title="bg-success-500"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-success-600)"
+							title="bg-success-600"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-success-700)"
+							title="bg-success-700"
+						></div></td
+					>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+				</tr>
+
+				<!-- Warning -->
+				<tr class="border-b border-secondary-100 dark:border-secondary-800">
+					<td class="py-3 px-2">
+						<div class="font-medium text-secondary-900 dark:text-secondary-100">Warning</div>
+						<div class="text-xs text-secondary-500 dark:text-secondary-400 font-mono">
+							bg-warning-*
+						</div>
+					</td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-warning-50)"
+							title="bg-warning-50"
+						></div></td
+					>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto ring-2 ring-secondary-300 dark:ring-secondary-600"
+							style="background-color: var(--color-warning-500)"
+							title="bg-warning-500"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-warning-600)"
+							title="bg-warning-600"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-warning-700)"
+							title="bg-warning-700"
+						></div></td
+					>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+				</tr>
+
+				<!-- Error -->
+				<tr>
+					<td class="py-3 px-2">
+						<div class="font-medium text-secondary-900 dark:text-secondary-100">Error</div>
+						<div class="text-xs text-secondary-500 dark:text-secondary-400 font-mono">
+							bg-error-*
+						</div>
+					</td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-error-50)"
+							title="bg-error-50"
+						></div></td
+					>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto ring-2 ring-secondary-300 dark:ring-secondary-600"
+							style="background-color: var(--color-error-500)"
+							title="bg-error-500"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-error-600)"
+							title="bg-error-600"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-error-700)"
+							title="bg-error-700"
+						></div></td
+					>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<!-- Usage Examples -->
+		<div class="mt-6 pt-6 border-t border-secondary-200 dark:border-secondary-700">
+			<h4 class="text-sm font-semibold mb-3 text-secondary-700 dark:text-secondary-300">
+				Usage Examples
+			</h4>
+			<div class="grid md:grid-cols-2 gap-4 text-xs font-mono">
+				<div class="p-3 rounded bg-secondary-50 dark:bg-secondary-800">
+					<span class="text-secondary-500">// Background</span><br />
+					<span class="text-primary-600">class</span>="<span class="text-success-600"
+						>bg-primary-500</span
+					>"
+				</div>
+				<div class="p-3 rounded bg-secondary-50 dark:bg-secondary-800">
+					<span class="text-secondary-500">// Text color</span><br />
+					<span class="text-primary-600">class</span>="<span class="text-success-600"
+						>text-primary-600</span
+					>"
+				</div>
+				<div class="p-3 rounded bg-secondary-50 dark:bg-secondary-800">
+					<span class="text-secondary-500">// Border</span><br />
+					<span class="text-primary-600">class</span>="<span class="text-success-600"
+						>border-accent-300</span
+					>"
+				</div>
+				<div class="p-3 rounded bg-secondary-50 dark:bg-secondary-800">
+					<span class="text-secondary-500">// CSS Variable</span><br />
+					<span class="text-primary-600">var</span>(<span class="text-success-600"
+						>--color-primary-500</span
+					>)
+				</div>
 			</div>
 		</div>
 	</div>
