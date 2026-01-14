@@ -9,7 +9,7 @@ export const POST: RequestHandler = async ({ locals, cookies }) => {
 
 		await logout(userId, cookies);
 
-		return json({ data: { loggedOut: true }, error: null }, { status: 200 });
+		return json({ loggedOut: true });
 	} catch (error: unknown) {
 		return mapErrorToResponse(error);
 	}

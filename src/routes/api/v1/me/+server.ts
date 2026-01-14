@@ -7,13 +7,10 @@ export const GET: RequestHandler = async ({ locals }) => {
 	try {
 		const userId = locals.userId;
 		if (!userId) {
-			return json(
-				{ data: null, error: { code: 'unauthenticated', message: 'User not authenticated' } },
-				{ status: 401 }
-			);
+			return json({ code: 'unauthenticated', message: 'User not authenticated' }, { status: 401 });
 		}
 		const payload = await getProfile(userId);
-		return json({ data: payload, error: null });
+		return json(payload);
 	} catch (error: unknown) {
 		return mapErrorToResponse(error);
 	}

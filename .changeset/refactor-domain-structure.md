@@ -1,5 +1,5 @@
 ---
-"talent-finder": patch
+'talent-finder': patch
 ---
 
 Reorganize server code by domain with colocation of errors and types

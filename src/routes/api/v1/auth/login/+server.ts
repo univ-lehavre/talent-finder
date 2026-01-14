@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 
 		await login(userId, secret, cookies);
 
-		return json({ data: { loggedIn: true }, error: null }, { status: 200 });
+		return json({ loggedIn: true });
 	} catch (error: unknown) {
 		return mapErrorToResponse(error);
 	}

@@ -47,11 +47,25 @@
 	<!-- Navigation -->
 	<nav class="bg-white border-b border-secondary-200">
 		<div class="container-app py-4 flex items-center justify-between">
-			<span class="text-xl font-bold text-primary-700">Talent Finder</span>
+			<a href="/" class="flex items-center gap-2">
+				<img src="/favicon.svg" alt="" class="h-8 w-8" />
+				<span class="text-xl font-bold text-primary-700">Talent Finder</span>
+			</a>
 			<div class="flex items-center gap-4">
-				<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+				<a href="/repository" class="text-secondary-600 hover:text-primary-600 text-sm">
+					Repository
+				</a>
+				<a href="/api/docs" class="text-secondary-600 hover:text-primary-600 text-sm"> API Docs </a>
 				<a href="/design-system" class="text-secondary-600 hover:text-primary-600 text-sm">
 					Design System
+				</a>
+				<a
+					href="https://zenodo.org/records/18241664"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-secondary-600 hover:text-primary-600 text-sm"
+				>
+					Archive
 				</a>
 				{#if data.user}
 					<span class="text-sm text-secondary-600">{data.user.email}</span>

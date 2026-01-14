@@ -10,10 +10,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		const email: string = await validateSignupEmail(body.email);
 		const token: Models.Token = await signupWithEmail(email);
 
-		return json(
-			{ data: { signedUp: true, createdAt: token.$createdAt }, error: null },
-			{ status: 200 }
-		);
+		return json({ signedUp: true, createdAt: token.$createdAt });
 	} catch (error: unknown) {
 		return mapErrorToResponse(error);
 	}
