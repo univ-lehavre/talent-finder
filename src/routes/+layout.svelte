@@ -2,43 +2,15 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import favicon from '$lib/assets/favicon.svg';
+	import logo from '$lib/assets/logo.svg?raw';
 	import { Icon, Signup, ThemeToggle } from '$lib/ui';
 	import { page } from '$app/stores';
-	import { createThemeStore, createFontStore, initTheme, initFontPairing } from '$lib/stores';
+	import { createThemeStore, initTheme } from '$lib/stores';
 
 	const themeStore = createThemeStore();
-	const fontStore = createFontStore();
-
-	/** Track if dark mode is active (based on .dark class on html element) */
-	let isDarkMode = $state(false);
-
-	/** Current theme colors - reactive to both theme changes and dark mode toggle */
-	let currentColors = $derived.by(() => {
-		const theme = themeStore.theme;
-		return isDarkMode ? theme.dark : theme.light;
-	});
 
 	onMount(() => {
 		initTheme();
-		initFontPairing();
-
-		// Check initial dark mode state from DOM
-		const updateDarkMode = (): void => {
-			isDarkMode = document.documentElement.classList.contains('dark');
-		};
-		updateDarkMode();
-
-		// Observe class changes on html element to detect theme toggle
-		const observer = new MutationObserver((mutations) => {
-			for (const mutation of mutations) {
-				if (mutation.attributeName === 'class') {
-					updateDarkMode();
-				}
-			}
-		});
-		observer.observe(document.documentElement, { attributes: true });
-
-		return () => observer.disconnect();
 	});
 
 	const isCurrentPage = (href: string): boolean => {
@@ -90,14 +62,7 @@
 		icon: 'lucide:layout-dashboard'
 	};
 
-	const publicNavLinks: NavLink[] = [
-		{
-			href: 'https://doi.org/10.5281/zenodo.18241663',
-			label: 'Archive',
-			icon: 'lucide:archive',
-			external: true
-		}
-	];
+	const publicNavLinks: NavLink[] = [];
 
 	const homeLink: NavLink = {
 		href: '/',
@@ -116,10 +81,13 @@
 	const mobileNavLinks = $derived([
 		{ href: '/', label: 'Home', icon: 'lucide:home' },
 		...(data.user ? [dashboardLink] : []),
-		{ href: '/repository', label: 'Repository', icon: 'lucide:bar-chart-2' },
-		{ href: '/api/docs', label: 'API Docs', icon: 'lucide:code' },
 		...(data.isAdmin ? [themeLink] : []),
-		...publicNavLinks,
+		{
+			href: 'https://doi.org/10.5281/zenodo.18241663',
+			label: 'Archive',
+			icon: 'lucide:archive',
+			external: true
+		},
 		{
 			href: 'https://github.com/univ-lehavre/talent-finder',
 			label: 'GitHub',
@@ -127,40 +95,30 @@
 			external: true
 		}
 	]);
+
+	/** Google Fonts URL for current font pairing */
+	const fontUrl = $derived(themeStore.font.googleFontsUrl);
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<!-- Load selected font pairing -->
+	<!-- Load selected font pairing from Google Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-	{#key fontStore.pairing.name}
-		<link href={fontStore.pairing.googleFontsUrl} rel="stylesheet" />
+	{#key themeStore.fontName}
+		<link href={fontUrl} rel="stylesheet" />
 	{/key}
 </svelte:head>
 
-<div
-	class="min-h-screen flex flex-col"
-	style="
-		--theme-primary: {currentColors.primary};
-		--theme-accent: {currentColors.accent};
-		--theme-background: {currentColors.background};
-		--theme-surface: {currentColors.surface};
-		--theme-text: {currentColors.text};
-		--theme-text-muted: {currentColors.textMuted};
-		--theme-border: {currentColors.border};
-		--font-heading: '{fontStore.pairing.heading}', sans-serif;
-		--font-body: '{fontStore.pairing.body}', sans-serif;
-		--font-mono: '{fontStore.pairing.mono}', monospace;
-	"
->
+<!-- Font families are defined in CSS via [data-font="name"] selectors -->
+<div class="min-h-screen flex flex-col">
 	<!-- Navigation -->
 	<nav
 		class="bg-white dark:bg-secondary-800 border-b border-secondary-200 dark:border-secondary-700 sticky top-0 z-50 transition-colors duration-200"
 	>
 		<div class="container-app py-4 flex items-center justify-between">
 			<a href="/" class="flex items-center gap-2">
-				<img src="/favicon.svg" alt="" class="h-8 w-8" />
+				<span class="h-8 w-8 [&>svg]:h-full [&>svg]:w-full">{@html logo}</span>
 				<span class="text-xl font-bold text-primary-700 dark:text-primary-400">Talent Finder</span>
 			</a>
 
@@ -184,16 +142,46 @@
 						{link.label}
 					</a>
 				{/each}
-				<a
-					href="https://github.com/univ-lehavre/talent-finder"
-					target="_blank"
-					rel="noopener noreferrer"
-					title="View on GitHub"
-					class="text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-				>
-					<Icon icon="mdi:github" width="20" height="20" />
-					<span class="sr-only">GitHub</span>
-				</a>
+				<div class="icon-link-wrapper group relative">
+					<a
+						href="https://doi.org/10.5281/zenodo.18241663"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+						aria-describedby="tooltip-archive"
+					>
+						<Icon icon="lucide:archive" width="20" height="20" />
+						<span class="sr-only">Archive</span>
+					</a>
+					<div
+						id="tooltip-archive"
+						role="tooltip"
+						class="icon-tooltip opacity-0 invisible group-hover:opacity-100 group-hover:visible"
+					>
+						<span class="font-semibold">Archive</span>
+						<span class="text-secondary-400 dark:text-secondary-500">Zenodo permanent archive</span>
+					</div>
+				</div>
+				<div class="icon-link-wrapper group relative">
+					<a
+						href="https://github.com/univ-lehavre/talent-finder"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+						aria-describedby="tooltip-github"
+					>
+						<Icon icon="mdi:github" width="20" height="20" />
+						<span class="sr-only">GitHub</span>
+					</a>
+					<div
+						id="tooltip-github"
+						role="tooltip"
+						class="icon-tooltip opacity-0 invisible group-hover:opacity-100 group-hover:visible"
+					>
+						<span class="font-semibold">GitHub</span>
+						<span class="text-secondary-400 dark:text-secondary-500">View source code</span>
+					</div>
+				</div>
 				<ThemeToggle />
 				{#if data.user}
 					<span class="text-sm text-secondary-600 dark:text-secondary-300">{data.user.email}</span>
@@ -205,15 +193,18 @@
 				{/if}
 			</div>
 
-			<!-- Mobile Menu Button -->
-			<button
-				type="button"
-				class="md:hidden p-2 text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400"
-				onclick={toggleMobileMenu}
-				aria-label="Toggle menu"
-			>
-				<Icon icon={mobileMenuOpen ? 'lucide:x' : 'lucide:menu'} width="24" height="24" />
-			</button>
+			<!-- Mobile Navigation -->
+			<div class="md:hidden flex items-center gap-2">
+				<ThemeToggle />
+				<button
+					type="button"
+					class="p-2 text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400"
+					onclick={toggleMobileMenu}
+					aria-label="Toggle menu"
+				>
+					<Icon icon={mobileMenuOpen ? 'lucide:x' : 'lucide:menu'} width="24" height="24" />
+				</button>
+			</div>
 		</div>
 	</nav>
 
@@ -324,3 +315,47 @@
 
 <!-- Signup Modal -->
 <Signup {form} bind:open={signupOpen} />
+
+<style>
+	.icon-tooltip {
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		margin-top: 0.5rem;
+		padding: 0.5rem 0.75rem;
+		background: var(--color-secondary-800);
+		border-radius: 0.375rem;
+		box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+		white-space: nowrap;
+		z-index: 50;
+		display: flex;
+		flex-direction: column;
+		gap: 0.125rem;
+		font-size: 0.75rem;
+		line-height: 1rem;
+		color: var(--color-secondary-100);
+		transition:
+			opacity 0.15s ease-in-out,
+			visibility 0.15s ease-in-out;
+		pointer-events: none;
+	}
+
+	.icon-tooltip::before {
+		content: '';
+		position: absolute;
+		bottom: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		border: 6px solid transparent;
+		border-bottom-color: var(--color-secondary-800);
+	}
+
+	:global(.dark) .icon-tooltip {
+		background: var(--color-secondary-700);
+	}
+
+	:global(.dark) .icon-tooltip::before {
+		border-bottom-color: var(--color-secondary-700);
+	}
+</style>

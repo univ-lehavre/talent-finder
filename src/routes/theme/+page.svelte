@@ -1,38 +1,42 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Alert, Badge, Icon, Modal, StatCard, ThemeSection } from '$lib/ui';
 	import {
-		themeCategories,
-		getThemesByCategory,
-		sequentialPalettes,
-		divergingPalettes,
-		qualitativePalettes,
-		gradientPalettes,
-		type ThemePalette
+		Alert,
+		Badge,
+		Card,
+		Icon,
+		LoadingSpinner,
+		Modal,
+		Signup,
+		StatCard,
+		ThemeSection,
+		ThemeToggle
+	} from '$lib/ui';
+	import {
+		paletteCategories,
+		palettesByCategory,
+		getPalettePreviewColors,
+		type PaletteName
 	} from '$lib/palettes';
 	import {
 		createThemeStore,
-		createFontStore,
 		fontCategories,
 		getFontsByCategory,
-		initTheme,
-		initFontPairing,
-		type FontPairing
+		clearThemePreferences,
+		hasThemePreferences,
+		setPalette,
+		setFont
 	} from '$lib/stores';
 
 	const themeStore = createThemeStore();
-	const fontStore = createFontStore();
 
 	let modalOpen = $state(false);
-	let themeDropdownOpen = $state(false);
+	let signupOpen = $state(false);
+	let paletteDropdownOpen = $state(false);
 	let fontDropdownOpen = $state(false);
 	let appliedFeedback = $state(false);
-
-	/** Get current theme colors based on preview mode */
-	const currentColors = $derived(themeStore.colors);
-
-	/** Heading font for consistency */
-	const headingFont = $derived(`'${fontStore.pairing.heading}'`);
+	let resetFeedback = $state(false);
+	let savedPreferences = $state({ palette: false, font: false });
 
 	/** Scroll to selected item when dropdown opens */
 	const scrollToSelected = (node: HTMLElement): void => {
@@ -45,1010 +49,1063 @@
 		}
 	};
 
-	const selectTheme = (theme: ThemePalette): void => {
-		themeStore.theme = theme;
-		themeDropdownOpen = false;
+	const selectPalette = (palette: PaletteName): void => {
+		themeStore.palette = palette;
+		paletteDropdownOpen = false;
 	};
 
-	const selectFont = (pairing: FontPairing): void => {
-		fontStore.pairing = pairing;
+	const selectFont = (fontName: string): void => {
+		themeStore.fontName = fontName;
 		fontDropdownOpen = false;
 	};
 
-	const toggleThemeDropdown = (): void => {
-		themeDropdownOpen = !themeDropdownOpen;
-		if (themeDropdownOpen) fontDropdownOpen = false;
+	const togglePaletteDropdown = (): void => {
+		paletteDropdownOpen = !paletteDropdownOpen;
+		if (paletteDropdownOpen) fontDropdownOpen = false;
 	};
 
 	const toggleFontDropdown = (): void => {
 		fontDropdownOpen = !fontDropdownOpen;
-		if (fontDropdownOpen) themeDropdownOpen = false;
+		if (fontDropdownOpen) paletteDropdownOpen = false;
 	};
 
 	const closeDropdowns = (): void => {
-		themeDropdownOpen = false;
+		paletteDropdownOpen = false;
 		fontDropdownOpen = false;
 	};
 
-	/** Apply theme settings and show feedback */
-	const applySettings = (): void => {
-		// Settings are already saved via stores, just show feedback
+	/** Set both palette and font as fixed (saved to cookies) */
+	const setTheme = (): void => {
+		setPalette(themeStore.palette);
+		setFont(themeStore.fontName);
 		appliedFeedback = true;
+		savedPreferences = hasThemePreferences();
 		setTimeout(() => {
 			appliedFeedback = false;
 		}, 2000);
 	};
 
+	/** Reset both palette and font to random mode (clear cookies and randomize) */
+	const resetTheme = (): void => {
+		clearThemePreferences();
+		resetFeedback = true;
+		savedPreferences = hasThemePreferences();
+		setTimeout(() => {
+			resetFeedback = false;
+		}, 2000);
+	};
+
 	onMount(() => {
-		initTheme();
-		initFontPairing();
+		// initTheme is called in +layout.svelte, just check preferences
+		savedPreferences = hasThemePreferences();
 	});
 </script>
 
 <svelte:head>
 	<title>Theme - Talent Finder</title>
 	<meta name="description" content="Talent Finder theme customization and design system" />
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-	{#key fontStore.pairing.name}
-		<link href={fontStore.pairing.googleFontsUrl} rel="stylesheet" />
-	{/key}
 </svelte:head>
 
-<!-- Full page with theme colors applied -->
+<!-- Theme Selector Bar -->
 <div
-	class="min-h-screen transition-colors duration-300"
-	style="background-color: {currentColors.background}; color: {currentColors.text}; font-family: '{fontStore
-		.pairing.body}', sans-serif"
+	class="border-b border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 sticky top-16 z-30 transition-colors duration-200"
 >
-	<!-- Theme Selector Bar -->
-	<div
-		class="border-b transition-colors duration-300 sticky top-16 z-30"
-		style="background-color: {currentColors.surface}; border-color: {currentColors.border}"
-	>
-		<div class="container-app py-4">
-			<div class="flex flex-wrap items-center justify-between gap-4">
-				<div class="flex items-center gap-3">
-					<Icon
-						icon="lucide:palette"
-						width="20"
-						height="20"
-						style="color: {currentColors.textMuted}"
-					/>
-					<span class="text-sm font-medium" style="color: {currentColors.textMuted}">
-						Theme Customization
-					</span>
-				</div>
-				<div class="flex flex-wrap items-center gap-4">
-					<!-- Light/Dark toggle for preview -->
-					<div
-						class="flex rounded-lg border overflow-hidden"
-						style="border-color: {currentColors.border}"
-					>
-						<button
-							type="button"
-							class="px-3 py-1.5 text-sm flex items-center gap-1.5 transition-colors"
-							style="background-color: {themeStore.previewMode === 'light'
-								? currentColors.border
-								: currentColors.surface}; color: {themeStore.previewMode === 'light'
-								? currentColors.text
-								: currentColors.textMuted}"
-							onclick={() => (themeStore.previewMode = 'light')}
-						>
-							<Icon icon="lucide:sun" width="14" height="14" />
-							Light
-						</button>
-						<button
-							type="button"
-							class="px-3 py-1.5 text-sm flex items-center gap-1.5 transition-colors"
-							style="background-color: {themeStore.previewMode === 'dark'
-								? currentColors.border
-								: currentColors.surface}; color: {themeStore.previewMode === 'dark'
-								? currentColors.text
-								: currentColors.textMuted}"
-							onclick={() => (themeStore.previewMode = 'dark')}
-						>
-							<Icon icon="lucide:moon" width="14" height="14" />
-							Dark
-						</button>
-					</div>
-
-					<!-- Font Pairing Dropdown -->
-					<div class="relative">
-						<button
-							type="button"
-							class="flex items-center gap-3 px-3 py-2 text-sm border rounded-lg transition-colors"
-							style="border-color: {currentColors.border}; background-color: {currentColors.surface}; color: {currentColors.text}"
-							onclick={toggleFontDropdown}
-							aria-expanded={fontDropdownOpen}
-							aria-haspopup="listbox"
-						>
-							<Icon icon="lucide:type" width="16" height="16" />
-							<span style="font-family: '{fontStore.pairing.heading}', sans-serif">
-								{fontStore.pairing.name}
-							</span>
-							<Icon icon="lucide:chevron-down" width="16" height="16" />
-						</button>
-
-						{#if fontDropdownOpen}
-							<button
-								type="button"
-								class="fixed inset-0 z-10"
-								onclick={closeDropdowns}
-								aria-label="Close font menu"
-							></button>
-
-							<div
-								class="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto border rounded-lg shadow-lg z-20"
-								style="background-color: {currentColors.surface}; border-color: {currentColors.border}"
-								use:scrollToSelected
-							>
-								{#each fontCategories as category, index (category.id)}
-									<div>
-										{#if index > 0}
-											<div class="mx-3 border-t" style="border-color: {currentColors.border}"></div>
-										{/if}
-										<div
-											class="px-4 py-2.5 text-xs font-bold uppercase tracking-wider sticky top-0 flex items-center gap-2"
-											style="color: {currentColors.text}; background-color: {currentColors.border}"
-										>
-											<span
-												class="w-2 h-2 rounded-full"
-												style="background-color: {currentColors.primary}"
-											></span>
-											{category.name}
-										</div>
-										{#each getFontsByCategory(category.id) as pairing (pairing.name)}
-											<button
-												type="button"
-												class="w-full px-4 py-2.5 flex items-center gap-3 transition-colors text-left"
-												style="background-color: {fontStore.pairing.name === pairing.name
-													? currentColors.border
-													: 'transparent'}; color: {currentColors.text}"
-												onclick={() => selectFont(pairing)}
-												role="option"
-												aria-selected={fontStore.pairing.name === pairing.name}
-												data-selected={fontStore.pairing.name === pairing.name}
-											>
-												<div class="flex-1 min-w-0">
-													<div
-														class="text-sm font-medium truncate"
-														style="font-family: '{pairing.heading}', sans-serif"
-													>
-														{pairing.name}
-													</div>
-													<div class="text-xs truncate" style="color: {currentColors.textMuted}">
-														{pairing.heading} + {pairing.body}
-													</div>
-												</div>
-												{#if fontStore.pairing.name === pairing.name}
-													<Icon
-														icon="lucide:check"
-														width="16"
-														height="16"
-														style="color: {currentColors.primary}"
-													/>
-												{/if}
-											</button>
-										{/each}
-									</div>
-								{/each}
-							</div>
-						{/if}
-					</div>
-
-					<!-- Theme Dropdown with Color Preview -->
-					<div class="relative">
-						<button
-							type="button"
-							class="flex items-center gap-3 px-3 py-2 text-sm border rounded-lg transition-colors"
-							style="border-color: {currentColors.border}; background-color: {currentColors.surface}; color: {currentColors.text}"
-							onclick={toggleThemeDropdown}
-							aria-expanded={themeDropdownOpen}
-							aria-haspopup="listbox"
-						>
-							<div class="flex gap-0.5">
-								<div
-									class="w-4 h-4 rounded-l"
-									style="background-color: {themeStore.theme.light.background}"
-								></div>
-								<div
-									class="w-4 h-4"
-									style="background-color: {themeStore.theme.light.surface}"
-								></div>
-								<div
-									class="w-4 h-4"
-									style="background-color: {themeStore.theme.light.primary}"
-								></div>
-								<div
-									class="w-4 h-4 rounded-r"
-									style="background-color: {themeStore.theme.dark.background}"
-								></div>
-							</div>
-							<span>{themeStore.theme.name}</span>
-							<Icon icon="lucide:chevron-down" width="16" height="16" />
-						</button>
-
-						{#if themeDropdownOpen}
-							<button
-								type="button"
-								class="fixed inset-0 z-10"
-								onclick={closeDropdowns}
-								aria-label="Close theme menu"
-							></button>
-
-							<div
-								class="absolute right-0 mt-2 w-96 max-h-96 overflow-y-auto border rounded-lg shadow-lg z-20"
-								style="background-color: {currentColors.surface}; border-color: {currentColors.border}"
-								use:scrollToSelected
-							>
-								{#each themeCategories as category, index (category.id)}
-									<div>
-										{#if index > 0}
-											<div class="mx-3 border-t" style="border-color: {currentColors.border}"></div>
-										{/if}
-										<div
-											class="px-4 py-2.5 text-xs font-bold uppercase tracking-wider sticky top-0 flex items-center gap-2"
-											style="color: {currentColors.text}; background-color: {currentColors.border}"
-										>
-											<span
-												class="w-2 h-2 rounded-full"
-												style="background-color: {currentColors.primary}"
-											></span>
-											{category.name}
-										</div>
-										{#each getThemesByCategory(category.id) as theme (theme.name)}
-											<button
-												type="button"
-												class="w-full px-4 py-2.5 flex items-center gap-3 transition-colors"
-												style="background-color: {themeStore.theme.name === theme.name
-													? currentColors.border
-													: 'transparent'}; color: {currentColors.text}"
-												onclick={() => selectTheme(theme)}
-												role="option"
-												aria-selected={themeStore.theme.name === theme.name}
-												data-selected={themeStore.theme.name === theme.name}
-											>
-												<!-- Light mode colors -->
-												<div class="flex gap-0.5">
-													<div
-														class="w-4 h-4 rounded-l border"
-														style="background-color: {theme.light
-															.background}; border-color: {currentColors.border}"
-														title="Background"
-													></div>
-													<div
-														class="w-4 h-4 border-y"
-														style="background-color: {theme.light
-															.surface}; border-color: {currentColors.border}"
-														title="Surface"
-													></div>
-													<div
-														class="w-4 h-4 border-y"
-														style="background-color: {theme.light
-															.primary}; border-color: {currentColors.border}"
-														title="Primary"
-													></div>
-													<div
-														class="w-4 h-4 rounded-r border"
-														style="background-color: {theme.light
-															.accent}; border-color: {currentColors.border}"
-														title="Accent"
-													></div>
-												</div>
-												<!-- Dark mode colors -->
-												<div class="flex gap-0.5">
-													<div
-														class="w-4 h-4 rounded-l border"
-														style="background-color: {theme.dark
-															.background}; border-color: {currentColors.border}"
-														title="Background"
-													></div>
-													<div
-														class="w-4 h-4 border-y"
-														style="background-color: {theme.dark
-															.surface}; border-color: {currentColors.border}"
-														title="Surface"
-													></div>
-													<div
-														class="w-4 h-4 border-y"
-														style="background-color: {theme.dark
-															.primary}; border-color: {currentColors.border}"
-														title="Primary"
-													></div>
-													<div
-														class="w-4 h-4 rounded-r border"
-														style="background-color: {theme.dark
-															.accent}; border-color: {currentColors.border}"
-														title="Accent"
-													></div>
-												</div>
-												<!-- Theme name and description -->
-												<div class="flex-1 text-left min-w-0">
-													<div class="text-sm font-medium truncate">
-														{theme.name}
-													</div>
-													<div class="text-xs truncate" style="color: {currentColors.textMuted}">
-														{theme.description}
-													</div>
-												</div>
-												{#if themeStore.theme.name === theme.name}
-													<Icon
-														icon="lucide:check"
-														width="16"
-														height="16"
-														style="color: {currentColors.primary}"
-													/>
-												{/if}
-											</button>
-										{/each}
-									</div>
-								{/each}
-							</div>
-						{/if}
-					</div>
-					<!-- Apply Button -->
+	<div class="container-app py-4">
+		<div class="flex flex-wrap items-center justify-between gap-4">
+			<div class="flex items-center gap-3">
+				<Icon
+					icon="lucide:palette"
+					width="20"
+					height="20"
+					class="text-secondary-500 dark:text-secondary-400"
+				/>
+				<span class="text-sm font-medium text-secondary-500 dark:text-secondary-400">
+					Theme Customization
+				</span>
+			</div>
+			<div class="flex flex-wrap items-center gap-4">
+				<!-- Font Pairing Dropdown -->
+				<div class="relative">
 					<button
 						type="button"
-						class="px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2"
-						style="background-color: {appliedFeedback
-							? '#16a34a'
-							: currentColors.primary}; color: white"
-						onclick={applySettings}
-						disabled={appliedFeedback}
+						class="h-[52px] flex items-center gap-3 px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-600 rounded-lg bg-white dark:bg-secondary-800 text-secondary-900 dark:text-secondary-100 transition-colors"
+						onclick={toggleFontDropdown}
+						aria-expanded={fontDropdownOpen}
+						aria-haspopup="listbox"
 					>
-						{#if appliedFeedback}
-							<Icon icon="lucide:check" width="16" height="16" />
-							Applied!
+						<Icon icon="lucide:type" width="16" height="16" />
+						<div class="flex flex-col items-start">
+							<span class="capitalize font-medium">{themeStore.fontName}</span>
+							<span class="text-xs text-secondary-500 dark:text-secondary-400">
+								{themeStore.font.headingFamily} / {themeStore.font.bodyFamily}
+							</span>
+						</div>
+						<Icon icon="lucide:chevron-down" width="16" height="16" />
+					</button>
+
+					{#if fontDropdownOpen}
+						<button
+							type="button"
+							class="fixed inset-0 z-10"
+							onclick={closeDropdowns}
+							aria-label="Close font menu"
+						></button>
+
+						<div
+							class="absolute right-0 mt-2 w-96 max-h-[32rem] overflow-y-auto border border-secondary-200 dark:border-secondary-600 rounded-lg shadow-lg z-20 bg-white dark:bg-secondary-800"
+							use:scrollToSelected
+						>
+							{#each fontCategories as category, index (category.id)}
+								<div>
+									{#if index > 0}
+										<div class="mx-3 border-t border-secondary-200 dark:border-secondary-700"></div>
+									{/if}
+									<div
+										class="px-4 py-2.5 text-xs font-bold uppercase tracking-wider sticky top-0 flex items-center gap-2 bg-secondary-100 dark:bg-secondary-700 text-secondary-900 dark:text-secondary-100"
+									>
+										<span class="w-2 h-2 rounded-full bg-primary-500"></span>
+										{category.name}
+									</div>
+									{#each getFontsByCategory(category.id) as pairing (pairing.name)}
+										<button
+											type="button"
+											class="w-full px-4 py-3 flex items-start gap-3 transition-colors text-left hover:bg-secondary-50 dark:hover:bg-secondary-700 {themeStore.fontName ===
+											pairing.name
+												? 'bg-secondary-100 dark:bg-secondary-700'
+												: ''}"
+											onclick={() => selectFont(pairing.name)}
+											role="option"
+											aria-selected={themeStore.fontName === pairing.name}
+											data-selected={themeStore.fontName === pairing.name}
+										>
+											<div class="flex-1 min-w-0">
+												<div class="flex items-center gap-2 mb-1">
+													<span
+														class="text-sm font-semibold capitalize text-secondary-900 dark:text-secondary-100"
+													>
+														{pairing.name}
+													</span>
+													{#if themeStore.fontName === pairing.name}
+														<Icon
+															icon="lucide:check"
+															width="14"
+															height="14"
+															class="text-primary-500"
+														/>
+													{/if}
+												</div>
+												<div class="grid grid-cols-3 gap-2 text-xs">
+													<div class="flex flex-col">
+														<span
+															class="text-[10px] uppercase tracking-wider text-secondary-400 dark:text-secondary-500"
+															>Heading</span
+														>
+														<span
+															class="text-secondary-700 dark:text-secondary-300 truncate"
+															style="font-family: '{pairing.headingFamily}', sans-serif"
+														>
+															{pairing.headingFamily}
+														</span>
+													</div>
+													<div class="flex flex-col">
+														<span
+															class="text-[10px] uppercase tracking-wider text-secondary-400 dark:text-secondary-500"
+															>Body</span
+														>
+														<span
+															class="text-secondary-700 dark:text-secondary-300 truncate"
+															style="font-family: '{pairing.bodyFamily}', sans-serif"
+														>
+															{pairing.bodyFamily}
+														</span>
+													</div>
+													<div class="flex flex-col">
+														<span
+															class="text-[10px] uppercase tracking-wider text-secondary-400 dark:text-secondary-500"
+															>Mono</span
+														>
+														<span
+															class="text-secondary-700 dark:text-secondary-300 truncate"
+															style="font-family: '{pairing.monoFamily}', monospace"
+														>
+															{pairing.monoFamily}
+														</span>
+													</div>
+												</div>
+											</div>
+										</button>
+									{/each}
+								</div>
+							{/each}
+						</div>
+					{/if}
+				</div>
+
+				<!-- Palette Dropdown -->
+				<div class="relative">
+					<button
+						type="button"
+						class="h-[52px] flex items-center gap-3 px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-600 rounded-lg bg-white dark:bg-secondary-800 text-secondary-900 dark:text-secondary-100 transition-colors"
+						onclick={togglePaletteDropdown}
+						aria-expanded={paletteDropdownOpen}
+						aria-haspopup="listbox"
+					>
+						<div class="flex gap-0.5">
+							<div class="w-4 h-4 rounded-l bg-primary-500"></div>
+							<div class="w-4 h-4 bg-accent-500"></div>
+							<div class="w-4 h-4 rounded-r bg-secondary-500"></div>
+						</div>
+						<span class="capitalize">{themeStore.palette}</span>
+						<Icon icon="lucide:chevron-down" width="16" height="16" />
+					</button>
+
+					{#if paletteDropdownOpen}
+						<button
+							type="button"
+							class="fixed inset-0 z-10"
+							onclick={closeDropdowns}
+							aria-label="Close palette menu"
+						></button>
+
+						<div
+							class="absolute right-0 mt-2 w-80 max-h-[32rem] overflow-y-auto border border-secondary-200 dark:border-secondary-600 rounded-lg shadow-lg z-20 bg-white dark:bg-secondary-800"
+							use:scrollToSelected
+						>
+							{#each paletteCategories as category, index (category.id)}
+								<div>
+									{#if index > 0}
+										<div class="mx-3 border-t border-secondary-200 dark:border-secondary-700"></div>
+									{/if}
+									<div
+										class="px-4 py-2.5 text-xs font-bold uppercase tracking-wider sticky top-0 flex items-center gap-2 bg-secondary-100 dark:bg-secondary-700 text-secondary-900 dark:text-secondary-100"
+									>
+										<span class="w-2 h-2 rounded-full bg-primary-500"></span>
+										{category.name}
+									</div>
+									{#each palettesByCategory[category.id] as palette (palette)}
+										{@const colors = getPalettePreviewColors(palette)}
+										<button
+											type="button"
+											class="w-full px-4 py-3 flex items-start gap-3 transition-colors text-left hover:bg-secondary-50 dark:hover:bg-secondary-700 {themeStore.palette ===
+											palette
+												? 'bg-secondary-100 dark:bg-secondary-700'
+												: ''}"
+											onclick={() => selectPalette(palette)}
+											role="option"
+											aria-selected={themeStore.palette === palette}
+											data-selected={themeStore.palette === palette}
+										>
+											<div class="flex-1 min-w-0">
+												<div class="flex items-center gap-2 mb-2">
+													<span
+														class="text-sm font-semibold capitalize text-secondary-900 dark:text-secondary-100"
+													>
+														{palette}
+													</span>
+													{#if themeStore.palette === palette}
+														<Icon
+															icon="lucide:check"
+															width="14"
+															height="14"
+															class="text-primary-500"
+														/>
+													{/if}
+												</div>
+												<!-- Color swatches with inline OKLCH colors -->
+												<div class="flex gap-0.5">
+													<div
+														class="w-6 h-6 rounded-l"
+														style="background-color: {colors.primary}"
+														title="Primary"
+													></div>
+													<div
+														class="w-6 h-6"
+														style="background-color: {colors.accent}"
+														title="Accent"
+													></div>
+													<div
+														class="w-6 h-6"
+														style="background-color: {colors.secondary}"
+														title="Secondary"
+													></div>
+													<div
+														class="w-6 h-6"
+														style="background-color: {colors.success}"
+														title="Success"
+													></div>
+													<div
+														class="w-6 h-6"
+														style="background-color: {colors.warning}"
+														title="Warning"
+													></div>
+													<div
+														class="w-6 h-6 rounded-r"
+														style="background-color: {colors.error}"
+														title="Error"
+													></div>
+												</div>
+											</div>
+										</button>
+									{/each}
+								</div>
+							{/each}
+						</div>
+					{/if}
+				</div>
+
+				<!-- Reset Button -->
+				{#if savedPreferences.palette || savedPreferences.font}
+					<button
+						type="button"
+						class="h-[52px] px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 {resetFeedback
+							? 'bg-warning-600 text-white'
+							: 'btn-outline'}"
+						onclick={resetTheme}
+						disabled={resetFeedback}
+						title="Clear saved theme preferences and get new random values"
+					>
+						{#if resetFeedback}
+							<Icon icon="lucide:shuffle" width="16" height="16" />
+							Randomized!
 						{:else}
-							<Icon icon="lucide:save" width="16" height="16" />
-							Apply
+							<Icon icon="lucide:rotate-ccw" width="16" height="16" />
+							Reset
 						{/if}
 					</button>
-				</div>
+				{/if}
+
+				<!-- Set Button -->
+				<button
+					type="button"
+					class="h-[52px] px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 {appliedFeedback
+						? 'bg-success-600 text-white'
+						: 'btn-primary'}"
+					onclick={setTheme}
+					disabled={appliedFeedback}
+					title="Save both palette and font as fixed preferences"
+				>
+					{#if appliedFeedback}
+						<Icon icon="lucide:check" width="16" height="16" />
+						Fixed!
+					{:else}
+						<Icon icon="lucide:lock" width="16" height="16" />
+						Set
+					{/if}
+				</button>
 			</div>
 		</div>
 	</div>
+</div>
 
-	<!-- Hero Section -->
-	<div
-		class="py-12 transition-colors duration-300"
-		style="background-color: {currentColors.background}"
-	>
-		<div class="container-app">
-			<h1 class="text-4xl font-bold mb-4" style="font-family: {headingFont}, sans-serif">
-				Theme Customization
-			</h1>
-			<p style="color: {currentColors.textMuted}; font-size: 1.125rem">
-				Customize colors and fonts to preview how your application will look. Select a theme palette
-				and font pairing to see the changes applied to this entire page.
+<!-- Hero Section -->
+<div class="py-12 bg-secondary-50 dark:bg-secondary-900 transition-colors duration-200">
+	<div class="container-app">
+		<h1 class="text-4xl font-bold mb-4 text-secondary-900 dark:text-secondary-100">
+			Theme Customization
+		</h1>
+		<p class="text-lg text-secondary-600 dark:text-secondary-400">
+			Customize colors and fonts to preview how your application will look. Select a palette and
+			font pairing to see the changes applied.
+		</p>
+	</div>
+</div>
+
+<!-- Current Settings Section -->
+<ThemeSection title="Current Settings" icon="lucide:settings" variant="surface">
+	<div class="grid md:grid-cols-2 gap-6">
+		<!-- Palette Colors -->
+		<div class="card">
+			<h3 class="text-lg font-semibold mb-4 capitalize">{themeStore.palette} Palette</h3>
+			<div class="grid grid-cols-3 gap-3">
+				<div class="flex flex-col items-center gap-2">
+					<div class="w-12 h-12 rounded-lg bg-primary-500"></div>
+					<span class="text-xs text-secondary-500 dark:text-secondary-400">Primary</span>
+				</div>
+				<div class="flex flex-col items-center gap-2">
+					<div class="w-12 h-12 rounded-lg bg-accent-500"></div>
+					<span class="text-xs text-secondary-500 dark:text-secondary-400">Accent</span>
+				</div>
+				<div class="flex flex-col items-center gap-2">
+					<div class="w-12 h-12 rounded-lg bg-secondary-500"></div>
+					<span class="text-xs text-secondary-500 dark:text-secondary-400">Neutral</span>
+				</div>
+				<div class="flex flex-col items-center gap-2">
+					<div class="w-12 h-12 rounded-lg bg-success-500"></div>
+					<span class="text-xs text-secondary-500 dark:text-secondary-400">Success</span>
+				</div>
+				<div class="flex flex-col items-center gap-2">
+					<div class="w-12 h-12 rounded-lg bg-warning-500"></div>
+					<span class="text-xs text-secondary-500 dark:text-secondary-400">Warning</span>
+				</div>
+				<div class="flex flex-col items-center gap-2">
+					<div class="w-12 h-12 rounded-lg bg-error-500"></div>
+					<span class="text-xs text-secondary-500 dark:text-secondary-400">Error</span>
+				</div>
+			</div>
+		</div>
+
+		<!-- Font Pairing -->
+		<div class="card">
+			<h3 class="text-lg font-semibold mb-4 capitalize">{themeStore.fontName}</h3>
+			<p class="mb-4 text-secondary-600 dark:text-secondary-400">
+				{themeStore.font.description}
 			</p>
+			<div class="space-y-3">
+				<div>
+					<span class="text-xs uppercase tracking-wide text-secondary-500 dark:text-secondary-400"
+						>Heading</span
+					>
+					<p class="text-xl font-semibold font-heading">The quick brown fox jumps</p>
+				</div>
+				<div>
+					<span class="text-xs uppercase tracking-wide text-secondary-500 dark:text-secondary-400"
+						>Body</span
+					>
+					<p>The quick brown fox jumps over the lazy dog. This text demonstrates the body font.</p>
+				</div>
+				<div>
+					<span class="text-xs uppercase tracking-wide text-secondary-500 dark:text-secondary-400"
+						>Mono</span
+					>
+					<p class="font-mono">const example = "code";</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</ThemeSection>
+
+<!-- Color Scale Section -->
+<ThemeSection title="Color Scales" icon="lucide:paintbrush" variant="default">
+	<div class="card overflow-x-auto">
+		<table class="w-full text-sm">
+			<thead>
+				<tr class="border-b border-secondary-200 dark:border-secondary-700">
+					<th class="py-3 px-2 text-left font-semibold text-secondary-700 dark:text-secondary-300"
+						>Scale</th
+					>
+					{#each [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as shade (shade)}
+						<th
+							class="py-3 px-1 text-center font-medium text-secondary-500 dark:text-secondary-400 text-xs"
+							>{shade}</th
+						>
+					{/each}
+				</tr>
+			</thead>
+			<tbody>
+				<!-- Primary -->
+				<tr class="border-b border-secondary-100 dark:border-secondary-800">
+					<td class="py-3 px-2">
+						<div class="font-medium text-secondary-900 dark:text-secondary-100">Primary</div>
+						<div class="text-xs text-secondary-500 dark:text-secondary-400 font-mono">
+							bg-primary-*
+						</div>
+					</td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-50)"
+							title="bg-primary-50"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-100)"
+							title="bg-primary-100"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-200)"
+							title="bg-primary-200"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-300)"
+							title="bg-primary-300"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-400)"
+							title="bg-primary-400"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto ring-2 ring-secondary-300 dark:ring-secondary-600"
+							style="background-color: var(--color-primary-500)"
+							title="bg-primary-500"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-600)"
+							title="bg-primary-600"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-700)"
+							title="bg-primary-700"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-800)"
+							title="bg-primary-800"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-900)"
+							title="bg-primary-900"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-primary-950)"
+							title="bg-primary-950"
+						></div></td
+					>
+				</tr>
+
+				<!-- Accent -->
+				<tr class="border-b border-secondary-100 dark:border-secondary-800">
+					<td class="py-3 px-2">
+						<div class="font-medium text-secondary-900 dark:text-secondary-100">Accent</div>
+						<div class="text-xs text-secondary-500 dark:text-secondary-400 font-mono">
+							bg-accent-*
+						</div>
+					</td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-50)"
+							title="bg-accent-50"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-100)"
+							title="bg-accent-100"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-200)"
+							title="bg-accent-200"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-300)"
+							title="bg-accent-300"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-400)"
+							title="bg-accent-400"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto ring-2 ring-secondary-300 dark:ring-secondary-600"
+							style="background-color: var(--color-accent-500)"
+							title="bg-accent-500"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-600)"
+							title="bg-accent-600"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-700)"
+							title="bg-accent-700"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-800)"
+							title="bg-accent-800"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-900)"
+							title="bg-accent-900"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-accent-950)"
+							title="bg-accent-950"
+						></div></td
+					>
+				</tr>
+
+				<!-- Secondary -->
+				<tr class="border-b border-secondary-100 dark:border-secondary-800">
+					<td class="py-3 px-2">
+						<div class="font-medium text-secondary-900 dark:text-secondary-100">Secondary</div>
+						<div class="text-xs text-secondary-500 dark:text-secondary-400 font-mono">
+							bg-secondary-*
+						</div>
+					</td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-50)"
+							title="bg-secondary-50"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-100)"
+							title="bg-secondary-100"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-200)"
+							title="bg-secondary-200"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-300)"
+							title="bg-secondary-300"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-400)"
+							title="bg-secondary-400"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto ring-2 ring-secondary-300 dark:ring-secondary-600"
+							style="background-color: var(--color-secondary-500)"
+							title="bg-secondary-500"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-600)"
+							title="bg-secondary-600"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-700)"
+							title="bg-secondary-700"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-800)"
+							title="bg-secondary-800"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-900)"
+							title="bg-secondary-900"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-secondary-950)"
+							title="bg-secondary-950"
+						></div></td
+					>
+				</tr>
+
+				<!-- Success -->
+				<tr class="border-b border-secondary-100 dark:border-secondary-800">
+					<td class="py-3 px-2">
+						<div class="font-medium text-secondary-900 dark:text-secondary-100">Success</div>
+						<div class="text-xs text-secondary-500 dark:text-secondary-400 font-mono">
+							bg-success-*
+						</div>
+					</td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-success-50)"
+							title="bg-success-50"
+						></div></td
+					>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto ring-2 ring-secondary-300 dark:ring-secondary-600"
+							style="background-color: var(--color-success-500)"
+							title="bg-success-500"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-success-600)"
+							title="bg-success-600"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-success-700)"
+							title="bg-success-700"
+						></div></td
+					>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+				</tr>
+
+				<!-- Warning -->
+				<tr class="border-b border-secondary-100 dark:border-secondary-800">
+					<td class="py-3 px-2">
+						<div class="font-medium text-secondary-900 dark:text-secondary-100">Warning</div>
+						<div class="text-xs text-secondary-500 dark:text-secondary-400 font-mono">
+							bg-warning-*
+						</div>
+					</td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-warning-50)"
+							title="bg-warning-50"
+						></div></td
+					>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto ring-2 ring-secondary-300 dark:ring-secondary-600"
+							style="background-color: var(--color-warning-500)"
+							title="bg-warning-500"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-warning-600)"
+							title="bg-warning-600"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-warning-700)"
+							title="bg-warning-700"
+						></div></td
+					>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+				</tr>
+
+				<!-- Error -->
+				<tr>
+					<td class="py-3 px-2">
+						<div class="font-medium text-secondary-900 dark:text-secondary-100">Error</div>
+						<div class="text-xs text-secondary-500 dark:text-secondary-400 font-mono">
+							bg-error-*
+						</div>
+					</td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-error-50)"
+							title="bg-error-50"
+						></div></td
+					>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto ring-2 ring-secondary-300 dark:ring-secondary-600"
+							style="background-color: var(--color-error-500)"
+							title="bg-error-500"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-error-600)"
+							title="bg-error-600"
+						></div></td
+					>
+					<td class="py-3 px-1"
+						><div
+							class="w-8 h-8 rounded mx-auto"
+							style="background-color: var(--color-error-700)"
+							title="bg-error-700"
+						></div></td
+					>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+					<td class="py-3 px-1"></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<!-- Usage Examples -->
+		<div class="mt-6 pt-6 border-t border-secondary-200 dark:border-secondary-700">
+			<h4 class="text-sm font-semibold mb-3 text-secondary-700 dark:text-secondary-300">
+				Usage Examples
+			</h4>
+			<div class="grid md:grid-cols-2 gap-4 text-xs font-mono">
+				<div class="p-3 rounded bg-secondary-50 dark:bg-secondary-800">
+					<span class="text-secondary-500">// Background</span><br />
+					<span class="text-primary-600">class</span>="<span class="text-success-600"
+						>bg-primary-500</span
+					>"
+				</div>
+				<div class="p-3 rounded bg-secondary-50 dark:bg-secondary-800">
+					<span class="text-secondary-500">// Text color</span><br />
+					<span class="text-primary-600">class</span>="<span class="text-success-600"
+						>text-primary-600</span
+					>"
+				</div>
+				<div class="p-3 rounded bg-secondary-50 dark:bg-secondary-800">
+					<span class="text-secondary-500">// Border</span><br />
+					<span class="text-primary-600">class</span>="<span class="text-success-600"
+						>border-accent-300</span
+					>"
+				</div>
+				<div class="p-3 rounded bg-secondary-50 dark:bg-secondary-800">
+					<span class="text-secondary-500">// CSS Variable</span><br />
+					<span class="text-primary-600">var</span>(<span class="text-success-600"
+						>--color-primary-500</span
+					>)
+				</div>
+			</div>
 		</div>
 	</div>
+</ThemeSection>
 
-	<!-- Current Settings Section -->
-	<ThemeSection
-		title="Current Settings"
-		icon="lucide:settings"
-		variant="surface"
-		colors={currentColors}
-		{headingFont}
-	>
-		<div class="grid md:grid-cols-2 gap-6">
-			<!-- Theme Colors -->
-			<div
-				class="rounded-xl p-6 transition-colors duration-300"
-				style="background-color: {currentColors.background}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-			>
-				<h3 class="text-lg font-semibold mb-4">Color Palette: {themeStore.theme.name}</h3>
-				<p class="mb-4" style="color: {currentColors.textMuted}">
-					{themeStore.theme.description}
-				</p>
-				<div class="grid grid-cols-2 gap-3">
-					<div class="flex items-center gap-3">
-						<div
-							class="w-8 h-8 rounded"
-							style="background-color: {currentColors.background}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-						></div>
-						<span class="text-sm" style="color: {currentColors.textMuted}">Background</span>
-					</div>
-					<div class="flex items-center gap-3">
-						<div
-							class="w-8 h-8 rounded"
-							style="background-color: {currentColors.surface}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-						></div>
-						<span class="text-sm" style="color: {currentColors.textMuted}">Surface</span>
-					</div>
-					<div class="flex items-center gap-3">
-						<div class="w-8 h-8 rounded" style="background-color: {currentColors.primary}"></div>
-						<span class="text-sm" style="color: {currentColors.textMuted}">Primary</span>
-					</div>
-					<div class="flex items-center gap-3">
-						<div class="w-8 h-8 rounded" style="background-color: {currentColors.accent}"></div>
-						<span class="text-sm" style="color: {currentColors.textMuted}">Accent</span>
-					</div>
-				</div>
-			</div>
-
-			<!-- Font Pairing -->
-			<div
-				class="rounded-xl p-6 transition-colors duration-300"
-				style="background-color: {currentColors.background}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-			>
-				<h3 class="text-lg font-semibold mb-4">Font Pairing: {fontStore.pairing.name}</h3>
-				<p class="mb-4" style="color: {currentColors.textMuted}">
-					{fontStore.pairing.description}
-				</p>
-				<div class="space-y-3">
-					<div>
-						<span class="text-xs uppercase tracking-wide" style="color: {currentColors.textMuted}"
-							>Heading</span
-						>
-						<p
-							class="text-xl font-semibold"
-							style="font-family: '{fontStore.pairing.heading}', sans-serif"
-						>
-							{fontStore.pairing.heading}
-						</p>
-					</div>
-					<div>
-						<span class="text-xs uppercase tracking-wide" style="color: {currentColors.textMuted}"
-							>Body</span
-						>
-						<p style="font-family: '{fontStore.pairing.body}', sans-serif">
-							{fontStore.pairing.body}
-						</p>
-					</div>
-					<div>
-						<span class="text-xs uppercase tracking-wide" style="color: {currentColors.textMuted}"
-							>Mono</span
-						>
-						<p style="font-family: '{fontStore.pairing.mono}', monospace">
-							{fontStore.pairing.mono}
-						</p>
-					</div>
-				</div>
-			</div>
+<!-- Buttons Section -->
+<ThemeSection title="Buttons" icon="lucide:mouse-pointer-click" variant="surface">
+	<div class="card">
+		<h3 class="text-lg font-semibold mb-4">Variants</h3>
+		<div class="flex flex-wrap gap-4 mb-6">
+			<button class="btn-primary">Primary</button>
+			<button class="btn-secondary">Secondary</button>
+			<button class="btn-accent">Accent</button>
+			<button class="btn-outline">Outline</button>
+			<button class="btn-ghost">Ghost</button>
 		</div>
-	</ThemeSection>
 
-	<!-- Typography Hierarchy Section -->
-	<ThemeSection
-		title="Typography Hierarchy"
-		icon="lucide:heading"
-		variant="background"
-		colors={currentColors}
-		{headingFont}
-	>
-		<div
-			class="rounded-xl p-6 transition-colors duration-300 space-y-6"
-			style="background-color: {currentColors.surface}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-		>
-			<div class="space-y-4">
-				<div>
-					<span class="text-xs uppercase tracking-wide" style="color: {currentColors.textMuted}"
-						>H1 - 3rem (48px)</span
-					>
-					<h1
-						class="text-5xl font-bold"
-						style="font-family: '{fontStore.pairing.heading}', sans-serif"
-					>
-						Heading Level 1
-					</h1>
-				</div>
-				<div>
-					<span class="text-xs uppercase tracking-wide" style="color: {currentColors.textMuted}"
-						>H2 - 2.25rem (36px)</span
-					>
-					<h2
-						class="text-4xl font-bold"
-						style="font-family: '{fontStore.pairing.heading}', sans-serif"
-					>
-						Heading Level 2
-					</h2>
-				</div>
-				<div>
-					<span class="text-xs uppercase tracking-wide" style="color: {currentColors.textMuted}"
-						>H3 - 1.875rem (30px)</span
-					>
-					<h3
-						class="text-3xl font-semibold"
-						style="font-family: '{fontStore.pairing.heading}', sans-serif"
-					>
-						Heading Level 3
-					</h3>
-				</div>
-				<div>
-					<span class="text-xs uppercase tracking-wide" style="color: {currentColors.textMuted}"
-						>H4 - 1.5rem (24px)</span
-					>
-					<h4
-						class="text-2xl font-semibold"
-						style="font-family: '{fontStore.pairing.heading}', sans-serif"
-					>
-						Heading Level 4
-					</h4>
-				</div>
-				<div>
-					<span class="text-xs uppercase tracking-wide" style="color: {currentColors.textMuted}"
-						>H5 - 1.25rem (20px)</span
-					>
-					<h5
-						class="text-xl font-medium"
-						style="font-family: '{fontStore.pairing.heading}', sans-serif"
-					>
-						Heading Level 5
-					</h5>
-				</div>
-				<div>
-					<span class="text-xs uppercase tracking-wide" style="color: {currentColors.textMuted}"
-						>H6 - 1rem (16px)</span
-					>
-					<h6
-						class="text-base font-medium"
-						style="font-family: '{fontStore.pairing.heading}', sans-serif"
-					>
-						Heading Level 6
-					</h6>
-				</div>
-			</div>
-			<div class="pt-4 border-t" style="border-color: {currentColors.border}">
-				<span class="text-xs uppercase tracking-wide" style="color: {currentColors.textMuted}"
-					>Body Text</span
-				>
-				<p class="mt-2" style="font-family: '{fontStore.pairing.body}', sans-serif">
-					This is a paragraph of body text using the selected font pairing. It demonstrates how
-					readable content will appear in your application. Good typography enhances user experience
-					by making content easy to scan and read.
-				</p>
-				<p
-					class="mt-2 text-sm"
-					style="color: {currentColors.textMuted}; font-family: '{fontStore.pairing
-						.body}', sans-serif"
-				>
-					This is smaller muted text often used for captions, hints, or secondary information.
-				</p>
-			</div>
+		<h3 class="text-lg font-semibold mb-4">With Icons</h3>
+		<div class="flex flex-wrap items-center gap-4">
+			<button class="btn-primary">
+				<Icon icon="lucide:plus" width="16" height="16" />
+				Add Item
+			</button>
+			<button class="btn-secondary">
+				<Icon icon="lucide:download" width="16" height="16" />
+				Download
+			</button>
+			<button class="btn-outline">
+				<Icon icon="lucide:settings" width="16" height="16" />
+				Settings
+			</button>
 		</div>
-	</ThemeSection>
+	</div>
+</ThemeSection>
 
-	<!-- Component Preview Section -->
-	<ThemeSection
-		title="Component Preview"
-		icon="lucide:component"
-		variant="surface"
-		colors={currentColors}
-		{headingFont}
-	>
-		<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-			<!-- Card Preview -->
-			<div
-				class="rounded-xl shadow-md p-6 transition-colors duration-300"
-				style="background-color: {currentColors.background}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-			>
-				<h3
-					class="text-lg font-semibold mb-2"
-					style="font-family: '{fontStore.pairing.heading}', sans-serif"
-				>
-					Card Component
-				</h3>
-				<p class="mb-4" style="color: {currentColors.textMuted}">
-					This card uses the selected theme colors for background, text, and border.
-				</p>
-				<button
-					class="px-4 py-2 rounded-lg font-medium text-white transition-colors"
-					style="background-color: {currentColors.primary}"
-				>
-					Primary Button
-				</button>
-			</div>
+<!-- Alerts Section -->
+<ThemeSection title="Alerts" icon="lucide:bell" variant="default">
+	<div class="space-y-4">
+		<Alert variant="info">
+			<strong>Info:</strong> This is an informational message using the theme colors.
+		</Alert>
+		<Alert variant="success">
+			<strong>Success:</strong> Operation completed successfully!
+		</Alert>
+		<Alert variant="warning">
+			<strong>Warning:</strong> Please review before proceeding.
+		</Alert>
+		<Alert variant="error">
+			<strong>Error:</strong> An error occurred. Please try again.
+		</Alert>
+	</div>
+</ThemeSection>
 
-			<!-- Form Preview -->
-			<div
-				class="rounded-xl shadow-md p-6 transition-colors duration-300"
-				style="background-color: {currentColors.background}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-			>
-				<h3
-					class="text-lg font-semibold mb-4"
-					style="font-family: '{fontStore.pairing.heading}', sans-serif"
-				>
-					Form Elements
-				</h3>
-				<div class="space-y-3">
-					<div>
-						<label
-							for="theme-preview-input"
-							class="block text-sm font-medium mb-1"
-							style="color: {currentColors.textMuted}"
-						>
-							Input Field
-						</label>
-						<input
-							id="theme-preview-input"
-							type="text"
-							placeholder="Enter text..."
-							class="w-full px-3 py-2 rounded-lg outline-none transition-colors"
-							style="background-color: {currentColors.surface}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-						/>
-					</div>
-					<button
-						class="w-full px-4 py-2 rounded-lg font-medium text-white transition-colors"
-						style="background-color: {currentColors.accent}"
-					>
-						Accent Button
-					</button>
-				</div>
-			</div>
-
-			<!-- Typography Preview -->
-			<div
-				class="rounded-xl shadow-md p-6 transition-colors duration-300"
-				style="background-color: {currentColors.background}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-			>
-				<h3
-					class="text-lg font-semibold mb-4"
-					style="font-family: '{fontStore.pairing.heading}', sans-serif"
-				>
-					Typography
-				</h3>
-				<div class="space-y-2">
-					<h4
-						class="text-xl font-bold"
-						style="font-family: '{fontStore.pairing.heading}', sans-serif"
-					>
-						Heading Style
-					</h4>
-					<p style="font-family: '{fontStore.pairing.body}', sans-serif">
-						Body text looks like this with the selected font pairing.
-					</p>
-					<code
-						class="text-sm px-2 py-1 rounded inline-block"
-						style="background-color: {currentColors.surface}; font-family: '{fontStore.pairing
-							.mono}', monospace"
-					>
-						const code = "monospace";
-					</code>
-				</div>
-			</div>
-		</div>
-	</ThemeSection>
-
-	<!-- Buttons Section -->
-	<ThemeSection
-		title="Buttons"
-		icon="lucide:mouse-pointer-click"
-		variant="background"
-		colors={currentColors}
-		{headingFont}
-	>
-		<div
-			class="rounded-xl p-6 transition-colors duration-300"
-			style="background-color: {currentColors.surface}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-		>
-			<h3
-				class="text-lg font-semibold mb-4"
-				style="font-family: '{fontStore.pairing.heading}', sans-serif"
-			>
-				Variants
-			</h3>
-			<div class="flex flex-wrap gap-4 mb-6">
-				<button
-					class="px-4 py-2 rounded-lg font-medium text-white transition-colors"
-					style="background-color: {currentColors.primary}"
-				>
-					Primary
-				</button>
-				<button
-					class="px-4 py-2 rounded-lg font-medium transition-colors"
-					style="background-color: {currentColors.border}; color: {currentColors.text}"
-				>
-					Secondary
-				</button>
-				<button
-					class="px-4 py-2 rounded-lg font-medium text-white transition-colors"
-					style="background-color: {currentColors.accent}"
-				>
-					Accent
-				</button>
-				<button
-					class="px-4 py-2 rounded-lg font-medium border-2 transition-colors"
-					style="border-color: {currentColors.primary}; color: {currentColors.primary}"
-				>
-					Outline
-				</button>
-				<button
-					class="px-4 py-2 rounded-lg font-medium transition-colors hover:opacity-80"
-					style="color: {currentColors.textMuted}"
-				>
-					Ghost
-				</button>
-			</div>
-
-			<h3
-				class="text-lg font-semibold mb-4"
-				style="font-family: '{fontStore.pairing.heading}', sans-serif"
-			>
-				With Icons
-			</h3>
-			<div class="flex flex-wrap items-center gap-4">
-				<button
-					class="px-4 py-2 rounded-lg font-medium text-white transition-colors inline-flex items-center gap-2"
-					style="background-color: {currentColors.primary}"
-				>
-					<Icon icon="lucide:plus" width="16" height="16" />
-					Add Item
-				</button>
-				<button
-					class="px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center gap-2"
-					style="background-color: {currentColors.border}; color: {currentColors.text}"
-				>
-					<Icon icon="lucide:download" width="16" height="16" />
-					Download
-				</button>
-				<button
-					class="px-4 py-2 rounded-lg font-medium border-2 transition-colors inline-flex items-center gap-2"
-					style="border-color: {currentColors.primary}; color: {currentColors.primary}"
-				>
-					<Icon icon="lucide:settings" width="16" height="16" />
-					Settings
-				</button>
-			</div>
-		</div>
-	</ThemeSection>
-
-	<!-- Alerts Section -->
-	<ThemeSection
-		title="Alerts"
-		icon="lucide:bell"
-		variant="surface"
-		colors={currentColors}
-		{headingFont}
-	>
-		<div class="space-y-4">
-			<Alert variant="info" colors={currentColors}>
-				<strong>Info:</strong> This is an informational message using the theme colors.
-			</Alert>
-			<Alert variant="success" colors={currentColors}>
-				<strong>Success:</strong> Operation completed successfully!
-			</Alert>
-			<Alert variant="warning" colors={currentColors}>
-				<strong>Warning:</strong> Please review before proceeding.
-			</Alert>
-			<Alert variant="error" colors={currentColors}>
-				<strong>Error:</strong> An error occurred. Please try again.
-			</Alert>
-		</div>
-	</ThemeSection>
-
-	<!-- Modal & Icons Section -->
-	<ThemeSection
-		title="Modal"
-		icon="lucide:square"
-		variant="background"
-		colors={currentColors}
-		{headingFont}
-	>
-		<div
-			class="rounded-xl p-6 transition-colors duration-300"
-			style="background-color: {currentColors.surface}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-		>
-			<p class="mb-4" style="color: {currentColors.textMuted}">
+<!-- Modal & Signup Section -->
+<ThemeSection title="Modal & Signup" icon="lucide:square" variant="surface">
+	<div class="grid md:grid-cols-2 gap-6">
+		<div class="card">
+			<h3 class="text-lg font-semibold mb-4">Modal</h3>
+			<p class="mb-4 text-secondary-600 dark:text-secondary-400">
 				Click the button to open a modal dialog.
 			</p>
-			<button
-				type="button"
-				class="px-4 py-2 rounded-lg font-medium text-white transition-colors"
-				style="background-color: {currentColors.primary}"
-				onclick={() => (modalOpen = true)}
-			>
+			<button type="button" class="btn-primary" onclick={() => (modalOpen = true)}>
 				Open Modal
 			</button>
 		</div>
-	</ThemeSection>
-
-	<!-- Icons Section -->
-	<ThemeSection
-		title="Icons (Iconify)"
-		icon="lucide:shapes"
-		variant="surface"
-		colors={currentColors}
-		{headingFont}
-	>
-		<div
-			class="rounded-xl p-6 transition-colors duration-300"
-			style="background-color: {currentColors.background}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-		>
-			<p class="mb-4" style="color: {currentColors.textMuted}">
-				Icons are rendered using the <code
-					class="px-1 rounded"
-					style="background-color: {currentColors.surface}">Icon</code
-				>
-				component with Iconify. Use the pattern
-				<code class="px-1 rounded" style="background-color: {currentColors.surface}"
-					>&lt;Icon icon="set:name" /&gt;</code
-				>.
+		<div class="card">
+			<h3 class="text-lg font-semibold mb-4">Signup</h3>
+			<p class="mb-4 text-secondary-600 dark:text-secondary-400">
+				The Signup component is a modal form for user authentication.
 			</p>
-			<div class="flex flex-wrap gap-6">
-				{#each [{ icon: 'lucide:home', name: 'home' }, { icon: 'lucide:user', name: 'user' }, { icon: 'lucide:settings', name: 'settings' }, { icon: 'lucide:search', name: 'search' }, { icon: 'lucide:mail', name: 'mail' }, { icon: 'lucide:chart-bar', name: 'chart-bar' }, { icon: 'lucide:code', name: 'code' }, { icon: 'lucide:check-circle', name: 'check-circle' }, { icon: 'lucide:alert-triangle', name: 'alert-triangle' }, { icon: 'lucide:x-circle', name: 'x-circle' }] as item (item.name)}
-					<div class="flex flex-col items-center gap-2">
-						<Icon
-							icon={item.icon}
-							width="24"
-							height="24"
-							style="color: {currentColors.textMuted}"
-						/>
-						<span class="text-xs" style="color: {currentColors.textMuted}">lucide:{item.name}</span>
-					</div>
-				{/each}
+			<button type="button" class="btn-primary" onclick={() => (signupOpen = true)}>
+				Open Signup Modal
+			</button>
+		</div>
+	</div>
+</ThemeSection>
+
+<!-- Stat Cards Section -->
+<ThemeSection title="Stat Cards" icon="lucide:bar-chart-2" variant="default">
+	<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+		<StatCard label="Default" value={42} />
+		<StatCard label="Success" value={128} variant="success" prefix="+" />
+		<StatCard label="Danger" value={23} variant="danger" prefix="-" />
+		<StatCard label="Net" value="1.2K" />
+	</div>
+</ThemeSection>
+
+<!-- Badges Section -->
+<ThemeSection title="Badges" icon="lucide:tag" variant="surface">
+	<div class="card">
+		<div class="flex flex-wrap gap-3">
+			<Badge>Primary</Badge>
+			<Badge variant="accent">Accent</Badge>
+			<Badge variant="success">Success</Badge>
+			<Badge variant="warning">Warning</Badge>
+			<Badge variant="error">Error</Badge>
+		</div>
+	</div>
+</ThemeSection>
+
+<!-- Card Section -->
+<ThemeSection title="Card" icon="lucide:square" variant="default">
+	<div class="grid md:grid-cols-2 gap-6">
+		<Card>
+			<h3 class="text-lg font-semibold mb-2">Card Component</h3>
+			<p class="text-secondary-600 dark:text-secondary-400 mb-4">
+				This is a reusable Card component with default shadow styling.
+			</p>
+			<button class="btn-primary">Action</button>
+		</Card>
+		<Card class="border-2 border-primary-500">
+			<h3 class="text-lg font-semibold mb-2">Card with Custom Class</h3>
+			<p class="text-secondary-600 dark:text-secondary-400 mb-4">
+				Cards accept a <code class="px-1 bg-secondary-100 dark:bg-secondary-700 rounded">class</code
+				> prop for customization.
+			</p>
+			<button class="btn-accent">Custom Action</button>
+		</Card>
+	</div>
+</ThemeSection>
+
+<!-- LoadingSpinner Section -->
+<ThemeSection title="Loading Spinner" icon="lucide:loader" variant="surface">
+	<div class="card">
+		<h3 class="text-lg font-semibold mb-4">Size Variants</h3>
+		<div class="flex flex-wrap items-center gap-8 mb-6">
+			<div class="flex flex-col items-center gap-2">
+				<LoadingSpinner size="sm" />
+				<span class="text-xs text-secondary-500 dark:text-secondary-400">Small</span>
+			</div>
+			<div class="flex flex-col items-center gap-2">
+				<LoadingSpinner size="md" />
+				<span class="text-xs text-secondary-500 dark:text-secondary-400">Medium</span>
+			</div>
+			<div class="flex flex-col items-center gap-2">
+				<LoadingSpinner size="lg" />
+				<span class="text-xs text-secondary-500 dark:text-secondary-400">Large</span>
 			</div>
 		</div>
-	</ThemeSection>
 
-	<!-- Stat Cards Section -->
-	<ThemeSection
-		title="Stat Cards"
-		icon="lucide:bar-chart-2"
-		variant="background"
-		colors={currentColors}
-		{headingFont}
-	>
-		<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-			<StatCard label="Default" value={42} />
-			<StatCard label="Success" value={128} variant="success" prefix="+" />
-			<StatCard label="Danger" value={23} variant="danger" prefix="-" />
-			<StatCard label="Net" value="1.2K" />
-		</div>
-	</ThemeSection>
-
-	<!-- Badges Section -->
-	<ThemeSection
-		title="Badges"
-		icon="lucide:tag"
-		variant="surface"
-		colors={currentColors}
-		{headingFont}
-	>
-		<div
-			class="rounded-xl p-6 transition-colors duration-300"
-			style="background-color: {currentColors.background}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-		>
-			<div class="flex flex-wrap gap-3">
-				<Badge>Primary</Badge>
-				<Badge variant="accent">Accent</Badge>
-				<Badge variant="success">Success</Badge>
-				<Badge variant="warning">Warning</Badge>
-				<Badge variant="error">Error</Badge>
+		<h3 class="text-lg font-semibold mb-4">Color Variants</h3>
+		<div class="flex flex-wrap items-center gap-8">
+			<div class="flex flex-col items-center gap-2">
+				<LoadingSpinner variant="primary" />
+				<span class="text-xs text-secondary-500 dark:text-secondary-400">Primary</span>
+			</div>
+			<div class="flex flex-col items-center gap-2">
+				<LoadingSpinner variant="accent" />
+				<span class="text-xs text-secondary-500 dark:text-secondary-400">Accent</span>
+			</div>
+			<div class="flex flex-col items-center gap-2">
+				<LoadingSpinner variant="secondary" />
+				<span class="text-xs text-secondary-500 dark:text-secondary-400">Secondary</span>
 			</div>
 		</div>
-	</ThemeSection>
+	</div>
+</ThemeSection>
 
-	<!-- Gradient Palettes Section -->
-	<ThemeSection
-		title="Gradient Palettes"
-		icon="lucide:blend"
-		variant="background"
-		colors={currentColors}
-		{headingFont}
-	>
-		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-			{#each gradientPalettes as gradient (gradient.name)}
-				<div
-					class="rounded-xl overflow-hidden transition-colors duration-300"
-					style="border: 1px solid {currentColors.border}"
-				>
-					<div class="h-24" style="background: {gradient.css}"></div>
-					<div class="p-3" style="background-color: {currentColors.surface}">
-						<p class="font-medium text-sm">{gradient.name}</p>
-						<p class="text-xs mt-1" style="color: {currentColors.textMuted}">
-							{gradient.description}
-						</p>
-					</div>
-				</div>
-			{/each}
+<!-- ThemeToggle Section -->
+<ThemeSection title="Theme Toggle" icon="lucide:moon" variant="default">
+	<div class="card">
+		<p class="mb-4 text-secondary-600 dark:text-secondary-400">
+			The ThemeToggle component allows users to switch between light and dark modes. It persists the
+			selection in cookies.
+		</p>
+		<div class="flex items-center gap-4">
+			<ThemeToggle />
+			<span class="text-sm text-secondary-500 dark:text-secondary-400"
+				>Click to toggle between light and dark modes</span
+			>
 		</div>
-	</ThemeSection>
-
-	<!-- Sequential Palettes Section -->
-	<ThemeSection
-		title="Sequential Palettes"
-		description="Single hue progressions for ordered data, quantities, and progression."
-		icon="lucide:arrow-right"
-		variant="surface"
-		colors={currentColors}
-		{headingFont}
-	>
-		<div class="space-y-4">
-			{#each sequentialPalettes as palette (palette.name)}
-				<div
-					class="rounded-xl p-4 transition-colors duration-300"
-					style="background-color: {currentColors.background}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-				>
-					<div class="flex items-center justify-between mb-2">
-						<p class="font-medium">{palette.name}</p>
-						<p class="text-xs" style="color: {currentColors.textMuted}">{palette.description}</p>
-					</div>
-					<div class="flex rounded-lg overflow-hidden">
-						{#each palette.colors as color (color)}
-							<div class="flex-1 h-10" style="background-color: {color}" title={color}></div>
-						{/each}
-					</div>
-				</div>
-			{/each}
-		</div>
-	</ThemeSection>
-
-	<!-- Diverging Palettes Section -->
-	<ThemeSection
-		title="Diverging Palettes"
-		description="Two hues with neutral midpoint for data with meaningful center (positive/negative, above/below average)."
-		icon="lucide:arrow-left-right"
-		variant="background"
-		colors={currentColors}
-		{headingFont}
-	>
-		<div class="space-y-4">
-			{#each divergingPalettes as palette (palette.name)}
-				<div
-					class="rounded-xl p-4 transition-colors duration-300"
-					style="background-color: {currentColors.surface}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-				>
-					<div class="flex items-center justify-between mb-2">
-						<p class="font-medium">{palette.name}</p>
-						<p class="text-xs" style="color: {currentColors.textMuted}">{palette.description}</p>
-					</div>
-					<div class="flex rounded-lg overflow-hidden">
-						{#each palette.colors as color (color)}
-							<div class="flex-1 h-10" style="background-color: {color}" title={color}></div>
-						{/each}
-					</div>
-				</div>
-			{/each}
-		</div>
-	</ThemeSection>
-
-	<!-- Qualitative Palettes Section -->
-	<ThemeSection
-		title="Qualitative Palettes"
-		description="Distinct colors for categorical/nominal data, different groups, and labels."
-		icon="lucide:shapes"
-		variant="surface"
-		colors={currentColors}
-		{headingFont}
-	>
-		<div class="space-y-4">
-			{#each qualitativePalettes as palette (palette.name)}
-				<div
-					class="rounded-xl p-4 transition-colors duration-300"
-					style="background-color: {currentColors.background}; border: 1px solid {currentColors.border}; color: {currentColors.text}"
-				>
-					<div class="flex items-center justify-between mb-2">
-						<p class="font-medium">{palette.name}</p>
-						<p class="text-xs" style="color: {currentColors.textMuted}">{palette.description}</p>
-					</div>
-					<div class="flex gap-1">
-						{#each palette.colors as color (color)}
-							<div
-								class="flex-1 h-10 rounded"
-								style="background-color: {color}"
-								title={color}
-							></div>
-						{/each}
-					</div>
-				</div>
-			{/each}
-		</div>
-	</ThemeSection>
-</div>
+	</div>
+</ThemeSection>
 
 <!-- Demo Modal -->
 <Modal bind:open={modalOpen} title="Example Modal">
-	<p class="text-secondary-600 mb-4">
+	<p class="mb-4">
 		This is a reusable modal component. It handles backdrop click, escape key, and focus management.
 	</p>
-	<p class="text-secondary-600">
-		You can pass any content as children and optionally provide a footer snippet.
-	</p>
+	<p>You can pass any content as children and optionally provide a footer snippet.</p>
 	{#snippet footer()}
-		<p class="text-xs text-secondary-500 text-center">Press Escape or click outside to close.</p>
+		<p class="text-xs text-center text-secondary-500 dark:text-secondary-400">
+			Press Escape or click outside to close.
+		</p>
 	{/snippet}
 </Modal>
+
+<!-- Demo Signup Modal -->
+<Signup form={null} bind:open={signupOpen} />

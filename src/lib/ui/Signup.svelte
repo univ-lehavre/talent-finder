@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { isEmail } from '$lib/validators';
 	import { enhance } from '$app/forms';
+	import Icon from './Icon.svelte';
 
 	interface Props {
 		form: {
@@ -62,36 +63,34 @@
 			<!-- Modal Content -->
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div
-				class="relative bg-white rounded-lg shadow-xl overflow-hidden"
-				style="width: min(28rem, calc(100vw - 2rem));"
+				class="relative rounded-lg shadow-xl overflow-hidden bg-white dark:bg-secondary-800"
+				style="width: min(28rem, calc(100vw - 2rem))"
 				onclick={(e) => e.stopPropagation()}
 				onkeydown={(e) => e.stopPropagation()}
 			>
 				<!-- Header -->
-				<div class="flex items-center justify-between p-4 border-b border-secondary-200">
-					<h2 id="signup-modal-title" class="text-lg font-semibold text-secondary-900">
+				<div
+					class="flex items-center justify-between p-4 border-b border-secondary-200 dark:border-secondary-700"
+				>
+					<h2
+						id="signup-modal-title"
+						class="text-lg font-semibold text-secondary-900 dark:text-white"
+					>
 						Authentification à votre compte
 					</h2>
 					<button
 						type="button"
-						class="text-secondary-400 hover:text-secondary-600 transition-colors p-1"
+						class="transition-colors p-1 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300"
 						onclick={closeModal}
 						aria-label="Fermer"
 					>
-						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M6 18L18 6M6 6l12 12"
-							/>
-						</svg>
+						<Icon icon="lucide:x" width="20" height="20" />
 					</button>
 				</div>
 
 				<!-- Body -->
 				<div class="p-4">
-					<p class="text-secondary-600 text-sm mb-4">
+					<p class="text-sm mb-4 text-secondary-600 dark:text-secondary-400">
 						Pour accéder à mes demandes, je vais m'authentifier. Cette action déposera un cookie
 						nécessaire au bon fonctionnement du site dans votre navigateur. Pour le supprimer après
 						l'authentification, il suffira que je me déconnecte.
@@ -121,12 +120,12 @@
 								aria-describedby="email-help"
 								bind:value={email}
 							/>
-							<p id="email-help" class="text-xs text-secondary-500 mt-1">
+							<p id="email-help" class="text-xs mt-1 text-secondary-500 dark:text-secondary-400">
 								Entrez votre adresse email universitaire
 							</p>
 						</div>
 
-						<button type="submit" class="btn-primary w-full" disabled={isDisabled}>
+						<button type="submit" class="w-full btn-primary" disabled={isDisabled}>
 							{#if signuping}
 								<span class="inline-flex items-center gap-2">
 									<span
@@ -153,18 +152,11 @@
 								</span>
 								<button
 									type="button"
-									class="text-red-600 hover:text-red-800 ml-2 flex-shrink-0"
+									class="text-error-600 hover:text-error-700 ml-2 flex-shrink-0"
 									onclick={dismissAlert}
 									aria-label="Fermer l'alerte"
 								>
-									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M6 18L18 6M6 6l12 12"
-										/>
-									</svg>
+									<Icon icon="lucide:x" width="16" height="16" />
 								</button>
 							</div>
 						{/if}
@@ -177,18 +169,11 @@
 								</span>
 								<button
 									type="button"
-									class="text-green-600 hover:text-green-800 ml-2 flex-shrink-0"
+									class="text-success-600 hover:text-success-700 ml-2 flex-shrink-0"
 									onclick={dismissAlert}
 									aria-label="Fermer l'alerte"
 								>
-									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M6 18L18 6M6 6l12 12"
-										/>
-									</svg>
+									<Icon icon="lucide:x" width="16" height="16" />
 								</button>
 							</div>
 						{/if}
@@ -196,8 +181,10 @@
 				</div>
 
 				<!-- Footer -->
-				<div class="p-4 border-t border-secondary-200 bg-secondary-50">
-					<p class="text-xs text-secondary-500 text-center">
+				<div
+					class="p-4 border-t border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-900"
+				>
+					<p class="text-xs text-center text-secondary-500 dark:text-secondary-400">
 						En vous authentifiant, vous acceptez nos conditions d'utilisation.
 					</p>
 				</div>

@@ -48,8 +48,8 @@
 			<!-- Modal Content -->
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div
-				class="relative bg-white dark:bg-secondary-800 rounded-lg shadow-xl overflow-hidden"
-				style="width: min(28rem, calc(100vw - 2rem));"
+				class="relative rounded-lg shadow-xl overflow-hidden bg-white dark:bg-secondary-800"
+				style="width: min(28rem, calc(100vw - 2rem))"
 				onclick={(e) => e.stopPropagation()}
 				onkeydown={(e) => e.stopPropagation()}
 			>
@@ -57,12 +57,12 @@
 				<div
 					class="flex items-center justify-between p-4 border-b border-secondary-200 dark:border-secondary-700"
 				>
-					<h2 id="modal-title" class="text-lg font-semibold">
+					<h2 id="modal-title" class="text-lg font-semibold text-secondary-900 dark:text-white">
 						{title}
 					</h2>
 					<button
 						type="button"
-						class="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 transition-colors p-1"
+						class="transition-colors p-1 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300"
 						onclick={closeModal}
 						aria-label="Fermer"
 					>
@@ -71,7 +71,7 @@
 				</div>
 
 				<!-- Body -->
-				<div class="p-4">
+				<div class="p-4 text-secondary-600 dark:text-secondary-400">
 					{@render children()}
 				</div>
 

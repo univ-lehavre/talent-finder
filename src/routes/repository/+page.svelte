@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import { Icon } from '$lib/ui';
 
 	interface Props {
 		data: PageData;
@@ -30,17 +31,13 @@
 		</h1>
 
 		{#if data.error}
-			<div
-				class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-700 dark:text-red-400"
-			>
+			<div class="alert-error">
 				{data.error}
 			</div>
 		{:else if data.stats}
 			<!-- GitHub Links -->
 			{#if data.githubUrls?.repository}
-				<div
-					class="bg-white dark:bg-secondary-800 rounded-lg shadow dark:shadow-black/20 p-6 mb-6 transition-colors duration-200"
-				>
+				<div class="card mb-6">
 					<h2 class="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
 						Liens GitHub
 					</h2>
@@ -52,11 +49,7 @@
 								rel="noopener noreferrer"
 								class="inline-flex items-center px-4 py-2 bg-secondary-900 dark:bg-secondary-700 text-white rounded-lg hover:bg-secondary-700 dark:hover:bg-secondary-600 transition-colors"
 							>
-								<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-									<path
-										d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
-									/>
-								</svg>
+								<Icon icon="mdi:github" width={20} height={20} class="mr-2" />
 								Dépôt
 							</a>
 						{/if}
@@ -65,7 +58,7 @@
 								href={data.githubUrls.issues}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-colors"
+								class="inline-flex items-center px-4 py-2 bg-success-600 text-white rounded-lg hover:bg-success-500 transition-colors"
 							>
 								Issues ({data.stats.github.issues.open} ouvertes)
 							</a>
@@ -75,7 +68,7 @@
 								href={data.githubUrls.newIssue}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors"
+								class="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-500 transition-colors"
 							>
 								Nouvelle Issue
 							</a>
@@ -85,7 +78,7 @@
 								href={data.githubUrls.pullRequests}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-500 transition-colors"
+								class="inline-flex items-center px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-500 transition-colors"
 							>
 								Pull Requests ({data.stats.github.pullRequests.open} ouvertes)
 							</a>
@@ -95,7 +88,7 @@
 								href={data.githubUrls.discussions}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition-colors"
+								class="inline-flex items-center px-4 py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-600 transition-colors"
 							>
 								Discussions
 							</a>
@@ -106,9 +99,7 @@
 
 			<!-- Overview Stats -->
 			<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-				<div
-					class="bg-white dark:bg-secondary-800 rounded-lg shadow dark:shadow-black/20 p-6 transition-colors duration-200"
-				>
+				<div class="card">
 					<div class="text-sm text-secondary-500 dark:text-secondary-400 uppercase tracking-wide">
 						Commits
 					</div>
@@ -116,29 +107,23 @@
 						{data.stats.totalCommits}
 					</div>
 				</div>
-				<div
-					class="bg-white dark:bg-secondary-800 rounded-lg shadow dark:shadow-black/20 p-6 transition-colors duration-200"
-				>
+				<div class="card">
 					<div class="text-sm text-secondary-500 dark:text-secondary-400 uppercase tracking-wide">
 						Additions
 					</div>
-					<div class="text-3xl font-bold text-green-600 dark:text-green-400">
+					<div class="text-3xl font-bold text-success-600 dark:text-success-500">
 						+{data.stats.totalAdditions}
 					</div>
 				</div>
-				<div
-					class="bg-white dark:bg-secondary-800 rounded-lg shadow dark:shadow-black/20 p-6 transition-colors duration-200"
-				>
+				<div class="card">
 					<div class="text-sm text-secondary-500 dark:text-secondary-400 uppercase tracking-wide">
 						Deletions
 					</div>
-					<div class="text-3xl font-bold text-red-600 dark:text-red-400">
+					<div class="text-3xl font-bold text-error-600 dark:text-error-500">
 						-{data.stats.totalDeletions}
 					</div>
 				</div>
-				<div
-					class="bg-white dark:bg-secondary-800 rounded-lg shadow dark:shadow-black/20 p-6 transition-colors duration-200"
-				>
+				<div class="card">
 					<div class="text-sm text-secondary-500 dark:text-secondary-400 uppercase tracking-wide">
 						Net
 					</div>
@@ -150,9 +135,7 @@
 			</div>
 
 			<!-- Date Range -->
-			<div
-				class="bg-white dark:bg-secondary-800 rounded-lg shadow dark:shadow-black/20 p-6 mb-6 transition-colors duration-200"
-			>
+			<div class="card mb-6">
 				<h2 class="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Historique</h2>
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<div>
@@ -172,9 +155,7 @@
 
 			<!-- Code Stats -->
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-				<div
-					class="bg-white dark:bg-secondary-800 rounded-lg shadow dark:shadow-black/20 p-6 transition-colors duration-200"
-				>
+				<div class="card">
 					<h2 class="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
 						Code Source TypeScript
 					</h2>
@@ -208,9 +189,7 @@
 					</div>
 				</div>
 
-				<div
-					class="bg-white dark:bg-secondary-800 rounded-lg shadow dark:shadow-black/20 p-6 transition-colors duration-200"
-				>
+				<div class="card">
 					<h2 class="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Tests</h2>
 					<div class="space-y-3">
 						<div class="flex justify-between items-center">
@@ -237,16 +216,14 @@
 
 			<!-- GitHub Stats -->
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-				<div
-					class="bg-white dark:bg-secondary-800 rounded-lg shadow dark:shadow-black/20 p-6 transition-colors duration-200"
-				>
+				<div class="card">
 					<h2 class="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
 						Issues GitHub
 					</h2>
 					<div class="space-y-3">
 						<div class="flex justify-between items-center">
 							<span class="text-secondary-600 dark:text-secondary-400">Ouvertes</span>
-							<span class="font-semibold text-green-600 dark:text-green-400"
+							<span class="font-semibold text-success-600 dark:text-success-500"
 								>{data.stats.github.issues.open}</span
 							>
 						</div>
@@ -259,16 +236,14 @@
 					</div>
 				</div>
 
-				<div
-					class="bg-white dark:bg-secondary-800 rounded-lg shadow dark:shadow-black/20 p-6 transition-colors duration-200"
-				>
+				<div class="card">
 					<h2 class="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
 						Pull Requests GitHub
 					</h2>
 					<div class="space-y-3">
 						<div class="flex justify-between items-center">
 							<span class="text-secondary-600 dark:text-secondary-400">Ouvertes</span>
-							<span class="font-semibold text-purple-600 dark:text-purple-400"
+							<span class="font-semibold text-accent-600 dark:text-accent-500"
 								>{data.stats.github.pullRequests.open}</span
 							>
 						</div>
@@ -284,9 +259,7 @@
 
 			<!-- Activity Timeline -->
 			{#if data.stats.hourlyStats.length > 0}
-				<div
-					class="bg-white dark:bg-secondary-800 rounded-lg shadow dark:shadow-black/20 p-6 transition-colors duration-200"
-				>
+				<div class="card">
 					<h2 class="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
 						Activité récente ({data.stats.hourlyStats.length} périodes)
 					</h2>
@@ -330,10 +303,11 @@
 											>{period.commits}</td
 										>
 										<td
-											class="px-4 py-3 whitespace-nowrap text-sm text-green-600 dark:text-green-400"
+											class="px-4 py-3 whitespace-nowrap text-sm text-success-600 dark:text-success-500"
 											>+{period.additions}</td
 										>
-										<td class="px-4 py-3 whitespace-nowrap text-sm text-red-600 dark:text-red-400"
+										<td
+											class="px-4 py-3 whitespace-nowrap text-sm text-error-600 dark:text-error-500"
 											>-{period.deletions}</td
 										>
 										<td

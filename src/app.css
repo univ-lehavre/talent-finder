@@ -6,74 +6,101 @@
 /*
  * Talent Finder - Design System
  * =============================
- * A clean, professional design system that can be customized.
+ * Unified theme system using OKLCH color space.
  *
  * Color Philosophy:
- * - Primary: Professional blue - trust, reliability
- * - Secondary: Neutral slate - balance, sophistication
- * - Accent: Vibrant teal - innovation, growth
- * - Success/Warning/Error: Semantic colors for feedback
+ * - Primary: Main brand color for actions and links
+ * - Accent: Secondary highlight color
+ * - Neutral: Text and background shades
+ * - Success/Warning/Error: Semantic feedback colors
+ *
+ * Each palette defines 7 parameters:
+ * - 6 hues (0-360°): primary, accent, neutral, success, warning, error
+ * - 1 chroma (0-0.3): saturation intensity
  */
 
+/* ============================================
+   THEME VARIABLES - Default values
+   ============================================ */
+:root {
+	/* Hue values (0-360 on color wheel) */
+	--hue-primary: 250;
+	--hue-accent: 180;
+	--hue-neutral: 260;
+	--hue-success: 145;
+	--hue-warning: 45;
+	--hue-error: 25;
+
+	/* Chroma (saturation intensity) */
+	--chroma: 0.15;
+}
+
+/* ============================================
+   OKLCH COLOR FORMULAS
+   Generate all nuances from hue + chroma
+   ============================================ */
 @theme {
-	/* Primary Colors - Professional Blue */
-	--color-primary-50: oklch(97% 0.01 250);
-	--color-primary-100: oklch(94% 0.02 250);
-	--color-primary-200: oklch(88% 0.04 250);
-	--color-primary-300: oklch(78% 0.08 250);
-	--color-primary-400: oklch(65% 0.12 250);
-	--color-primary-500: oklch(55% 0.15 250);
-	--color-primary-600: oklch(48% 0.15 250);
-	--color-primary-700: oklch(42% 0.13 250);
-	--color-primary-800: oklch(35% 0.1 250);
-	--color-primary-900: oklch(28% 0.08 250);
-	--color-primary-950: oklch(20% 0.05 250);
+	/* Primary Colors */
+	--color-primary-50: oklch(97% calc(var(--chroma) * 0.13) var(--hue-primary));
+	--color-primary-100: oklch(94% calc(var(--chroma) * 0.27) var(--hue-primary));
+	--color-primary-200: oklch(88% calc(var(--chroma) * 0.53) var(--hue-primary));
+	--color-primary-300: oklch(78% calc(var(--chroma) * 0.8) var(--hue-primary));
+	--color-primary-400: oklch(68% calc(var(--chroma) * 0.93) var(--hue-primary));
+	--color-primary-500: oklch(55% var(--chroma) var(--hue-primary));
+	--color-primary-600: oklch(48% var(--chroma) var(--hue-primary));
+	--color-primary-700: oklch(40% calc(var(--chroma) * 0.93) var(--hue-primary));
+	--color-primary-800: oklch(32% calc(var(--chroma) * 0.8) var(--hue-primary));
+	--color-primary-900: oklch(24% calc(var(--chroma) * 0.67) var(--hue-primary));
+	--color-primary-950: oklch(15% calc(var(--chroma) * 0.53) var(--hue-primary));
 
-	/* Secondary Colors - Neutral Slate */
-	--color-secondary-50: oklch(98% 0.005 260);
-	--color-secondary-100: oklch(96% 0.01 260);
-	--color-secondary-200: oklch(91% 0.01 260);
-	--color-secondary-300: oklch(82% 0.02 260);
-	--color-secondary-400: oklch(70% 0.02 260);
-	--color-secondary-500: oklch(55% 0.02 260);
-	--color-secondary-600: oklch(45% 0.02 260);
-	--color-secondary-700: oklch(37% 0.02 260);
-	--color-secondary-800: oklch(28% 0.015 260);
-	--color-secondary-900: oklch(22% 0.01 260);
-	--color-secondary-950: oklch(15% 0.005 260);
+	/* Accent Colors */
+	--color-accent-50: oklch(97% calc(var(--chroma) * 0.13) var(--hue-accent));
+	--color-accent-100: oklch(94% calc(var(--chroma) * 0.27) var(--hue-accent));
+	--color-accent-200: oklch(88% calc(var(--chroma) * 0.53) var(--hue-accent));
+	--color-accent-300: oklch(78% calc(var(--chroma) * 0.8) var(--hue-accent));
+	--color-accent-400: oklch(70% calc(var(--chroma) * 0.93) var(--hue-accent));
+	--color-accent-500: oklch(60% var(--chroma) var(--hue-accent));
+	--color-accent-600: oklch(52% var(--chroma) var(--hue-accent));
+	--color-accent-700: oklch(45% calc(var(--chroma) * 0.93) var(--hue-accent));
+	--color-accent-800: oklch(38% calc(var(--chroma) * 0.8) var(--hue-accent));
+	--color-accent-900: oklch(30% calc(var(--chroma) * 0.67) var(--hue-accent));
+	--color-accent-950: oklch(22% calc(var(--chroma) * 0.53) var(--hue-accent));
 
-	/* Accent Colors - Vibrant Teal */
-	--color-accent-50: oklch(97% 0.02 180);
-	--color-accent-100: oklch(94% 0.04 180);
-	--color-accent-200: oklch(88% 0.08 180);
-	--color-accent-300: oklch(78% 0.12 180);
-	--color-accent-400: oklch(70% 0.14 180);
-	--color-accent-500: oklch(60% 0.14 180);
-	--color-accent-600: oklch(52% 0.12 180);
-	--color-accent-700: oklch(45% 0.1 180);
-	--color-accent-800: oklch(38% 0.08 180);
-	--color-accent-900: oklch(30% 0.06 180);
-	--color-accent-950: oklch(22% 0.04 180);
+	/* Secondary/Neutral Colors */
+	--color-secondary-50: oklch(98% calc(var(--chroma) * 0.03) var(--hue-neutral));
+	--color-secondary-100: oklch(96% calc(var(--chroma) * 0.07) var(--hue-neutral));
+	--color-secondary-200: oklch(91% calc(var(--chroma) * 0.07) var(--hue-neutral));
+	--color-secondary-300: oklch(82% calc(var(--chroma) * 0.13) var(--hue-neutral));
+	--color-secondary-400: oklch(70% calc(var(--chroma) * 0.13) var(--hue-neutral));
+	--color-secondary-500: oklch(55% calc(var(--chroma) * 0.13) var(--hue-neutral));
+	--color-secondary-600: oklch(45% calc(var(--chroma) * 0.13) var(--hue-neutral));
+	--color-secondary-700: oklch(37% calc(var(--chroma) * 0.13) var(--hue-neutral));
+	--color-secondary-800: oklch(28% calc(var(--chroma) * 0.1) var(--hue-neutral));
+	--color-secondary-900: oklch(22% calc(var(--chroma) * 0.07) var(--hue-neutral));
+	--color-secondary-950: oklch(15% calc(var(--chroma) * 0.03) var(--hue-neutral));
 
-	/* Semantic Colors */
-	--color-success-50: oklch(97% 0.02 145);
-	--color-success-500: oklch(55% 0.15 145);
-	--color-success-600: oklch(48% 0.14 145);
-	--color-success-700: oklch(42% 0.12 145);
+	/* Success Colors */
+	--color-success-50: oklch(97% calc(var(--chroma) * 0.13) var(--hue-success));
+	--color-success-500: oklch(55% var(--chroma) var(--hue-success));
+	--color-success-600: oklch(48% var(--chroma) var(--hue-success));
+	--color-success-700: oklch(42% calc(var(--chroma) * 0.8) var(--hue-success));
 
-	--color-warning-50: oklch(98% 0.03 85);
-	--color-warning-500: oklch(75% 0.15 85);
-	--color-warning-600: oklch(65% 0.14 85);
-	--color-warning-700: oklch(55% 0.12 85);
+	/* Warning Colors */
+	--color-warning-50: oklch(98% calc(var(--chroma) * 0.2) var(--hue-warning));
+	--color-warning-500: oklch(75% var(--chroma) var(--hue-warning));
+	--color-warning-600: oklch(65% var(--chroma) var(--hue-warning));
+	--color-warning-700: oklch(55% calc(var(--chroma) * 0.8) var(--hue-warning));
 
-	--color-error-50: oklch(97% 0.02 25);
-	--color-error-500: oklch(55% 0.2 25);
-	--color-error-600: oklch(48% 0.18 25);
-	--color-error-700: oklch(42% 0.15 25);
+	/* Error Colors */
+	--color-error-50: oklch(97% calc(var(--chroma) * 0.13) var(--hue-error));
+	--color-error-500: oklch(55% calc(var(--chroma) * 1.33) var(--hue-error));
+	--color-error-600: oklch(48% calc(var(--chroma) * 1.2) var(--hue-error));
+	--color-error-700: oklch(42% var(--chroma) var(--hue-error));
 
-	/* Typography - Inter for UI, clean and readable */
-	--font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-	--font-mono: 'JetBrains Mono', ui-monospace, monospace;
+	/* Typography */
+	--font-sans: var(--font-body, 'Inter'), ui-sans-serif, system-ui, sans-serif;
+	--font-heading: var(--font-heading-family, 'Inter'), ui-sans-serif, system-ui, sans-serif;
+	--font-mono: var(--font-mono-family, 'JetBrains Mono'), ui-monospace, monospace;
 
 	/* Font Sizes */
 	--text-xs: 0.75rem;
@@ -111,24 +138,463 @@
 	--transition-slow: 300ms ease;
 }
 
-/* Theme CSS Variables - Applied dynamically via layout */
-:root {
-	--theme-primary: oklch(48% 0.15 250);
-	--theme-accent: oklch(52% 0.12 180);
-	--theme-background: oklch(98% 0.005 260);
-	--theme-surface: oklch(100% 0 0);
-	--theme-text: oklch(22% 0.01 260);
-	--theme-text-muted: oklch(45% 0.02 260);
-	--theme-border: oklch(91% 0.01 260);
-	--font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
-	--font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
-	--font-mono: 'JetBrains Mono', ui-monospace, monospace;
+/* ============================================
+   18 PALETTES - Professional
+   ============================================ */
+
+/* Default - Professional Blue (default values in :root) */
+
+[data-palette='corporate'] {
+	--hue-primary: 220;
+	--hue-accent: 200;
+	--hue-neutral: 220;
+	--hue-success: 145;
+	--hue-warning: 45;
+	--hue-error: 25;
+	--chroma: 0.12;
 }
 
-/* Base Styles */
+[data-palette='executive'] {
+	--hue-primary: 240;
+	--hue-accent: 280;
+	--hue-neutral: 240;
+	--hue-success: 145;
+	--hue-warning: 45;
+	--hue-error: 25;
+	--chroma: 0.1;
+}
+
+/* ============================================
+   18 PALETTES - Nature
+   ============================================ */
+
+[data-palette='forest'] {
+	--hue-primary: 145;
+	--hue-accent: 85;
+	--hue-neutral: 145;
+	--hue-success: 120;
+	--hue-warning: 55;
+	--hue-error: 15;
+	--chroma: 0.15;
+}
+
+[data-palette='ocean'] {
+	--hue-primary: 200;
+	--hue-accent: 180;
+	--hue-neutral: 210;
+	--hue-success: 145;
+	--hue-warning: 45;
+	--hue-error: 25;
+	--chroma: 0.15;
+}
+
+[data-palette='earth'] {
+	--hue-primary: 35;
+	--hue-accent: 85;
+	--hue-neutral: 40;
+	--hue-success: 120;
+	--hue-warning: 55;
+	--hue-error: 15;
+	--chroma: 0.12;
+}
+
+/* ============================================
+   18 PALETTES - Vibrant
+   ============================================ */
+
+[data-palette='neon'] {
+	--hue-primary: 280;
+	--hue-accent: 320;
+	--hue-neutral: 260;
+	--hue-success: 150;
+	--hue-warning: 50;
+	--hue-error: 350;
+	--chroma: 0.22;
+}
+
+[data-palette='electric'] {
+	--hue-primary: 240;
+	--hue-accent: 60;
+	--hue-neutral: 250;
+	--hue-success: 145;
+	--hue-warning: 45;
+	--hue-error: 25;
+	--chroma: 0.2;
+}
+
+[data-palette='tropical'] {
+	--hue-primary: 170;
+	--hue-accent: 45;
+	--hue-neutral: 180;
+	--hue-success: 145;
+	--hue-warning: 45;
+	--hue-error: 25;
+	--chroma: 0.18;
+}
+
+/* ============================================
+   18 PALETTES - Minimal
+   ============================================ */
+
+[data-palette='paper'] {
+	--hue-primary: 220;
+	--hue-accent: 200;
+	--hue-neutral: 220;
+	--hue-success: 145;
+	--hue-warning: 45;
+	--hue-error: 25;
+	--chroma: 0.08;
+}
+
+[data-palette='slate'] {
+	--hue-primary: 210;
+	--hue-accent: 210;
+	--hue-neutral: 210;
+	--hue-success: 145;
+	--hue-warning: 45;
+	--hue-error: 25;
+	--chroma: 0.06;
+}
+
+[data-palette='stone'] {
+	--hue-primary: 30;
+	--hue-accent: 30;
+	--hue-neutral: 30;
+	--hue-success: 145;
+	--hue-warning: 45;
+	--hue-error: 25;
+	--chroma: 0.05;
+}
+
+/* ============================================
+   18 PALETTES - Warm
+   ============================================ */
+
+[data-palette='amber'] {
+	--hue-primary: 45;
+	--hue-accent: 25;
+	--hue-neutral: 40;
+	--hue-success: 145;
+	--hue-warning: 55;
+	--hue-error: 15;
+	--chroma: 0.15;
+}
+
+[data-palette='rose'] {
+	--hue-primary: 350;
+	--hue-accent: 320;
+	--hue-neutral: 355;
+	--hue-success: 145;
+	--hue-warning: 45;
+	--hue-error: 25;
+	--chroma: 0.14;
+}
+
+[data-palette='terracotta'] {
+	--hue-primary: 25;
+	--hue-accent: 35;
+	--hue-neutral: 25;
+	--hue-success: 120;
+	--hue-warning: 55;
+	--hue-error: 5;
+	--chroma: 0.13;
+}
+
+/* ============================================
+   18 PALETTES - Cool
+   ============================================ */
+
+[data-palette='arctic'] {
+	--hue-primary: 200;
+	--hue-accent: 180;
+	--hue-neutral: 210;
+	--hue-success: 145;
+	--hue-warning: 45;
+	--hue-error: 25;
+	--chroma: 0.12;
+}
+
+[data-palette='indigo'] {
+	--hue-primary: 260;
+	--hue-accent: 280;
+	--hue-neutral: 260;
+	--hue-success: 145;
+	--hue-warning: 45;
+	--hue-error: 25;
+	--chroma: 0.16;
+}
+
+[data-palette='mint'] {
+	--hue-primary: 160;
+	--hue-accent: 145;
+	--hue-neutral: 165;
+	--hue-success: 145;
+	--hue-warning: 45;
+	--hue-error: 25;
+	--chroma: 0.14;
+}
+
+/* ============================================
+   FONT PAIRINGS
+   Each font defines heading, body, and mono families
+   Google Fonts loaded dynamically in +layout.svelte
+   ============================================ */
+
+/* === Sans-Serif Fonts === */
+
+/* Interface - Default (values in :root) */
+:root {
+	--font-heading-family: 'Inter';
+	--font-body: 'Inter';
+	--font-mono-family: 'JetBrains Mono';
+}
+
+[data-font='modern'] {
+	--font-heading-family: 'Poppins';
+	--font-body: 'Open Sans';
+	--font-mono-family: 'Roboto Mono';
+}
+
+[data-font='humanist'] {
+	--font-heading-family: 'Nunito';
+	--font-body: 'Nunito Sans';
+	--font-mono-family: 'Fira Code';
+}
+
+[data-font='geometric'] {
+	--font-heading-family: 'Outfit';
+	--font-body: 'DM Sans';
+	--font-mono-family: 'DM Mono';
+}
+
+[data-font='minimal'] {
+	--font-heading-family: 'Manrope';
+	--font-body: 'Karla';
+	--font-mono-family: 'Space Mono';
+}
+
+[data-font='startup'] {
+	--font-heading-family: 'Plus Jakarta Sans';
+	--font-body: 'Plus Jakarta Sans';
+	--font-mono-family: 'Inconsolata';
+}
+
+[data-font='professional'] {
+	--font-heading-family: 'Lexend';
+	--font-body: 'Work Sans';
+	--font-mono-family: 'Source Code Pro';
+}
+
+[data-font='friendly'] {
+	--font-heading-family: 'Quicksand';
+	--font-body: 'Rubik';
+	--font-mono-family: 'Fira Code';
+}
+
+[data-font='rounded'] {
+	--font-heading-family: 'Comfortaa';
+	--font-body: 'Varela Round';
+	--font-mono-family: 'Ubuntu Mono';
+}
+
+[data-font='nordic'] {
+	--font-heading-family: 'Albert Sans';
+	--font-body: 'Figtree';
+	--font-mono-family: 'JetBrains Mono';
+}
+
+/* === Serif Fonts === */
+
+[data-font='editorial'] {
+	--font-heading-family: 'Source Serif 4';
+	--font-body: 'Source Sans 3';
+	--font-mono-family: 'Source Code Pro';
+}
+
+[data-font='classic'] {
+	--font-heading-family: 'Playfair Display';
+	--font-body: 'Lato';
+	--font-mono-family: 'Inconsolata';
+}
+
+[data-font='literary'] {
+	--font-heading-family: 'Merriweather';
+	--font-body: 'Merriweather';
+	--font-mono-family: 'Fira Code';
+}
+
+[data-font='magazine'] {
+	--font-heading-family: 'Libre Baskerville';
+	--font-body: 'Libre Franklin';
+	--font-mono-family: 'Roboto Mono';
+}
+
+[data-font='academic'] {
+	--font-heading-family: 'Crimson Pro';
+	--font-body: 'Crimson Pro';
+	--font-mono-family: 'JetBrains Mono';
+}
+
+[data-font='elegant'] {
+	--font-heading-family: 'Cormorant Garamond';
+	--font-body: 'Proza Libre';
+	--font-mono-family: 'Source Code Pro';
+}
+
+[data-font='news'] {
+	--font-heading-family: 'PT Serif';
+	--font-body: 'PT Sans';
+	--font-mono-family: 'PT Mono';
+}
+
+[data-font='typewriter'] {
+	--font-heading-family: 'Courier Prime';
+	--font-body: 'Spectral';
+	--font-mono-family: 'Courier Prime';
+}
+
+[data-font='transitional'] {
+	--font-heading-family: 'Lora';
+	--font-body: 'Roboto';
+	--font-mono-family: 'Roboto Mono';
+}
+
+[data-font='contemporary'] {
+	--font-heading-family: 'Fraunces';
+	--font-body: 'Commissioner';
+	--font-mono-family: 'Fira Code';
+}
+
+/* === Display Fonts === */
+
+[data-font='bold-statement'] {
+	--font-heading-family: 'Bebas Neue';
+	--font-body: 'Montserrat';
+	--font-mono-family: 'Space Mono';
+}
+
+[data-font='creative'] {
+	--font-heading-family: 'Abril Fatface';
+	--font-body: 'Raleway';
+	--font-mono-family: 'Fira Code';
+}
+
+[data-font='luxe'] {
+	--font-heading-family: 'Bodoni Moda';
+	--font-body: 'Josefin Sans';
+	--font-mono-family: 'Inconsolata';
+}
+
+[data-font='vintage'] {
+	--font-heading-family: 'Archivo Black';
+	--font-body: 'Archivo';
+	--font-mono-family: 'IBM Plex Mono';
+}
+
+[data-font='urban'] {
+	--font-heading-family: 'Oswald';
+	--font-body: 'Source Sans 3';
+	--font-mono-family: 'Source Code Pro';
+}
+
+[data-font='playful'] {
+	--font-heading-family: 'Fredoka';
+	--font-body: 'Nunito';
+	--font-mono-family: 'Ubuntu Mono';
+}
+
+[data-font='art-deco'] {
+	--font-heading-family: 'Poiret One';
+	--font-body: 'Quicksand';
+	--font-mono-family: 'Space Mono';
+}
+
+[data-font='condensed'] {
+	--font-heading-family: 'Barlow Condensed';
+	--font-body: 'Barlow';
+	--font-mono-family: 'Fira Code';
+}
+
+[data-font='contrast'] {
+	--font-heading-family: 'Yeseva One';
+	--font-body: 'Noto Sans';
+	--font-mono-family: 'Noto Sans Mono';
+}
+
+[data-font='slab'] {
+	--font-heading-family: 'Alfa Slab One';
+	--font-body: 'Public Sans';
+	--font-mono-family: 'JetBrains Mono';
+}
+
+/* === Technical Fonts === */
+
+[data-font='technical'] {
+	--font-heading-family: 'IBM Plex Sans';
+	--font-body: 'IBM Plex Sans';
+	--font-mono-family: 'IBM Plex Mono';
+}
+
+[data-font='developer'] {
+	--font-heading-family: 'JetBrains Mono';
+	--font-body: 'Inter';
+	--font-mono-family: 'JetBrains Mono';
+}
+
+[data-font='terminal'] {
+	--font-heading-family: 'Fira Code';
+	--font-body: 'Fira Sans';
+	--font-mono-family: 'Fira Code';
+}
+
+[data-font='data'] {
+	--font-heading-family: 'Roboto';
+	--font-body: 'Roboto';
+	--font-mono-family: 'Roboto Mono';
+}
+
+[data-font='science'] {
+	--font-heading-family: 'STIX Two Text';
+	--font-body: 'STIX Two Text';
+	--font-mono-family: 'Source Code Pro';
+}
+
+[data-font='engineering'] {
+	--font-heading-family: 'Share Tech';
+	--font-body: 'Exo 2';
+	--font-mono-family: 'Share Tech Mono';
+}
+
+[data-font='system'] {
+	--font-heading-family: 'Ubuntu';
+	--font-body: 'Ubuntu';
+	--font-mono-family: 'Ubuntu Mono';
+}
+
+[data-font='console'] {
+	--font-heading-family: 'VT323';
+	--font-body: 'Anonymous Pro';
+	--font-mono-family: 'VT323';
+}
+
+[data-font='monospace'] {
+	--font-heading-family: 'Space Mono';
+	--font-body: 'Space Grotesk';
+	--font-mono-family: 'Space Mono';
+}
+
+[data-font='documentation'] {
+	--font-heading-family: 'Atkinson Hyperlegible';
+	--font-body: 'Atkinson Hyperlegible';
+	--font-mono-family: 'JetBrains Mono';
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
 @layer base {
 	html {
-		font-family: var(--font-body);
+		font-family: var(--font-body, 'Inter'), ui-sans-serif, system-ui, sans-serif;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		color-scheme: light;
@@ -151,7 +617,7 @@
 	h5,
 	h6 {
 		@apply font-semibold text-secondary-900 dark:text-secondary-100;
-		font-family: var(--font-heading);
+		font-family: var(--font-heading-family, 'Inter'), ui-sans-serif, system-ui, sans-serif;
 		line-height: 1.25;
 	}
 
@@ -185,7 +651,9 @@
 	}
 }
 
-/* Component Layer - Reusable component styles */
+/* ============================================
+   COMPONENT STYLES
+   ============================================ */
 @layer components {
 	/* Buttons - Base styles included in each variant */
 	.btn-primary {
