@@ -62,14 +62,7 @@
 		icon: 'lucide:layout-dashboard'
 	};
 
-	const publicNavLinks: NavLink[] = [
-		{
-			href: 'https://doi.org/10.5281/zenodo.18241663',
-			label: 'Archive',
-			icon: 'lucide:archive',
-			external: true
-		}
-	];
+	const publicNavLinks: NavLink[] = [];
 
 	const homeLink: NavLink = {
 		href: '/',
@@ -88,10 +81,13 @@
 	const mobileNavLinks = $derived([
 		{ href: '/', label: 'Home', icon: 'lucide:home' },
 		...(data.user ? [dashboardLink] : []),
-		{ href: '/repository', label: 'Repository', icon: 'lucide:bar-chart-2' },
-		{ href: '/api/docs', label: 'API Docs', icon: 'lucide:code' },
 		...(data.isAdmin ? [themeLink] : []),
-		...publicNavLinks,
+		{
+			href: 'https://doi.org/10.5281/zenodo.18241663',
+			label: 'Archive',
+			icon: 'lucide:archive',
+			external: true
+		},
 		{
 			href: 'https://github.com/univ-lehavre/talent-finder',
 			label: 'GitHub',
@@ -146,16 +142,46 @@
 						{link.label}
 					</a>
 				{/each}
-				<a
-					href="https://github.com/univ-lehavre/talent-finder"
-					target="_blank"
-					rel="noopener noreferrer"
-					title="View on GitHub"
-					class="text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-				>
-					<Icon icon="mdi:github" width="20" height="20" />
-					<span class="sr-only">GitHub</span>
-				</a>
+				<div class="icon-link-wrapper group relative">
+					<a
+						href="https://doi.org/10.5281/zenodo.18241663"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+						aria-describedby="tooltip-archive"
+					>
+						<Icon icon="lucide:archive" width="20" height="20" />
+						<span class="sr-only">Archive</span>
+					</a>
+					<div
+						id="tooltip-archive"
+						role="tooltip"
+						class="icon-tooltip opacity-0 invisible group-hover:opacity-100 group-hover:visible"
+					>
+						<span class="font-semibold">Archive</span>
+						<span class="text-secondary-400 dark:text-secondary-500">Zenodo permanent archive</span>
+					</div>
+				</div>
+				<div class="icon-link-wrapper group relative">
+					<a
+						href="https://github.com/univ-lehavre/talent-finder"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+						aria-describedby="tooltip-github"
+					>
+						<Icon icon="mdi:github" width="20" height="20" />
+						<span class="sr-only">GitHub</span>
+					</a>
+					<div
+						id="tooltip-github"
+						role="tooltip"
+						class="icon-tooltip opacity-0 invisible group-hover:opacity-100 group-hover:visible"
+					>
+						<span class="font-semibold">GitHub</span>
+						<span class="text-secondary-400 dark:text-secondary-500">View source code</span>
+					</div>
+				</div>
 				<ThemeToggle />
 				{#if data.user}
 					<span class="text-sm text-secondary-600 dark:text-secondary-300">{data.user.email}</span>
@@ -167,15 +193,18 @@
 				{/if}
 			</div>
 
-			<!-- Mobile Menu Button -->
-			<button
-				type="button"
-				class="md:hidden p-2 text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400"
-				onclick={toggleMobileMenu}
-				aria-label="Toggle menu"
-			>
-				<Icon icon={mobileMenuOpen ? 'lucide:x' : 'lucide:menu'} width="24" height="24" />
-			</button>
+			<!-- Mobile Navigation -->
+			<div class="md:hidden flex items-center gap-2">
+				<ThemeToggle />
+				<button
+					type="button"
+					class="p-2 text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400"
+					onclick={toggleMobileMenu}
+					aria-label="Toggle menu"
+				>
+					<Icon icon={mobileMenuOpen ? 'lucide:x' : 'lucide:menu'} width="24" height="24" />
+				</button>
+			</div>
 		</div>
 	</nav>
 
@@ -286,3 +315,47 @@
 
 <!-- Signup Modal -->
 <Signup {form} bind:open={signupOpen} />
+
+<style>
+	.icon-tooltip {
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		margin-top: 0.5rem;
+		padding: 0.5rem 0.75rem;
+		background: var(--color-secondary-800);
+		border-radius: 0.375rem;
+		box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+		white-space: nowrap;
+		z-index: 50;
+		display: flex;
+		flex-direction: column;
+		gap: 0.125rem;
+		font-size: 0.75rem;
+		line-height: 1rem;
+		color: var(--color-secondary-100);
+		transition:
+			opacity 0.15s ease-in-out,
+			visibility 0.15s ease-in-out;
+		pointer-events: none;
+	}
+
+	.icon-tooltip::before {
+		content: '';
+		position: absolute;
+		bottom: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		border: 6px solid transparent;
+		border-bottom-color: var(--color-secondary-800);
+	}
+
+	:global(.dark) .icon-tooltip {
+		background: var(--color-secondary-700);
+	}
+
+	:global(.dark) .icon-tooltip::before {
+		border-bottom-color: var(--color-secondary-700);
+	}
+</style>

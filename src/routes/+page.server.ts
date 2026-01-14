@@ -1,4 +1,4 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 import type { Actions } from './$types';
 import { signupWithEmail, logout } from '$lib/server/auth';
@@ -37,6 +37,6 @@ export const actions = {
 		} catch {
 			// Ignore logout errors - we'll clear the cookie anyway
 		}
-		return { loggedOut: true };
+		redirect(303, '/');
 	}
 } satisfies Actions;

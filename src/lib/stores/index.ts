@@ -2,11 +2,15 @@
  * Stores index - exports all global stores
  */
 export {
+	clearFontPreference,
+	clearPalettePreference,
+	clearThemePreferences,
 	createThemeStore,
 	getDarkMode,
 	getFont,
 	getFontName,
 	getPalette,
+	hasThemePreferences,
 	initTheme,
 	setDarkMode,
 	setFont,

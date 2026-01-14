@@ -126,26 +126,44 @@ export const setDarkMode = (mode: DarkMode): void => {
 };
 
 /**
+ * Get a random palette name
+ */
+const getRandomPalette = (): PaletteName => {
+	return paletteNames[Math.floor(Math.random() * paletteNames.length)];
+};
+
+/**
+ * Get a random font name
+ */
+const getRandomFont = (): string => {
+	return fontPairings[Math.floor(Math.random() * fontPairings.length)].name;
+};
+
+/**
  * Initialize theme from cookies
+ * If no cookie exists, selects a random value without saving to cookie
  * Call this on client-side mount
  */
 export const initTheme = (): void => {
-	// Initialize palette
+	// Initialize palette (from cookie or random)
 	const savedPalette = getCookie(COOKIE_PALETTE) as PaletteName | null;
 	if (savedPalette && paletteNames.includes(savedPalette)) {
 		currentPalette = savedPalette;
-		applyPalette(savedPalette);
+	} else {
+		// Random selection without saving to cookie
+		currentPalette = getRandomPalette();
 	}
+	applyPalette(currentPalette);
 
-	// Initialize font
+	// Initialize font (from cookie or random)
 	const savedFontName = getCookie(COOKIE_FONT);
-	if (savedFontName) {
-		const found = getFontByName(savedFontName);
-		if (found) {
-			currentFontName = savedFontName;
-			applyFont(savedFontName);
-		}
+	if (savedFontName && getFontByName(savedFontName)) {
+		currentFontName = savedFontName;
+	} else {
+		// Random selection without saving to cookie
+		currentFontName = getRandomFont();
 	}
+	applyFont(currentFontName);
 
 	// Initialize dark mode
 	const savedDarkMode = getCookie(COOKIE_DARK_MODE) as DarkMode | null;
@@ -162,6 +180,53 @@ export const initTheme = (): void => {
 			}
 		});
 	}
+};
+
+/**
+ * Delete a cookie by setting it to expire
+ */
+const deleteCookie = (name: string): void => {
+	if (typeof document === 'undefined') return;
+	document.cookie = `${name}=; path=/; max-age=0; SameSite=Lax`;
+};
+
+/**
+ * Check if theme preferences are saved in cookies
+ */
+export const hasThemePreferences = (): { palette: boolean; font: boolean } => {
+	return {
+		palette: getCookie(COOKIE_PALETTE) !== null,
+		font: getCookie(COOKIE_FONT) !== null
+	};
+};
+
+/**
+ * Clear theme preferences from cookies and reinitialize with random values
+ */
+export const clearThemePreferences = (): void => {
+	deleteCookie(COOKIE_PALETTE);
+	deleteCookie(COOKIE_FONT);
+
+	// Set random values without saving to cookies
+	currentPalette = getRandomPalette();
+	currentFontName = getRandomFont();
+
+	applyPalette(currentPalette);
+	applyFont(currentFontName);
+};
+
+/**
+ * Clear only palette preference from cookie
+ */
+export const clearPalettePreference = (): void => {
+	deleteCookie(COOKIE_PALETTE);
+};
+
+/**
+ * Clear only font preference from cookie
+ */
+export const clearFontPreference = (): void => {
+	deleteCookie(COOKIE_FONT);
 };
 
 /**

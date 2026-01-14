@@ -18,7 +18,15 @@
 		getPalettePreviewColors,
 		type PaletteName
 	} from '$lib/palettes';
-	import { createThemeStore, initTheme, fontCategories, getFontsByCategory } from '$lib/stores';
+	import {
+		createThemeStore,
+		fontCategories,
+		getFontsByCategory,
+		clearThemePreferences,
+		hasThemePreferences,
+		setPalette,
+		setFont
+	} from '$lib/stores';
 
 	const themeStore = createThemeStore();
 
@@ -27,6 +35,8 @@
 	let paletteDropdownOpen = $state(false);
 	let fontDropdownOpen = $state(false);
 	let appliedFeedback = $state(false);
+	let resetFeedback = $state(false);
+	let savedPreferences = $state({ palette: false, font: false });
 
 	/** Scroll to selected item when dropdown opens */
 	const scrollToSelected = (node: HTMLElement): void => {
@@ -64,17 +74,30 @@
 		fontDropdownOpen = false;
 	};
 
-	/** Apply theme settings and show feedback */
-	const applySettings = (): void => {
-		// Settings are already saved via stores, just show feedback
+	/** Set both palette and font as fixed (saved to cookies) */
+	const setTheme = (): void => {
+		setPalette(themeStore.palette);
+		setFont(themeStore.fontName);
 		appliedFeedback = true;
+		savedPreferences = hasThemePreferences();
 		setTimeout(() => {
 			appliedFeedback = false;
 		}, 2000);
 	};
 
+	/** Reset both palette and font to random mode (clear cookies and randomize) */
+	const resetTheme = (): void => {
+		clearThemePreferences();
+		resetFeedback = true;
+		savedPreferences = hasThemePreferences();
+		setTimeout(() => {
+			resetFeedback = false;
+		}, 2000);
+	};
+
 	onMount(() => {
-		initTheme();
+		// initTheme is called in +layout.svelte, just check preferences
+		savedPreferences = hasThemePreferences();
 	});
 </script>
 
@@ -330,21 +353,43 @@
 					{/if}
 				</div>
 
-				<!-- Apply Button -->
+				<!-- Reset Button -->
+				{#if savedPreferences.palette || savedPreferences.font}
+					<button
+						type="button"
+						class="h-[52px] px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 {resetFeedback
+							? 'bg-warning-600 text-white'
+							: 'btn-outline'}"
+						onclick={resetTheme}
+						disabled={resetFeedback}
+						title="Clear saved theme preferences and get new random values"
+					>
+						{#if resetFeedback}
+							<Icon icon="lucide:shuffle" width="16" height="16" />
+							Randomized!
+						{:else}
+							<Icon icon="lucide:rotate-ccw" width="16" height="16" />
+							Reset
+						{/if}
+					</button>
+				{/if}
+
+				<!-- Set Button -->
 				<button
 					type="button"
 					class="h-[52px] px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 {appliedFeedback
 						? 'bg-success-600 text-white'
 						: 'btn-primary'}"
-					onclick={applySettings}
+					onclick={setTheme}
 					disabled={appliedFeedback}
+					title="Save both palette and font as fixed preferences"
 				>
 					{#if appliedFeedback}
 						<Icon icon="lucide:check" width="16" height="16" />
-						Applied!
+						Fixed!
 					{:else}
-						<Icon icon="lucide:save" width="16" height="16" />
-						Apply
+						<Icon icon="lucide:lock" width="16" height="16" />
+						Set
 					{/if}
 				</button>
 			</div>

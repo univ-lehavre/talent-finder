@@ -43,6 +43,7 @@ export default defineConfig(
 			'**/routes/repository/+page.svelte',
 			'**/routes/+page.svelte',
 			'**/routes/+layout.svelte',
+			'**/routes/+error.svelte',
 			'**/routes/dashboard/+page.svelte'
 		],
 		rules: {
