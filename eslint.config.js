@@ -49,5 +49,12 @@ export default defineConfig(
 			// External links and static navigation don't need resolve()
 			'svelte/no-navigation-without-resolve': 'off'
 		}
+	},
+	{
+		files: ['**/routes/+layout.svelte'],
+		rules: {
+			// Static SVG from build-time import is safe
+			'svelte/no-at-html-tags': 'off'
+		}
 	}
 );

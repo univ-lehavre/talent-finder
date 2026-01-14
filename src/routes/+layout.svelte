@@ -2,6 +2,7 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import favicon from '$lib/assets/favicon.svg';
+	import logo from '$lib/assets/logo.svg?raw';
 	import { Icon, Signup, ThemeToggle } from '$lib/ui';
 	import { page } from '$app/stores';
 	import { createThemeStore, initTheme } from '$lib/stores';
@@ -121,7 +122,7 @@
 	>
 		<div class="container-app py-4 flex items-center justify-between">
 			<a href="/" class="flex items-center gap-2">
-				<img src="/favicon.svg" alt="" class="h-8 w-8" />
+				<span class="h-8 w-8 [&>svg]:h-full [&>svg]:w-full">{@html logo}</span>
 				<span class="text-xl font-bold text-primary-700 dark:text-primary-400">Talent Finder</span>
 			</a>
 
