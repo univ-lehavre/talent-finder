@@ -1,9 +1,45 @@
 <script lang="ts">
 	import '../app.css';
+	import { onMount } from 'svelte';
 	import favicon from '$lib/assets/favicon.svg';
-	import { Signup } from '$lib/ui';
+	import { Icon, Signup, ThemeToggle } from '$lib/ui';
 	import { page } from '$app/stores';
-	import * as icons from '$lib/icons';
+	import { createThemeStore, createFontStore, initTheme, initFontPairing } from '$lib/stores';
+
+	const themeStore = createThemeStore();
+	const fontStore = createFontStore();
+
+	/** Track if dark mode is active (based on .dark class on html element) */
+	let isDarkMode = $state(false);
+
+	/** Current theme colors - reactive to both theme changes and dark mode toggle */
+	let currentColors = $derived.by(() => {
+		const theme = themeStore.theme;
+		return isDarkMode ? theme.dark : theme.light;
+	});
+
+	onMount(() => {
+		initTheme();
+		initFontPairing();
+
+		// Check initial dark mode state from DOM
+		const updateDarkMode = (): void => {
+			isDarkMode = document.documentElement.classList.contains('dark');
+		};
+		updateDarkMode();
+
+		// Observe class changes on html element to detect theme toggle
+		const observer = new MutationObserver((mutations) => {
+			for (const mutation of mutations) {
+				if (mutation.attributeName === 'class') {
+					updateDarkMode();
+				}
+			}
+		});
+		observer.observe(document.documentElement, { attributes: true });
+
+		return () => observer.disconnect();
+	});
 
 	const isCurrentPage = (href: string): boolean => {
 		return $page.url.pathname === href || $page.url.pathname.startsWith(href + '/');
@@ -12,6 +48,7 @@
 	interface Props {
 		data: {
 			user: { email: string } | null;
+			isAdmin: boolean;
 		};
 		form: {
 			error?: boolean;
@@ -50,83 +87,116 @@
 	const dashboardLink: NavLink = {
 		href: '/dashboard',
 		label: 'Dashboard',
-		icon: icons.dashboard
+		icon: 'lucide:layout-dashboard'
 	};
 
 	const publicNavLinks: NavLink[] = [
-		{ href: '/repository', label: 'Repository', icon: icons.chartBar },
-		{ href: '/api/docs', label: 'API Docs', icon: icons.code },
-		{ href: '/design-system', label: 'Design System', icon: icons.colorSwatch },
 		{
 			href: 'https://doi.org/10.5281/zenodo.18241663',
 			label: 'Archive',
-			icon: icons.archive,
+			icon: 'lucide:archive',
 			external: true
 		}
 	];
 
-	const navLinks = $derived(data.user ? [dashboardLink, ...publicNavLinks] : publicNavLinks);
+	const homeLink: NavLink = {
+		href: '/',
+		label: 'Home',
+		icon: 'lucide:home'
+	};
 
-	const mobileNavLinks = $derived([{ href: '/', label: 'Home', icon: icons.home }, ...navLinks]);
+	const navLinks = $derived([homeLink, ...(data.user ? [dashboardLink] : []), ...publicNavLinks]);
+
+	const themeLink: NavLink = {
+		href: '/theme',
+		label: 'Theme',
+		icon: 'lucide:palette'
+	};
+
+	const mobileNavLinks = $derived([
+		{ href: '/', label: 'Home', icon: 'lucide:home' },
+		...(data.user ? [dashboardLink] : []),
+		{ href: '/repository', label: 'Repository', icon: 'lucide:bar-chart-2' },
+		{ href: '/api/docs', label: 'API Docs', icon: 'lucide:code' },
+		...(data.isAdmin ? [themeLink] : []),
+		...publicNavLinks,
+		{
+			href: 'https://github.com/univ-lehavre/talent-finder',
+			label: 'GitHub',
+			icon: 'mdi:github',
+			external: true
+		}
+	]);
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<!-- Load selected font pairing -->
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	{#key fontStore.pairing.name}
+		<link href={fontStore.pairing.googleFontsUrl} rel="stylesheet" />
+	{/key}
 </svelte:head>
 
-<div class="min-h-screen flex flex-col">
+<div
+	class="min-h-screen flex flex-col"
+	style="
+		--theme-primary: {currentColors.primary};
+		--theme-accent: {currentColors.accent};
+		--theme-background: {currentColors.background};
+		--theme-surface: {currentColors.surface};
+		--theme-text: {currentColors.text};
+		--theme-text-muted: {currentColors.textMuted};
+		--theme-border: {currentColors.border};
+		--font-heading: '{fontStore.pairing.heading}', sans-serif;
+		--font-body: '{fontStore.pairing.body}', sans-serif;
+		--font-mono: '{fontStore.pairing.mono}', monospace;
+	"
+>
 	<!-- Navigation -->
-	<nav class="bg-white border-b border-secondary-200 sticky top-0 z-50">
+	<nav
+		class="bg-white dark:bg-secondary-800 border-b border-secondary-200 dark:border-secondary-700 sticky top-0 z-50 transition-colors duration-200"
+	>
 		<div class="container-app py-4 flex items-center justify-between">
 			<a href="/" class="flex items-center gap-2">
 				<img src="/favicon.svg" alt="" class="h-8 w-8" />
-				<span class="text-xl font-bold text-primary-700">Talent Finder</span>
+				<span class="text-xl font-bold text-primary-700 dark:text-primary-400">Talent Finder</span>
 			</a>
 
 			<!-- Desktop Navigation -->
 			<div class="hidden md:flex items-center gap-4">
 				{#each navLinks as link (link.href)}
-					{@const isCurrent = !link.external && isCurrentPage(link.href)}
+					{@const isCurrent =
+						!link.external &&
+						(link.href === '/' ? $page.url.pathname === '/' : isCurrentPage(link.href))}
 					<a
 						href={link.href}
 						target={link.external ? '_blank' : undefined}
 						rel={link.external ? 'noopener noreferrer' : undefined}
+						title={link.external ? 'Opens in new tab' : undefined}
 						class="text-sm inline-flex items-center gap-1.5 {isCurrent
-							? 'text-secondary-400 cursor-default pointer-events-none'
-							: 'text-secondary-600 hover:text-primary-600'}"
+							? 'text-secondary-400 dark:text-secondary-500 cursor-default pointer-events-none'
+							: 'text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400'}"
 						aria-current={isCurrent ? 'page' : undefined}
 					>
-						<svg
-							class="w-4 h-4"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-							aria-hidden="true"
-						>
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={link.icon} />
-						</svg>
+						<Icon icon={link.icon} width="16" height="16" />
 						{link.label}
-						{#if link.external}
-							<svg
-								class="w-3 h-3"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-								aria-hidden="true"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d={icons.externalLink}
-								/>
-							</svg>
-							<span class="sr-only">(opens in new tab)</span>
-						{/if}
 					</a>
 				{/each}
+				<a
+					href="https://github.com/univ-lehavre/talent-finder"
+					target="_blank"
+					rel="noopener noreferrer"
+					title="View on GitHub"
+					class="text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+				>
+					<Icon icon="mdi:github" width="20" height="20" />
+					<span class="sr-only">GitHub</span>
+				</a>
+				<ThemeToggle />
 				{#if data.user}
-					<span class="text-sm text-secondary-600">{data.user.email}</span>
+					<span class="text-sm text-secondary-600 dark:text-secondary-300">{data.user.email}</span>
 					<form method="post" action="/?/logout">
 						<button type="submit" class="btn-secondary btn-sm">Déconnexion</button>
 					</form>
@@ -138,18 +208,11 @@
 			<!-- Mobile Menu Button -->
 			<button
 				type="button"
-				class="md:hidden p-2 text-secondary-600 hover:text-primary-600"
+				class="md:hidden p-2 text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400"
 				onclick={toggleMobileMenu}
 				aria-label="Toggle menu"
 			>
-				<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d={mobileMenuOpen ? icons.x : icons.menu}
-					/>
-				</svg>
+				<Icon icon={mobileMenuOpen ? 'lucide:x' : 'lucide:menu'} width="24" height="24" />
 			</button>
 		</div>
 	</nav>
@@ -165,18 +228,20 @@
 		></button>
 
 		<!-- Offcanvas Panel -->
-		<div class="fixed top-0 right-0 h-full w-72 bg-white shadow-xl z-50 md:hidden">
-			<div class="p-4 border-b border-secondary-200 flex items-center justify-between">
-				<span class="text-lg font-bold text-primary-700">Menu</span>
+		<div
+			class="fixed top-0 right-0 h-full w-72 bg-white dark:bg-secondary-800 shadow-xl z-50 md:hidden transition-colors duration-200"
+		>
+			<div
+				class="p-4 border-b border-secondary-200 dark:border-secondary-700 flex items-center justify-between"
+			>
+				<span class="text-lg font-bold text-primary-700 dark:text-primary-400">Menu</span>
 				<button
 					type="button"
-					class="p-2 text-secondary-600 hover:text-primary-600"
+					class="p-2 text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400"
 					onclick={closeMobileMenu}
 					aria-label="Close menu"
 				>
-					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={icons.x} />
-					</svg>
+					<Icon icon="lucide:x" width="24" height="24" />
 				</button>
 			</div>
 			<div class="p-4 flex flex-col gap-4">
@@ -188,51 +253,20 @@
 						href={link.href}
 						target={link.external ? '_blank' : undefined}
 						rel={link.external ? 'noopener noreferrer' : undefined}
-						class="py-2 border-b border-secondary-100 flex items-center justify-between {isCurrent
-							? 'text-secondary-400 cursor-default pointer-events-none'
-							: 'text-secondary-700 hover:text-primary-600'}"
+						title={link.external ? 'Opens in new tab' : undefined}
+						class="py-2 border-b border-secondary-100 dark:border-secondary-700 flex items-center gap-3 {isCurrent
+							? 'text-secondary-400 dark:text-secondary-500 cursor-default pointer-events-none'
+							: 'text-secondary-700 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400'}"
 						onclick={closeMobileMenu}
 						aria-current={isCurrent ? 'page' : undefined}
 					>
-						<span class="flex items-center gap-3">
-							<svg
-								class="w-5 h-5"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-								aria-hidden="true"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d={link.icon}
-								/>
-							</svg>
-							{link.label}
-						</span>
-						{#if link.external}
-							<svg
-								class="w-4 h-4 text-secondary-400"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-								aria-hidden="true"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d={icons.externalLink}
-								/>
-							</svg>
-							<span class="sr-only">(opens in new tab)</span>
-						{/if}
+						<Icon icon={link.icon} width="20" height="20" />
+						{link.label}
 					</a>
 				{/each}
-				<div class="pt-4 border-t border-secondary-200">
+				<div class="pt-4 border-t border-secondary-200 dark:border-secondary-700">
 					{#if data.user}
-						<p class="text-sm text-secondary-600 mb-3">{data.user.email}</p>
+						<p class="text-sm text-secondary-600 dark:text-secondary-400 mb-3">{data.user.email}</p>
 						<form method="post" action="/?/logout">
 							<button type="submit" class="btn-secondary w-full">Déconnexion</button>
 						</form>
@@ -259,7 +293,9 @@
 	</main>
 
 	<!-- Footer -->
-	<footer class="bg-secondary-100 border-t border-secondary-200 py-8">
+	<footer
+		class="bg-secondary-100 dark:bg-secondary-800 border-t border-secondary-200 dark:border-secondary-700 py-8 transition-colors duration-200"
+	>
 		<div class="container-app">
 			<div class="flex flex-col md:flex-row items-center justify-center gap-8">
 				<a
@@ -279,7 +315,7 @@
 					<img src="/logos/eunicoast.png" alt="EUNICoast" class="h-12" />
 				</a>
 			</div>
-			<p class="text-center text-sm text-secondary-500 mt-6">
+			<p class="text-center text-sm text-secondary-500 dark:text-secondary-400 mt-6">
 				Developed at Université Le Havre Normandie
 			</p>
 		</div>

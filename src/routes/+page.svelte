@@ -58,22 +58,29 @@
 </header>
 
 <!-- How it Works Section -->
-<section id="how-it-works" class="bg-white py-16 md:py-24 scroll-mt-16">
+<section
+	id="how-it-works"
+	class="bg-white dark:bg-secondary-900 py-16 md:py-24 scroll-mt-16 transition-colors duration-200"
+>
 	<div class="container-app">
-		<h2 class="text-3xl font-bold text-center mb-4">{content.howItWorks.title}</h2>
-		<p class="text-secondary-600 text-center mb-12 max-w-3xl mx-auto">
+		<h2 class="text-3xl font-bold text-center mb-4 text-secondary-900 dark:text-white">
+			{content.howItWorks.title}
+		</h2>
+		<p class="text-secondary-600 dark:text-secondary-400 text-center mb-12 max-w-3xl mx-auto">
 			{content.howItWorks.subtitle}
 		</p>
 		<div class="grid md:grid-cols-3 gap-8">
 			{#each content.howItWorks.steps as step (step.number)}
 				<div class="text-center">
 					<div
-						class="w-16 h-16 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4"
+						class="w-16 h-16 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4"
 					>
 						{step.number}
 					</div>
-					<h3 class="text-xl font-semibold mb-3 text-secondary-900">{step.title}</h3>
-					<p class="text-secondary-600">{step.description}</p>
+					<h3 class="text-xl font-semibold mb-3 text-secondary-900 dark:text-white">
+						{step.title}
+					</h3>
+					<p class="text-secondary-600 dark:text-secondary-400">{step.description}</p>
 				</div>
 			{/each}
 		</div>
@@ -81,18 +88,26 @@
 </section>
 
 <!-- State of the Art Section -->
-<section class="bg-secondary-50 py-16 md:py-24">
+<section
+	class="bg-secondary-50 dark:bg-secondary-800 py-16 md:py-24 transition-colors duration-200"
+>
 	<div class="container-app">
-		<h2 class="text-3xl font-bold text-center mb-4">{content.challenges.title}</h2>
-		<p class="text-secondary-600 text-center mb-12 max-w-3xl mx-auto">
+		<h2 class="text-3xl font-bold text-center mb-4 text-secondary-900 dark:text-white">
+			{content.challenges.title}
+		</h2>
+		<p class="text-secondary-600 dark:text-secondary-400 text-center mb-12 max-w-3xl mx-auto">
 			{content.challenges.subtitle}
 		</p>
 		<div class="grid md:grid-cols-3 gap-8">
 			{#each content.challenges.items as challenge (challenge.title)}
 				<div class="card hover:shadow-lg transition-shadow">
-					<h3 class="text-lg font-semibold mb-3 text-secondary-900">{challenge.title}</h3>
-					<p class="text-secondary-600 text-sm mb-4">{challenge.problem}</p>
-					<p class="text-primary-700 text-sm font-medium">{challenge.solution}</p>
+					<h3 class="text-lg font-semibold mb-3 text-secondary-900 dark:text-white">
+						{challenge.title}
+					</h3>
+					<p class="text-secondary-600 dark:text-secondary-400 text-sm mb-4">{challenge.problem}</p>
+					<p class="text-primary-700 dark:text-primary-400 text-sm font-medium">
+						{challenge.solution}
+					</p>
 				</div>
 			{/each}
 		</div>
@@ -100,10 +115,10 @@
 </section>
 
 <!-- CTA Section -->
-<section class="bg-white py-16">
+<section class="bg-white dark:bg-secondary-900 py-16 transition-colors duration-200">
 	<div class="container-app text-center">
-		<h2 class="text-3xl font-bold mb-4">{content.cta.title}</h2>
-		<p class="text-secondary-600 mb-8 max-w-3xl mx-auto">
+		<h2 class="text-3xl font-bold mb-4 text-secondary-900 dark:text-white">{content.cta.title}</h2>
+		<p class="text-secondary-600 dark:text-secondary-400 mb-8 max-w-3xl mx-auto">
 			{content.cta.subtitle}
 		</p>
 		{#if data.user}

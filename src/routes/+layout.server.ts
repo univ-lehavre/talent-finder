@@ -1,4 +1,4 @@
-import { getProfile, type TUser } from '$lib/server/user';
+import { getProfile, isAdmin, type TUser } from '$lib/server/user';
 import type { LayoutServerLoad } from './$types';
 
 /**
@@ -8,13 +8,13 @@ import type { LayoutServerLoad } from './$types';
 export const load: LayoutServerLoad = async ({ locals }) => {
 	const userId = locals.userId;
 	if (!userId) {
-		return { user: null };
+		return { user: null, isAdmin: false };
 	}
 
 	try {
 		const user: TUser = await getProfile(userId);
-		return { user };
+		return { user, isAdmin: isAdmin(user) };
 	} catch {
-		return { user: null };
+		return { user: null, isAdmin: false };
 	}
 };

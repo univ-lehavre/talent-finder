@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { Icon } from '$lib/ui';
+
 	interface Props {
 		data: {
 			user: { email: string } | null;
@@ -6,6 +8,42 @@
 	}
 
 	let { data }: Props = $props();
+
+	interface QuickAction {
+		href: string;
+		icon: string;
+		title: string;
+		description: string;
+		external?: boolean;
+	}
+
+	const quickActions: QuickAction[] = [
+		{
+			href: '/repository',
+			icon: 'lucide:bar-chart-2',
+			title: 'Repository Stats',
+			description: 'Explore code statistics and analytics'
+		},
+		{
+			href: '/api/docs',
+			icon: 'lucide:code',
+			title: 'API Documentation',
+			description: 'Browse the REST API reference'
+		},
+		{
+			href: '/theme',
+			icon: 'lucide:palette',
+			title: 'Theme Customization',
+			description: 'Customize colors and fonts'
+		},
+		{
+			href: 'https://doi.org/10.5281/zenodo.18241663',
+			icon: 'lucide:archive',
+			title: 'Archive',
+			description: 'Zenodo permanent archive',
+			external: true
+		}
+	];
 </script>
 
 <svelte:head>
@@ -16,23 +54,23 @@
 <div class="container-app py-12">
 	<div class="max-w-4xl mx-auto">
 		<h1 class="text-3xl font-bold mb-2">Dashboard</h1>
-		<p class="text-secondary-600 mb-8">
+		<p class="text-secondary-600 dark:text-secondary-400 mb-8">
 			Welcome back{data.user ? `, ${data.user.email}` : ''}.
 		</p>
 
 		<div class="grid md:grid-cols-2 gap-6">
 			<!-- Profile Card -->
 			<div class="card">
-				<h2 class="text-xl font-semibold mb-4 text-secondary-900">Your Profile</h2>
+				<h2 class="text-xl font-semibold mb-4">Your Profile</h2>
 				<div class="space-y-3">
 					<div>
-						<span class="text-sm text-secondary-500">Email</span>
-						<p class="text-secondary-900">{data.user?.email ?? 'Not logged in'}</p>
+						<span class="text-sm text-secondary-500 dark:text-secondary-400">Email</span>
+						<p>{data.user?.email ?? 'Not logged in'}</p>
 					</div>
 				</div>
 				<div class="mt-6">
 					<span
-						class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
+						class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200"
 					>
 						Profile incomplete
 					</span>
@@ -41,111 +79,53 @@
 
 			<!-- Quick Actions Card -->
 			<div class="card">
-				<h2 class="text-xl font-semibold mb-4 text-secondary-900">Quick Actions</h2>
+				<h2 class="text-xl font-semibold mb-4">Quick Actions</h2>
 				<div class="space-y-3">
-					<a
-						href="/repository"
-						class="flex items-center gap-3 p-3 rounded-lg border border-secondary-200 hover:border-primary-300 hover:bg-primary-50 transition-colors"
-					>
-						<svg
-							class="w-5 h-5 text-primary-600"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-							aria-hidden="true"
+					{#each quickActions as action (action.href)}
+						<a
+							href={action.href}
+							target={action.external ? '_blank' : undefined}
+							rel={action.external ? 'noopener noreferrer' : undefined}
+							title={action.external ? 'Opens in new tab' : undefined}
+							class="flex items-center gap-3 p-3 rounded-lg border border-secondary-200 dark:border-secondary-700 hover:border-primary-300 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
 						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+							<Icon
+								icon={action.icon}
+								width="20"
+								height="20"
+								class="text-primary-600 dark:text-primary-400"
 							/>
-						</svg>
-						<div>
-							<p class="font-medium text-secondary-900">View Repository Stats</p>
-							<p class="text-sm text-secondary-500">Explore code statistics and analytics</p>
-						</div>
-					</a>
-					<a
-						href="/api/docs"
-						class="flex items-center gap-3 p-3 rounded-lg border border-secondary-200 hover:border-primary-300 hover:bg-primary-50 transition-colors"
-					>
-						<svg
-							class="w-5 h-5 text-primary-600"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-							aria-hidden="true"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-							/>
-						</svg>
-						<div>
-							<p class="font-medium text-secondary-900">API Documentation</p>
-							<p class="text-sm text-secondary-500">Browse the REST API reference</p>
-						</div>
-					</a>
+							<div class="flex-1">
+								<p class="font-medium">{action.title}</p>
+								<p class="text-sm text-secondary-500 dark:text-secondary-400">
+									{action.description}
+								</p>
+							</div>
+						</a>
+					{/each}
 				</div>
 			</div>
 		</div>
 
 		<!-- Coming Soon Section -->
-		<div class="mt-8 p-6 bg-secondary-50 rounded-lg border border-secondary-200">
-			<h2 class="text-lg font-semibold mb-2 text-secondary-900">Coming Soon</h2>
-			<p class="text-secondary-600 mb-4">
+		<div
+			class="mt-8 p-6 bg-secondary-50 dark:bg-secondary-800 rounded-lg border border-secondary-200 dark:border-secondary-700"
+		>
+			<h2 class="text-lg font-semibold mb-2">Coming Soon</h2>
+			<p class="text-secondary-600 dark:text-secondary-400 mb-4">
 				We're working on new features to help you manage your profile and discover collaborators.
 			</p>
-			<ul class="space-y-2 text-secondary-600">
+			<ul class="space-y-2 text-secondary-600 dark:text-secondary-400">
 				<li class="flex items-center gap-2">
-					<svg
-						class="w-4 h-4 text-primary-500"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M5 13l4 4L19 7"
-						/>
-					</svg>
+					<Icon icon="lucide:check" width="16" height="16" class="text-primary-500" />
 					Complete profile with skills and expertise
 				</li>
 				<li class="flex items-center gap-2">
-					<svg
-						class="w-4 h-4 text-primary-500"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M5 13l4 4L19 7"
-						/>
-					</svg>
+					<Icon icon="lucide:check" width="16" height="16" class="text-primary-500" />
 					Search and discover other researchers
 				</li>
 				<li class="flex items-center gap-2">
-					<svg
-						class="w-4 h-4 text-primary-500"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M5 13l4 4L19 7"
-						/>
-					</svg>
+					<Icon icon="lucide:check" width="16" height="16" class="text-primary-500" />
 					Connect and collaborate on projects
 				</li>
 			</ul>

@@ -1,0 +1,89 @@
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+	import Icon from './Icon.svelte';
+
+	interface Props {
+		open?: boolean;
+		title: string;
+		onclose?: () => void;
+		children: Snippet;
+		footer?: Snippet;
+	}
+
+	let { open = $bindable(false), title, onclose, children, footer }: Props = $props();
+
+	const closeModal = (): void => {
+		open = false;
+		onclose?.();
+	};
+
+	const handleKeydown = (event: KeyboardEvent): void => {
+		if (event.key === 'Escape') {
+			closeModal();
+		}
+	};
+</script>
+
+<svelte:window onkeydown={handleKeydown} />
+
+{#if open}
+	<!-- Backdrop -->
+	<div
+		class="fixed inset-0 bg-secondary-900/50 z-40"
+		onclick={closeModal}
+		onkeydown={(e) => e.key === 'Enter' && closeModal()}
+		role="button"
+		tabindex="-1"
+		aria-label="Close modal"
+	></div>
+
+	<!-- Modal Container -->
+	<div
+		class="fixed inset-0 z-50 overflow-y-auto"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="modal-title"
+	>
+		<div class="flex min-h-full items-center justify-center p-4">
+			<!-- Modal Content -->
+			<!-- svelte-ignore a11y_no_static_element_interactions -->
+			<div
+				class="relative bg-white dark:bg-secondary-800 rounded-lg shadow-xl overflow-hidden"
+				style="width: min(28rem, calc(100vw - 2rem));"
+				onclick={(e) => e.stopPropagation()}
+				onkeydown={(e) => e.stopPropagation()}
+			>
+				<!-- Header -->
+				<div
+					class="flex items-center justify-between p-4 border-b border-secondary-200 dark:border-secondary-700"
+				>
+					<h2 id="modal-title" class="text-lg font-semibold">
+						{title}
+					</h2>
+					<button
+						type="button"
+						class="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 transition-colors p-1"
+						onclick={closeModal}
+						aria-label="Fermer"
+					>
+						<Icon icon="lucide:x" width="20" height="20" />
+					</button>
+				</div>
+
+				<!-- Body -->
+				<div class="p-4">
+					{@render children()}
+				</div>
+
+				<!-- Footer -->
+				{#if footer}
+					<div
+						class="p-4 border-t border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-900"
+					>
+						{@render footer()}
+					</div>
+				{/if}
+			</div>
+		</div>
+	</div>
+{/if}
