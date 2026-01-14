@@ -51,12 +51,3 @@ export class InvalidContentTypeError extends ApplicationError {
 		super('invalid_content_type', 400, message, opts);
 	}
 }
-
-/**
- * Error thrown when provided email is invalid or not allowed.
- */
-export class NotAnEmailError extends ApplicationError {
-	constructor(message = 'Registration not possible', opts?: { cause?: string; details?: unknown }) {
-		super('invalid_email', 400, message, opts);
-	}
-}

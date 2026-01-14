@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { getProfile } from '$lib/server/services/profile';
-import { mapErrorToResponse } from '$lib/errors/mapper';
+import { getProfile } from '$lib/server/user';
+import { mapErrorToResponse } from '$lib/server/http';
 
 export const GET: RequestHandler = async ({ locals }) => {
 	try {

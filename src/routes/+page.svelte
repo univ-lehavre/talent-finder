@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Signup from '$lib/ui/Signup.svelte';
+	import { Signup } from '$lib/ui';
 
 	interface Props {
 		data: {

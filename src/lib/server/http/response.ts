@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { ApplicationError } from '.';
+import { ApplicationError } from './errors';
 
 /**
  * Maps an error to a standardized JSON response.

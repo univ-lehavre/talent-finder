@@ -1,6 +1,6 @@
 import { fail } from '@sveltejs/kit';
 
-import type { TUser } from '$lib/types/api/user';
+import type { TUser } from '$lib/server/user';
 import type { PageServerLoad, Actions } from './$types';
 
 /**

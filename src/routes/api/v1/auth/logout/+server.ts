@@ -1,8 +1,7 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-import { logout } from '$lib/server/services/auth';
-import { validateUserId } from '$lib/server/validators/auth';
-import { mapErrorToResponse } from '$lib/errors/mapper';
+import { mapErrorToResponse } from '$lib/server/http';
+import { logout, validateUserId } from '$lib/server/auth';
 
 export const POST: RequestHandler = async ({ locals, cookies }) => {
 	try {

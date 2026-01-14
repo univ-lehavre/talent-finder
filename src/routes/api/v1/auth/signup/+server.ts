@@ -1,9 +1,8 @@
 import type { Models } from 'node-appwrite';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-import { mapErrorToResponse } from '$lib/errors/mapper';
-import { signupWithEmail } from '$lib/server/services/auth';
-import { checkRequestBody, validateSignupEmail } from '$lib/server/validators/auth';
+import { mapErrorToResponse } from '$lib/server/http';
+import { signupWithEmail, checkRequestBody, validateSignupEmail } from '$lib/server/auth';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {

@@ -4,11 +4,7 @@ import { ID, type Models } from 'node-appwrite';
 import { SESSION_COOKIE } from '$lib/constants';
 import { PUBLIC_LOGIN_URL } from '$env/static/public';
 import { createAdminClient, createSessionClient } from '$lib/server/appwrite';
-import {
-	validateMagicUrlLogin,
-	validateSignupEmail,
-	validateUserId
-} from '$lib/server/validators/auth';
+import { validateMagicUrlLogin, validateSignupEmail, validateUserId } from './validators';
 
 /**
  * Signs up a user with email and sends a magic link for authentication.
