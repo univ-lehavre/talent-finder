@@ -71,7 +71,7 @@
 
 	/**
 	 * Gets the appropriate color class based on freshness.
-	 * Transitions from success (fresh) to secondary (stale).
+	 * Uses secondary color for healthy status.
 	 */
 	const getFreshnessColorClass = (baseStatus: 'healthy' | 'degraded' | 'unhealthy'): string => {
 		// Only apply freshness fade for healthy status
@@ -79,13 +79,13 @@
 			return statusConfig[baseStatus].color;
 		}
 
-		// Transition thresholds
+		// Use secondary color for healthy status
 		if (freshness > 0.66) {
-			return 'text-success-600 dark:text-success-400';
+			return 'text-secondary-600 dark:text-secondary-400';
 		} else if (freshness > 0.33) {
-			return 'text-success-500/70 dark:text-success-400/70';
-		} else {
 			return 'text-secondary-500 dark:text-secondary-400';
+		} else {
+			return 'text-secondary-400 dark:text-secondary-500';
 		}
 	};
 
@@ -98,14 +98,8 @@
 			return 'bg-error-50 dark:bg-error-900/20';
 		}
 
-		// Transition thresholds for healthy status
-		if (freshness > 0.66) {
-			return 'bg-success-50 dark:bg-success-900/20';
-		} else if (freshness > 0.33) {
-			return 'bg-success-50/70 dark:bg-success-900/10';
-		} else {
-			return 'bg-secondary-100 dark:bg-secondary-700/30';
-		}
+		// Use secondary background for healthy status
+		return 'bg-secondary-100 dark:bg-secondary-700/30';
 	};
 
 	const statusConfig: Record<
@@ -114,7 +108,7 @@
 	> = {
 		healthy: {
 			icon: 'lucide:check-circle',
-			color: 'text-success-600 dark:text-success-400',
+			color: 'text-secondary-600 dark:text-secondary-400',
 			label: 'Healthy'
 		},
 		degraded: {
@@ -310,7 +304,7 @@
 			{#if health.status === 'healthy'}
 				<div class="w-16 h-1.5 bg-secondary-200 dark:bg-secondary-600 rounded-full overflow-hidden">
 					<div
-						class="h-full bg-success-500 dark:bg-success-400 transition-all duration-1000 rounded-full"
+						class="h-full bg-secondary-500 dark:bg-secondary-400 transition-all duration-1000 rounded-full"
 						style="width: {freshness * 100}%"
 					></div>
 				</div>
