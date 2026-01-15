@@ -21,6 +21,10 @@
 			"description": "Gestion des utilisateurs"
 		},
 		{
+			"name": "institutions",
+			"description": "Recherche d'institutions de recherche via OpenAlex"
+		},
+		{
 			"name": "repository",
 			"description": "Statistiques du dépôt git"
 		},
@@ -238,6 +242,48 @@
 					},
 					"500": {
 						"description": "Erreur serveur",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/institutions/search": {
+			"get": {
+				"operationId": "searchInstitutions",
+				"summary": "Rechercher des institutions",
+				"description": "Recherche des institutions de recherche via l'API OpenAlex (autocomplete). Retourne jusqu'à 10 résultats.",
+				"tags": ["institutions"],
+				"parameters": [
+					{
+						"name": "q",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"minLength": 1
+						},
+						"description": "Terme de recherche (nom de l'institution)"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Résultats de recherche",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InstitutionSearchResponse"
+								}
+							}
+						}
+					},
+					"502": {
+						"description": "Erreur API OpenAlex",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -478,6 +524,60 @@
 					},
 					"urls": {
 						"$ref": "#/components/schemas/GitHubUrls"
+					}
+				}
+			},
+			"Institution": {
+				"type": "object",
+				"required": ["id", "displayName", "citedByCount"],
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "OpenAlex ID de l'institution"
+					},
+					"displayName": {
+						"type": "string",
+						"description": "Nom de l'institution"
+					},
+					"location": {
+						"type": "string",
+						"nullable": true,
+						"description": "Localisation (ville, pays)"
+					},
+					"citedByCount": {
+						"type": "integer",
+						"description": "Nombre de citations"
+					},
+					"worksCount": {
+						"type": "integer",
+						"nullable": true,
+						"description": "Nombre de publications"
+					}
+				}
+			},
+			"InstitutionSearchResponse": {
+				"type": "object",
+				"required": ["institutions", "meta"],
+				"properties": {
+					"institutions": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Institution"
+						},
+						"description": "Liste des institutions trouvées (max 10)"
+					},
+					"meta": {
+						"type": "object",
+						"properties": {
+							"count": {
+								"type": "integer",
+								"description": "Nombre de résultats"
+							},
+							"responseTimeMs": {
+								"type": "integer",
+								"description": "Temps de réponse en millisecondes"
+							}
+						}
 					}
 				}
 			}

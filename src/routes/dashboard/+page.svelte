@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Icon } from '$lib/ui';
+	import { Icon, ResearchOrganizationSearch } from '$lib/ui';
 	import {
 		createThemeStore,
 		hasThemePreferences,
@@ -250,6 +250,9 @@
 					{/each}
 				</div>
 			</div>
+
+			<!-- Research Organization Search Card -->
+			<ResearchOrganizationSearch />
 		</div>
 
 		<!-- Coming Soon Section -->
