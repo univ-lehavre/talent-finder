@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import favicon from '$lib/assets/favicon.svg';
 	import logo from '$lib/assets/logo.svg?raw';
-	import { Icon, Signup, ThemeToggle } from '$lib/ui';
+	import { Icon, Signup, ThemeToggle, ConnectivityBanner } from '$lib/ui';
 	import { page } from '$app/stores';
 	import { createThemeStore, initTheme } from '$lib/stores';
 
@@ -21,6 +21,7 @@
 		data: {
 			user: { email: string } | null;
 			isAdmin: boolean;
+			connectivityError?: 'appwrite_unavailable' | 'no_internet';
 		};
 		form: {
 			error?: boolean;
@@ -276,6 +277,11 @@
 				</div>
 			</div>
 		</div>
+	{/if}
+
+	<!-- Connectivity Error Banner -->
+	{#if data.connectivityError}
+		<ConnectivityBanner error={data.connectivityError} />
 	{/if}
 
 	<!-- Main Content -->
