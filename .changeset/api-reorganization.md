@@ -14,6 +14,7 @@ API structure reorganized from action-based to resource-based:
 - `/api/v1/github` → `/api/v1/repositories/[id]/issues` and `/api/v1/repositories/[id]/pulls`
 
 New stub endpoints:
+
 - `/api/v1/repositories/[id]/contributors`
 - `/api/v1/repositories/[id]/analysis`
 

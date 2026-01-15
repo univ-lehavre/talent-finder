@@ -86,11 +86,11 @@ Cette collection stocke l'historique immutable des consentements (audit log).
 
 **Attributs à créer** :
 
-| Attribut | Type | Taille | Requis | Description |
-|----------|------|--------|--------|-------------|
-| `userId` | String | 36 | ✅ | ID de l'utilisateur Appwrite |
-| `consentType` | Enum | - | ✅ | Type de consentement |
-| `action` | Enum | - | ✅ | Action effectuée |
+| Attribut      | Type   | Taille | Requis | Description                  |
+| ------------- | ------ | ------ | ------ | ---------------------------- |
+| `userId`      | String | 36     | ✅     | ID de l'utilisateur Appwrite |
+| `consentType` | Enum   | -      | ✅     | Type de consentement         |
+| `action`      | Enum   | -      | ✅     | Action effectuée             |
 
 **Valeurs Enum** :
 
@@ -99,10 +99,10 @@ Cette collection stocke l'historique immutable des consentements (audit log).
 
 **Index à créer** :
 
-| Nom | Type | Attributs |
-|-----|------|-----------|
-| `userId_idx` | Key | `userId` |
-| `userId_type_idx` | Key | `userId`, `consentType` |
+| Nom               | Type | Attributs               |
+| ----------------- | ---- | ----------------------- |
+| `userId_idx`      | Key  | `userId`                |
+| `userId_type_idx` | Key  | `userId`, `consentType` |
 
 #### Collection `current-consents`
 
@@ -115,11 +115,11 @@ Cette collection stocke l'état actuel des consentements (une entrée par utilis
 
 **Attributs à créer** :
 
-| Attribut | Type | Taille | Requis | Description |
-|----------|------|--------|--------|-------------|
-| `userId` | String | 36 | ✅ | ID de l'utilisateur Appwrite |
-| `consentType` | Enum | - | ✅ | Type de consentement |
-| `granted` | Boolean | - | ✅ | Consentement accordé ou non |
+| Attribut      | Type    | Taille | Requis | Description                  |
+| ------------- | ------- | ------ | ------ | ---------------------------- |
+| `userId`      | String  | 36     | ✅     | ID de l'utilisateur Appwrite |
+| `consentType` | Enum    | -      | ✅     | Type de consentement         |
+| `granted`     | Boolean | -      | ✅     | Consentement accordé ou non  |
 
 **Valeurs Enum** :
 
@@ -127,8 +127,8 @@ Cette collection stocke l'état actuel des consentements (une entrée par utilis
 
 **Index à créer** :
 
-| Nom | Type | Attributs |
-|-----|------|-----------|
+| Nom               | Type   | Attributs               |
+| ----------------- | ------ | ----------------------- |
 | `userId_type_idx` | Unique | `userId`, `consentType` |
 
 ## Vérification
@@ -139,43 +139,43 @@ L'API `/api/v1/health` retourne :
 
 ```json
 {
-  "status": "healthy",
-  "timestamp": "2024-01-15T12:00:00.000Z",
-  "services": [
-    {
-      "name": "appwrite",
-      "status": "healthy",
-      "responseTimeMs": 150,
-      "database": {
-        "id": "votre-database-id",
-        "name": "talent-finder",
-        "exists": true,
-        "apiKeyValid": true,
-        "collections": [
-          {
-            "id": "consent-events",
-            "name": "Consent Events",
-            "exists": true,
-            "attributes": [
-              { "name": "userId", "exists": true, "type": "string" },
-              { "name": "consentType", "exists": true, "type": "enum" },
-              { "name": "action", "exists": true, "type": "enum" }
-            ]
-          },
-          {
-            "id": "current-consents",
-            "name": "Current Consents",
-            "exists": true,
-            "attributes": [
-              { "name": "userId", "exists": true, "type": "string" },
-              { "name": "consentType", "exists": true, "type": "enum" },
-              { "name": "granted", "exists": true, "type": "boolean" }
-            ]
-          }
-        ]
-      }
-    }
-  ]
+	"status": "healthy",
+	"timestamp": "2024-01-15T12:00:00.000Z",
+	"services": [
+		{
+			"name": "appwrite",
+			"status": "healthy",
+			"responseTimeMs": 150,
+			"database": {
+				"id": "votre-database-id",
+				"name": "talent-finder",
+				"exists": true,
+				"apiKeyValid": true,
+				"collections": [
+					{
+						"id": "consent-events",
+						"name": "Consent Events",
+						"exists": true,
+						"attributes": [
+							{ "name": "userId", "exists": true, "type": "string" },
+							{ "name": "consentType", "exists": true, "type": "enum" },
+							{ "name": "action", "exists": true, "type": "enum" }
+						]
+					},
+					{
+						"id": "current-consents",
+						"name": "Current Consents",
+						"exists": true,
+						"attributes": [
+							{ "name": "userId", "exists": true, "type": "string" },
+							{ "name": "consentType", "exists": true, "type": "enum" },
+							{ "name": "granted", "exists": true, "type": "boolean" }
+						]
+					}
+				]
+			}
+		}
+	]
 }
 ```
 
@@ -183,19 +183,19 @@ L'API `/api/v1/health` retourne :
 
 ### Status "unhealthy"
 
-| Erreur | Cause | Solution |
-|--------|-------|----------|
-| `Invalid API key` | Clé API incorrecte ou expirée | Régénérer la clé dans Appwrite |
-| `Project not found` | Project ID incorrect | Vérifier `APPWRITE_PROJECT` |
-| `Database not found` | Database ID incorrect | Vérifier `APPWRITE_DATABASE_ID` |
-| `Connection timeout` | Appwrite inaccessible | Vérifier l'URL et le réseau |
+| Erreur               | Cause                         | Solution                        |
+| -------------------- | ----------------------------- | ------------------------------- |
+| `Invalid API key`    | Clé API incorrecte ou expirée | Régénérer la clé dans Appwrite  |
+| `Project not found`  | Project ID incorrect          | Vérifier `APPWRITE_PROJECT`     |
+| `Database not found` | Database ID incorrect         | Vérifier `APPWRITE_DATABASE_ID` |
+| `Connection timeout` | Appwrite inaccessible         | Vérifier l'URL et le réseau     |
 
 ### Status "degraded"
 
-| Erreur | Cause | Solution |
-|--------|-------|----------|
-| `Missing collections: X` | Collection non créée | Créer la collection manquante |
-| `Missing attributes: X.Y` | Attribut non créé | Ajouter l'attribut manquant |
+| Erreur                    | Cause                | Solution                      |
+| ------------------------- | -------------------- | ----------------------------- |
+| `Missing collections: X`  | Collection non créée | Créer la collection manquante |
+| `Missing attributes: X.Y` | Attribut non créé    | Ajouter l'attribut manquant   |
 
 ## Architecture
 
