@@ -1,122 +1,82 @@
-# Talent Finder
+# ECRIN | Talent Finder
 
 [![CI](https://github.com/univ-lehavre/talent-finder/actions/workflows/ci.yml/badge.svg)](https://github.com/univ-lehavre/talent-finder/actions/workflows/ci.yml)
 [![DOI](https://zenodo.org/badge/1133686064.svg)](https://doi.org/10.5281/zenodo.18241663)
 
-Talent Finder is a web application built with SvelteKit that helps discover and analyze developer talent through git repository statistics and GitHub integration.
+## About
 
-## Features
+**Talent Finder** is a web application that enables discovering and analyzing researcher expertise through their publications and contributions. It facilitates connections between researchers, institutions, and partners by identifying skills and areas of expertise.
 
-- **Magic Link Authentication** - Passwordless login via email
-- **Repository Analytics** - Analyze git commit history, code statistics, and test coverage
-- **GitHub Integration** - Track issues, pull requests, and repository activity
-- **API Documentation** - Interactive Swagger UI at `/api/docs`
+## Context: ECRIN
 
-## Tech Stack
+Talent Finder is a sub-project of **ECRIN** (Espace de Coopération pour la Recherche et l'Innovation Normande).
 
-- **Runtime**: Node.js 24
-- **Package Manager**: pnpm 10
-- **Framework**: SvelteKit with Svelte 5
-- **Styling**: Tailwind CSS 4
-- **Backend**: Appwrite for authentication
-- **Validation**: Zod schemas
-- **Testing**: Vitest
+ECRIN aims to foster cooperation between researchers from **[Université Le Havre Normandie](https://www.univ-lehavre.fr/)**, the **[Campus Polytechnique des Territoires Maritimes et Portuaires (CPTMP)](https://www.cptmp.fr/)**, and the European university alliance **[EUNICoast](https://eunicoast.eu/)**.
 
-## Getting Started
+The program is organized around three major axes:
 
-### Prerequisites
+- **Smart City**: urban logistics, sustainable mobility, reuse, pedagogical innovation, air and water quality
+- **Maritime and Port**: cybersecurity, drones, sail transport, data platforms, financial engineering
+- **Energy and Industry**: digital transition, material recovery, new energy production
 
-- Node.js 24+
-- pnpm 10+
-- An Appwrite instance for authentication
+### CPTMP
 
-### Installation
+**[CPTMP](https://www.cptmp.fr/)** (Campus Polytechnique des Territoires Maritimes et Portuaires) is an open-air laboratory unique in Europe. This interdisciplinary consortium unites higher education, research institutions, and economic actors to address major digital, environmental, energy, and social transformations.
 
-```bash
-# Clone the repository
-git clone https://github.com/univ-lehavre/talent-finder.git
-cd talent-finder
+**Strategic axes:**
 
-# Install dependencies
-pnpm install
+- City of tomorrow
+- Maritime and port challenges
+- Transitions, risks, and uncertainties
 
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your Appwrite credentials
-```
+**Operational hubs:**
 
-### Development
+- Expertise and Qualifications
+- Creation and Innovation
+- International
+- Digital and Technological Platforms
+- Sports Academy
 
-```bash
-# Start the development server
-pnpm dev
+**Founding members (12):** CNRS, Communauté urbaine Le Havre Seine Métropole, EMN (École de Management de Normandie), ENSA Normandie, ENSM (École Nationale Supérieure Maritime), ESADHaR, IFEN, INSA Rouen Normandie, Région Normandie, Sciences Po, Synerzip LH, UMEP (Union Maritime et Portuaire du Havre).
 
-# Run type checking
-pnpm type-check
+### EUNICoast
 
-# Run linting
-pnpm lint
+**[EUNICoast](https://eunicoast.eu/)** (European University of Islands, Ports and Coastal Territories) is an alliance of 12 higher education institutions and 88 associated partners across 11 European countries, coordinated by Université Le Havre Normandie.
 
-# Run tests
-pnpm test
+**Thematic hubs:**
 
-# Build for production
-pnpm build
-```
+- Local identities and cultures
+- Blue economy and sustainable tourism
+- Coastal governance
+- Biodiversity and environmental health
+- Maritime technologies
 
-## Project Structure
+**Member universities (12):** Université Le Havre Normandie (France), EMUNI University (Slovenia), Burgas Free University (Bulgaria), University of Dubrovnik (Croatia), University of Patras (Greece), University of Sassari (Italy), University of the Azores (Portugal), University of the Balearic Islands (Spain), Stralsund University of Applied Sciences (Germany), Université des Antilles (France), Åland University of Applied Sciences (Finland), West Pomeranian University of Technology (Poland).
 
-```
-talent-finder/
-├── src/
-│   ├── lib/
-│   │   ├── server/          # Server-side modules
-│   │   │   ├── auth/        # Authentication logic
-│   │   │   ├── user/        # User management
-│   │   │   ├── git-stats/   # Git repository analysis
-│   │   │   ├── github/      # GitHub API integration
-│   │   │   ├── http/        # HTTP utilities
-│   │   │   └── appwrite/    # Appwrite client
-│   │   ├── ui/              # Reusable Svelte components
-│   │   ├── validators/      # Client-side validation
-│   │   └── constants/       # Shared constants
-│   └── routes/
-│       ├── api/v1/          # REST API endpoints
-│       ├── repository/      # Repository stats page
-│       └── login/           # Magic link callback
-├── docs/
-│   ├── design-system.md     # UI design guidelines
-│   └── appwrite-setup.md    # Appwrite database setup
-└── CLAUDE.md                # AI assistant instructions
-```
+## Documentation
 
-## API
-
-The REST API follows pure REST conventions with JSON responses:
-
-| Endpoint              | Method | Description                            |
-| --------------------- | ------ | -------------------------------------- |
-| `/api/v1/auth/signup` | POST   | Send magic link for registration       |
-| `/api/v1/auth/login`  | POST   | Validate magic link and create session |
-| `/api/v1/auth/logout` | POST   | End current session                    |
-| `/api/v1/me`          | GET    | Get current user profile               |
-| `/api/v1/repository`  | GET    | Get repository statistics              |
-| `/api/v1/github`      | GET    | Get GitHub statistics and URLs         |
-
-Full API documentation available at `/api/docs` when running the application.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+- [Technical Documentation](./docs/technical-setup.md): installation and configuration
+- [Appwrite Setup](./docs/appwrite-setup.md): database configuration
+- [Design System](./docs/design-system.md): style guide and components
 
 ## License
 
-This project is developed at Université Le Havre Normandie.
-
-## Citation
+This project is developed at **[Université Le Havre Normandie](https://www.univ-lehavre.fr/)**.
 
 If you use this software in your research, please cite it using the DOI badge above.
+
+---
+
+<p align="center">
+  <a href="https://www.cptmp.fr/">
+    <img src="./static/logos/cptmp.png" alt="Campus Polytechnique des Territoires Maritimes et Portuaires" height="60">
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://www.univ-lehavre.fr/">
+    <img src="./static/logos/ulhn.svg" alt="Université Le Havre Normandie" height="60">
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://eunicoast.eu/">
+    <img src="./static/logos/eunicoast.png" alt="EUNICoast" height="60">
+  </a>
+</p>
