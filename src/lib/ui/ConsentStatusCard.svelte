@@ -60,7 +60,7 @@
 		error = null;
 
 		try {
-			const response = await fetch('/api/v1/consent?type=openalex_email');
+			const response = await fetch('/api/v1/consents/openalex_email');
 
 			if (!response.ok) {
 				const data = await response.json().catch(() => null);
@@ -86,10 +86,10 @@
 		error = null;
 
 		try {
-			const response = await fetch('/api/v1/consent', {
-				method: 'POST',
+			const response = await fetch('/api/v1/consents/openalex_email', {
+				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ type: 'openalex_email', action: 'grant' })
+				body: JSON.stringify({ granted: true })
 			});
 
 			if (!response.ok) {
@@ -115,10 +115,10 @@
 		error = null;
 
 		try {
-			const response = await fetch('/api/v1/consent', {
-				method: 'POST',
+			const response = await fetch('/api/v1/consents/openalex_email', {
+				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ type: 'openalex_email', action: 'revoke' })
+				body: JSON.stringify({ granted: false })
 			});
 
 			if (!response.ok) {
@@ -180,7 +180,7 @@
 		<div class="space-y-4">
 			<div
 				class="p-4 rounded-lg border {status?.granted === true
-					? 'bg-success-50 dark:bg-success-900/20 border-success-200 dark:border-success-800'
+					? 'bg-secondary-50 dark:bg-secondary-800 border-secondary-200 dark:border-secondary-700'
 					: status?.granted === false
 						? 'bg-secondary-50 dark:bg-secondary-800 border-secondary-200 dark:border-secondary-700'
 						: 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800'}"
@@ -195,7 +195,7 @@
 						width="20"
 						height="20"
 						class={status?.granted === true
-							? 'text-success-600 dark:text-success-400 mt-0.5'
+							? 'text-secondary-600 dark:text-secondary-400 mt-0.5'
 							: status?.granted === false
 								? 'text-secondary-500 dark:text-secondary-400 mt-0.5'
 								: 'text-primary-600 dark:text-primary-400 mt-0.5'}

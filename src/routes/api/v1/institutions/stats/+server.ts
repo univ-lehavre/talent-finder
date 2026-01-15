@@ -8,14 +8,14 @@ import { mapErrorToResponse } from '$lib/server/http';
 const MAX_INSTITUTIONS = 10;
 
 /**
- * GET /api/v1/openalex/institution-stats
+ * GET /api/v1/institutions/stats
  * Returns comprehensive statistics for the specified institutions over the last 5 years.
  * Includes works count (all types), articles count, and authors count.
  *
  * Requires authentication and consent to use the OpenAlex polite pool.
  *
  * Query parameters:
- * - institutions (required): Comma-separated OpenAlex institution IDs
+ * - ids (required): Comma-separated OpenAlex institution IDs (max 10)
  */
 export const GET: RequestHandler = async ({ url, locals }) => {
 	try {
@@ -36,16 +36,16 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			);
 		}
 
-		const institutionsParam = url.searchParams.get('institutions');
+		const idsParam = url.searchParams.get('ids');
 
-		if (!institutionsParam) {
+		if (!idsParam) {
 			return json(
-				{ code: 'missing_parameter', message: 'institutions parameter is required' },
+				{ code: 'missing_parameter', message: 'ids parameter is required' },
 				{ status: 400 }
 			);
 		}
 
-		const institutionIds = institutionsParam.split(',').filter(Boolean);
+		const institutionIds = idsParam.split(',').filter(Boolean);
 
 		if (institutionIds.length === 0) {
 			return json(

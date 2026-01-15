@@ -3,6 +3,10 @@ import type { RequestHandler } from './$types';
 import { getProfile } from '$lib/server/user';
 import { mapErrorToResponse } from '$lib/server/http';
 
+/**
+ * GET /api/v1/users/me
+ * Returns the profile of the authenticated user.
+ */
 export const GET: RequestHandler = async ({ locals }) => {
 	try {
 		const userId = locals.userId;

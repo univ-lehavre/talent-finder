@@ -44,9 +44,7 @@
 		try {
 			const ids = selectedOrganizations.map((org) => org.id).join(',');
 
-			const response = await fetch(
-				`/api/v1/openalex/institution-stats?institutions=${encodeURIComponent(ids)}`
-			);
+			const response = await fetch(`/api/v1/institutions/stats?ids=${encodeURIComponent(ids)}`);
 
 			if (!response.ok) {
 				const data = await response.json().catch(() => null);
