@@ -5,6 +5,10 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			userId?: string;
+			/** User email address */
+			userEmail?: string;
+			/** Connectivity error type, if any */
+			connectivityError?: 'appwrite_unavailable' | 'no_internet';
 		}
 		// interface PageData {}
 		// interface PageState {}

@@ -13,3 +13,7 @@ export { default as StatCard } from './StatCard.svelte';
 export { default as ThemeSection } from './ThemeSection.svelte';
 export { default as ThemeToggle } from './ThemeToggle.svelte';
 export { default as ResearchOrganizationSearch } from './ResearchOrganizationSearch.svelte';
+export { default as ArticlesCountCard } from './ArticlesCountCard.svelte';
+export { default as ConnectivityBanner } from './ConnectivityBanner.svelte';
+export { default as HealthStatusCard } from './HealthStatusCard.svelte';
+export { default as ConsentStatusCard } from './ConsentStatusCard.svelte';

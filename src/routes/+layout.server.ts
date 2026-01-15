@@ -6,15 +6,16 @@ import type { LayoutServerLoad } from './$types';
  * Available to all pages via the layout.
  */
 export const load: LayoutServerLoad = async ({ locals }) => {
-	const userId = locals.userId;
+	const { userId, connectivityError } = locals;
+
 	if (!userId) {
-		return { user: null, isAdmin: false };
+		return { user: null, isAdmin: false, connectivityError };
 	}
 
 	try {
 		const user: TUser = await getProfile(userId);
-		return { user, isAdmin: isAdmin(user) };
+		return { user, isAdmin: isAdmin(user), connectivityError };
 	} catch {
-		return { user: null, isAdmin: false };
+		return { user: null, isAdmin: false, connectivityError };
 	}
 };

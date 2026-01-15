@@ -10,6 +10,9 @@ env:
   APPWRITE_KEY: ci_placeholder
   APPWRITE_ENDPOINT: https://cloud.appwrite.io/v1
   APPWRITE_PROJECT: ci_placeholder
+  APPWRITE_DATABASE_ID: ci_placeholder
+  APPWRITE_CONSENT_EVENTS_COLLECTION_ID: ci_placeholder
+  APPWRITE_CURRENT_CONSENTS_COLLECTION_ID: ci_placeholder
   PUBLIC_LOGIN_URL: http://localhost:5173/login
   ALLOWED_DOMAINS_REGEXP: .*
 

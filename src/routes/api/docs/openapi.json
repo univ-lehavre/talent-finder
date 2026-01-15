@@ -21,8 +21,16 @@
 			"description": "Gestion des utilisateurs"
 		},
 		{
+			"name": "consent",
+			"description": "Gestion du consentement utilisateur"
+		},
+		{
 			"name": "institutions",
 			"description": "Recherche d'institutions de recherche via OpenAlex"
+		},
+		{
+			"name": "openalex",
+			"description": "Statistiques OpenAlex pour les institutions (nécessite authentification et consentement)"
 		},
 		{
 			"name": "repository",
@@ -278,6 +286,261 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/InstitutionSearchResponse"
+								}
+							}
+						}
+					},
+					"502": {
+						"description": "Erreur API OpenAlex",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/consent": {
+			"get": {
+				"operationId": "getConsentStatus",
+				"summary": "Obtenir le statut du consentement",
+				"description": "Retourne le statut actuel du consentement pour l'utilisateur authentifié.",
+				"tags": ["consent"],
+				"parameters": [
+					{
+						"name": "type",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"enum": ["openalex_email"]
+						},
+						"description": "Type de consentement (ex: openalex_email)"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Statut du consentement",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ConsentStatus"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Paramètre manquant ou invalide",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Non authentifié",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"operationId": "updateConsent",
+				"summary": "Accorder ou révoquer un consentement",
+				"description": "Accorde ou révoque le consentement pour l'utilisateur authentifié.",
+				"tags": ["consent"],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["type", "action"],
+								"properties": {
+									"type": {
+										"type": "string",
+										"enum": ["openalex_email"],
+										"description": "Type de consentement"
+									},
+									"action": {
+										"type": "string",
+										"enum": ["grant", "revoke"],
+										"description": "Action à effectuer"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Consentement mis à jour",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ConsentStatus"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Paramètre manquant ou invalide",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Non authentifié",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/openalex/institution-stats": {
+			"get": {
+				"operationId": "getInstitutionStats",
+				"summary": "Statistiques des institutions",
+				"description": "Retourne des statistiques complètes pour les institutions spécifiées : nombre de publications, articles par année, nombre d'auteurs. Utilise le polite pool OpenAlex avec l'email de l'utilisateur.",
+				"tags": ["openalex"],
+				"parameters": [
+					{
+						"name": "institutions",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"description": "IDs OpenAlex des institutions, séparés par des virgules (max 10)"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Statistiques des institutions",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InstitutionStatsResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Paramètre manquant ou invalide",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Non authentifié",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Consentement requis",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"502": {
+						"description": "Erreur API OpenAlex",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/openalex/works-count": {
+			"get": {
+				"operationId": "getWorksCount",
+				"summary": "Nombre de publications",
+				"description": "Retourne le nombre de publications des institutions spécifiées sur les 5 dernières années. Utilise le polite pool OpenAlex avec l'email de l'utilisateur.",
+				"tags": ["openalex"],
+				"parameters": [
+					{
+						"name": "institutions",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"description": "IDs OpenAlex des institutions, séparés par des virgules (max 10)"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Comptage des publications",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/WorksCountResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Paramètre manquant ou invalide",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Non authentifié",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Consentement requis",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiError"
 								}
 							}
 						}
@@ -578,6 +841,114 @@
 								"description": "Temps de réponse en millisecondes"
 							}
 						}
+					}
+				}
+			},
+			"ConsentStatus": {
+				"type": "object",
+				"required": ["consentType", "granted", "updatedAt"],
+				"properties": {
+					"consentType": {
+						"type": "string",
+						"enum": ["openalex_email"],
+						"description": "Type de consentement"
+					},
+					"granted": {
+						"type": "boolean",
+						"nullable": true,
+						"description": "true si accordé, false si révoqué, null si jamais demandé"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true,
+						"description": "Date de dernière mise à jour (ISO 8601)"
+					}
+				}
+			},
+			"YearlyArticleCount": {
+				"type": "object",
+				"required": ["year", "count"],
+				"properties": {
+					"year": {
+						"oneOf": [
+							{
+								"type": "integer",
+								"description": "Année de publication (ex: 2024)"
+							},
+							{
+								"type": "string",
+								"enum": ["before"],
+								"description": "Articles antérieurs à la période affichée"
+							}
+						],
+						"description": "Année ou 'before' pour les articles plus anciens"
+					},
+					"count": {
+						"type": "integer",
+						"description": "Nombre d'articles"
+					}
+				}
+			},
+			"InstitutionStatsResponse": {
+				"type": "object",
+				"required": [
+					"worksCount",
+					"articlesCount",
+					"articlesByYear",
+					"authorsCount",
+					"responseTimeMs",
+					"institutionCount"
+				],
+				"properties": {
+					"worksCount": {
+						"type": "integer",
+						"description": "Nombre total de publications (tous types)"
+					},
+					"articlesCount": {
+						"type": "integer",
+						"description": "Nombre d'articles (type:article uniquement)"
+					},
+					"articlesByYear": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/YearlyArticleCount"
+						},
+						"description": "Décompte des articles par année"
+					},
+					"authorsCount": {
+						"type": "integer",
+						"description": "Nombre d'auteurs distincts affiliés aux institutions"
+					},
+					"responseTimeMs": {
+						"type": "integer",
+						"description": "Temps de réponse total en millisecondes"
+					},
+					"institutionCount": {
+						"type": "integer",
+						"description": "Nombre d'institutions interrogées"
+					}
+				}
+			},
+			"WorksCountResponse": {
+				"type": "object",
+				"required": ["count", "responseTimeMs", "fromDate", "institutionCount"],
+				"properties": {
+					"count": {
+						"type": "integer",
+						"description": "Nombre de publications"
+					},
+					"responseTimeMs": {
+						"type": "integer",
+						"description": "Temps de réponse en millisecondes"
+					},
+					"fromDate": {
+						"type": "string",
+						"description": "Date de début de la période (format YYYY-MM-DD)"
+					},
+					"institutionCount": {
+						"type": "integer",
+						"description": "Nombre d'institutions interrogées"
 					}
 				}
 			}
