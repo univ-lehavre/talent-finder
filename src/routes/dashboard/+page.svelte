@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Icon, ResearchOrganizationSearch } from '$lib/ui';
+	import {
+		Icon,
+		ResearchOrganizationSearch,
+		ArticlesCountCard,
+		HealthStatusCard,
+		ConsentStatusCard
+	} from '$lib/ui';
 	import {
 		createThemeStore,
 		hasThemePreferences,
@@ -9,10 +15,17 @@
 		setPalette,
 		setFont
 	} from '$lib/stores';
+	import type { TInstitution } from '$lib/server/openalex';
 
 	const themeStore = createThemeStore();
 
 	let savedPreferences = $state({ palette: false, font: false });
+
+	/** Shared state for selected organizations */
+	let selectedOrganizations = $state<TInstitution[]>([]);
+
+	/** Whether user has granted consent for OpenAlex (shared between components) */
+	let hasOpenAlexConsent = $state(false);
 
 	/** Toggle palette between fixed (saved) and random */
 	const togglePaletteMode = (): void => {
@@ -251,8 +264,19 @@
 				</div>
 			</div>
 
+			<!-- Consent Status Card -->
+			<ConsentStatusCard userEmail={data.user?.email} bind:hasConsent={hasOpenAlexConsent} />
+
 			<!-- Research Organization Search Card -->
-			<ResearchOrganizationSearch />
+			<ResearchOrganizationSearch bind:selectedOrganizations hasConsent={hasOpenAlexConsent} />
+
+			<!-- Articles Count Card -->
+			<ArticlesCountCard {selectedOrganizations} hasConsent={hasOpenAlexConsent} />
+
+			<!-- System Health Card (Admin only) -->
+			{#if data.isAdmin}
+				<HealthStatusCard />
+			{/if}
 		</div>
 
 		<!-- Coming Soon Section -->
