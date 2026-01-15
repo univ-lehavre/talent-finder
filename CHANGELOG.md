@@ -1,5 +1,85 @@
 # talent-finder
 
+## 0.4.0
+
+### Minor Changes
+
+- 3c64227: refactor(api): reorganize endpoints by data type
+
+  API structure reorganized from action-based to resource-based:
+  - `/api/v1/me` → `/api/v1/users/me`
+  - `/api/v1/consent` → `/api/v1/consents/[id]` (GET, PUT, DELETE)
+  - `/api/v1/openalex/institution-stats` → `/api/v1/institutions/stats`
+  - `/api/v1/openalex/works-count` → `/api/v1/works/counts`
+  - `/api/v1/repository` → `/api/v1/repositories/[id]/stats`
+  - `/api/v1/github` → `/api/v1/repositories/[id]/issues` and `/api/v1/repositories/[id]/pulls`
+
+  New stub endpoints:
+  - `/api/v1/repositories/[id]/contributors`
+  - `/api/v1/repositories/[id]/analysis`
+
+  Frontend updated to use new endpoint paths.
+  OpenAPI documentation fully rewritten with tags and new paths.
+
+- 304d93f: feat: add OpenAlex institution statistics with consent management
+  - Add OpenAlex API integration for searching research institutions
+  - Create `ResearchOrganizationSearch` component with autocomplete search
+  - Add `ArticlesCountCard` with yearly article breakdown and "Avant" category
+  - Implement consent management system for OpenAlex polite pool
+  - Add `ConsentStatusCard` for managing user data consent
+  - Require authentication and consent for OpenAlex API endpoints
+  - Add collapsible `HealthStatusCard` for Appwrite service details
+  - Use `group_by=publication_year` for efficient API calls (3 calls instead of 8)
+  - Display institution details (name, location, works count, citations)
+  - Lock OpenAlex cards when user has not granted consent
+  - Add `/api/v1/institutions/search`, `/api/v1/openalex/institution-stats`, `/api/v1/consent` endpoints
+  - Update OpenAPI documentation with consent and openalex endpoints
+  - Add health check service and `/api/v1/health` endpoint
+  - Add `ConnectivityBanner` for network/Appwrite errors
+
+### Patch Changes
+
+- 81e8fb5: style(branding): rename site to "ECRIN | Talent finder"
+  - Update site title across all pages (home, dashboard, login, theme, repository, error, API docs)
+  - Add ECRIN link to footer (https://ecrin.sites.chasset.net)
+  - Add External Links card in dashboard with ECRIN, GitHub, and Zenodo
+  - Remove Zenodo link from navbar (keep GitHub only)
+  - Move theme toggle to mobile offcanvas menu header
+  - Remove Theme link from mobile offcanvas menu
+
+- 1441010: fix(dashboard): improve card layout and styling
+  - Move Research Organization Search and Articles Count cards to top of dashboard
+  - Conditionally position Data Consent card (top if not granted, after research cards if granted)
+  - Replace single "Pages" card with separate "Repository" and "API Documentation" cards (admin only)
+  - Change HealthStatusCard "Healthy" status from success to secondary color
+  - Change ConsentStatusCard "granted" state from success to secondary color
+
+- 5d08326: docs: add Appwrite database setup guide
+  - Create `docs/appwrite-setup.md` with complete configuration instructions
+  - Document environment variables, project creation, API key setup
+  - Detail `consent-events` and `current-consents` collections schema
+  - Include attribute types, indexes, and enum values
+  - Add troubleshooting section for health check statuses
+  - Update `docs/CLAUDE.md` and `README.md` with reference to new documentation
+
+- 6a5994c: feat(homepage): add partner sections with institutional information
+  - Add "Our Partners" section with gradient background as visual break
+  - Add Université Le Havre Normandie section (7,000+ students, 120+ diplomas, 12 labs)
+  - Add CPTMP section with ECRIN program axes (Smart City, Maritime, Energy)
+  - Add EUNICoast section with 5 thematic hubs
+  - Add CPTMP logo to footer in layout
+  - Update README with ULHN section and key figures
+  - Fix background color alternation across all sections
+
+- 91e2e62: docs: restructure README as project homepage with ECRIN context
+  - Transform README from technical documentation to institutional presentation
+  - Add ECRIN program description and three major axes (Smart City, Maritime, Energy)
+  - Add CPTMP section with strategic axes, hubs, and 12 founding members
+  - Add EUNICoast section with thematic hubs and 12 member universities
+  - Move technical content to docs/technical-setup.md
+  - Add CPTMP logo and partner logos in footer
+  - Add links to partner websites (ULHN, CPTMP, EUNICoast)
+
 All notable changes to this project are documented here.
 
 ## [0.3.0](https://github.com/univ-lehavre/talent-finder/compare/v0.2.0...v0.3.0) - 2025-01-14
