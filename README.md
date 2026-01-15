@@ -19,6 +19,19 @@ The program is organized around three major axes:
 - **Maritime and Port**: cybersecurity, drones, sail transport, data platforms, financial engineering
 - **Energy and Industry**: digital transition, material recovery, new energy production
 
+### Université Le Havre Normandie
+
+**[Université Le Havre Normandie](https://www.univ-lehavre.fr/)** is a French public higher education and research institution with over 7,000 students from 85 nationalities. It offers 120+ diplomas across Arts, Law, Human Sciences, and Science & Technology, supported by 12 research laboratories and 174 partner institutions worldwide.
+
+**Key figures:**
+
+- 7,000+ students
+- 85 nationalities
+- 120+ diplomas
+- 12 research laboratories
+- 174 partner institutions
+- 3rd place nationally in ERASMUS rankings
+
 ### CPTMP
 
 **[CPTMP](https://www.cptmp.fr/)** (Campus Polytechnique des Territoires Maritimes et Portuaires) is an open-air laboratory unique in Europe. This interdisciplinary consortium unites higher education, research institutions, and economic actors to address major digital, environmental, energy, and social transformations.

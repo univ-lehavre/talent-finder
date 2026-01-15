@@ -266,15 +266,19 @@
 		<div class="container-app">
 			<div class="flex flex-col md:flex-row items-center justify-center gap-8">
 				<a
-					href="https://ecrin.sites.chasset.net"
+					href="https://www.cptmp.fr/"
 					target="_blank"
 					rel="noopener noreferrer"
 					class="flex items-center gap-3 hover:opacity-80 transition-opacity"
 				>
-					<span class="text-lg font-bold text-primary-700 dark:text-primary-400">ECRIN</span>
+					<img
+						src="/logos/cptmp.png"
+						alt="Campus Polytechnique des Territoires Maritimes et Portuaires"
+						class="h-12"
+					/>
 				</a>
 				<a
-					href="https://www.univ-lehavre.fr"
+					href="https://www.univ-lehavre.fr/"
 					target="_blank"
 					rel="noopener noreferrer"
 					class="flex items-center gap-3 hover:opacity-80 transition-opacity"
@@ -282,7 +286,7 @@
 					<img src="/logos/ulhn.svg" alt="Université Le Havre Normandie" class="h-12" />
 				</a>
 				<a
-					href="https://eunicoast.eu"
+					href="https://eunicoast.eu/"
 					target="_blank"
 					rel="noopener noreferrer"
 					class="flex items-center gap-3 hover:opacity-80 transition-opacity"
