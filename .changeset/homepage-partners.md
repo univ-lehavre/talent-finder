@@ -1,5 +1,5 @@
 ---
-"talent-finder": patch
+'talent-finder': patch
 ---
 
 feat(homepage): add partner sections with institutional information

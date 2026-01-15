@@ -1,5 +1,5 @@
 ---
-"talent-finder": patch
+'talent-finder': patch
 ---
 
 docs: restructure README as project homepage with ECRIN context

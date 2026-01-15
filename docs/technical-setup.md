@@ -94,14 +94,14 @@ talent-finder/
 
 The REST API follows pure REST conventions with JSON responses:
 
-| Endpoint              | Method | Description                        |
-| --------------------- | ------ | ---------------------------------- |
-| `/api/v1/auth/signup` | POST   | Send magic link for registration   |
-| `/api/v1/auth/login`  | POST   | Validate magic link and session    |
-| `/api/v1/auth/logout` | POST   | End session                        |
-| `/api/v1/me`          | GET    | Get current user profile           |
-| `/api/v1/repository`  | GET    | Get repository statistics          |
-| `/api/v1/github`      | GET    | Get GitHub statistics and URLs     |
+| Endpoint              | Method | Description                      |
+| --------------------- | ------ | -------------------------------- |
+| `/api/v1/auth/signup` | POST   | Send magic link for registration |
+| `/api/v1/auth/login`  | POST   | Validate magic link and session  |
+| `/api/v1/auth/logout` | POST   | End session                      |
+| `/api/v1/me`          | GET    | Get current user profile         |
+| `/api/v1/repository`  | GET    | Get repository statistics        |
+| `/api/v1/github`      | GET    | Get GitHub statistics and URLs   |
 
 Full API documentation available at `/api/docs` when the application is running.
 
