@@ -2,7 +2,6 @@
 	import { Icon, LoadingSpinner, Alert } from '$lib/ui';
 	import type { TInstitution, TInstitutionStatsResponse } from '$lib/server/openalex';
 
-
 	interface Props {
 		/** Selected organizations to count articles for */
 		selectedOrganizations: TInstitution[];

@@ -172,43 +172,43 @@
 				{/if}
 			</div>
 
-		<!-- Search Results Dropdown -->
-		{#if searchResults.length > 0}
-			<div
-				class="absolute z-10 w-full mt-1 bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 rounded-lg shadow-lg max-h-64 overflow-y-auto"
-			>
-				{#each searchResults as result (result.id)}
-					<button
-						type="button"
-						onclick={() => addOrganization(result)}
-						class="w-full px-4 py-3 text-left hover:bg-primary-50 dark:hover:bg-primary-900/20 border-b border-secondary-100 dark:border-secondary-700 last:border-b-0 transition-colors"
-					>
-						<p class="font-medium text-secondary-900 dark:text-secondary-100">
-							{result.displayName}
-						</p>
-						{#if result.location}
-							<p class="text-sm text-secondary-500 dark:text-secondary-400">
-								{result.location}
+			<!-- Search Results Dropdown -->
+			{#if searchResults.length > 0}
+				<div
+					class="absolute z-10 w-full mt-1 bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 rounded-lg shadow-lg max-h-64 overflow-y-auto"
+				>
+					{#each searchResults as result (result.id)}
+						<button
+							type="button"
+							onclick={() => addOrganization(result)}
+							class="w-full px-4 py-3 text-left hover:bg-primary-50 dark:hover:bg-primary-900/20 border-b border-secondary-100 dark:border-secondary-700 last:border-b-0 transition-colors"
+						>
+							<p class="font-medium text-secondary-900 dark:text-secondary-100">
+								{result.displayName}
 							</p>
-						{/if}
-						<p class="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
-							{formatNumber(result.worksCount)} works &middot; {formatNumber(result.citedByCount)} citations
-						</p>
-					</button>
-				{/each}
-			</div>
-		{/if}
+							{#if result.location}
+								<p class="text-sm text-secondary-500 dark:text-secondary-400">
+									{result.location}
+								</p>
+							{/if}
+							<p class="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
+								{formatNumber(result.worksCount)} works &middot; {formatNumber(result.citedByCount)} citations
+							</p>
+						</button>
+					{/each}
+				</div>
+			{/if}
 
-		<!-- Empty State for Search -->
-		{#if searchQuery.length >= MIN_QUERY_LENGTH && !isLoading && searchResults.length === 0 && !error}
-			<div
-				class="absolute z-10 w-full mt-1 bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 rounded-lg shadow-lg p-4"
-			>
-				<p class="text-secondary-500 dark:text-secondary-400 text-center">
-					No organizations found for "{searchQuery}"
-				</p>
-			</div>
-		{/if}
+			<!-- Empty State for Search -->
+			{#if searchQuery.length >= MIN_QUERY_LENGTH && !isLoading && searchResults.length === 0 && !error}
+				<div
+					class="absolute z-10 w-full mt-1 bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 rounded-lg shadow-lg p-4"
+				>
+					<p class="text-secondary-500 dark:text-secondary-400 text-center">
+						No organizations found for "{searchQuery}"
+					</p>
+				</div>
+			{/if}
 		</div>
 
 		<!-- Error State -->
