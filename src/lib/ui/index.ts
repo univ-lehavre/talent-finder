@@ -12,3 +12,4 @@ export { default as Signup } from './Signup.svelte';
 export { default as StatCard } from './StatCard.svelte';
 export { default as ThemeSection } from './ThemeSection.svelte';
 export { default as ThemeToggle } from './ThemeToggle.svelte';
+export { default as ResearchOrganizationSearch } from './ResearchOrganizationSearch.svelte';
