@@ -65,40 +65,38 @@
 
 	let { data }: Props = $props();
 
-	interface QuickAction {
+	interface ExternalLink {
 		href: string;
 		icon: string;
 		title: string;
 		description: string;
-		external?: boolean;
 	}
 
-	const quickActions: QuickAction[] = [
+	const externalLinks: ExternalLink[] = [
 		{
-			href: '/repository',
-			icon: 'lucide:bar-chart-2',
-			title: 'Repository Stats',
-			description: 'Explore code statistics and analytics'
+			href: 'https://ecrin.sites.chasset.net',
+			icon: 'lucide:globe',
+			title: 'ECRIN',
+			description: 'Main project website'
 		},
 		{
-			href: '/api/docs',
-			icon: 'lucide:code',
-			title: 'API Documentation',
-			description: 'Browse the REST API reference'
+			href: 'https://github.com/univ-lehavre/talent-finder',
+			icon: 'mdi:github',
+			title: 'GitHub',
+			description: 'Source code repository'
 		},
 		{
 			href: 'https://doi.org/10.5281/zenodo.18241663',
 			icon: 'lucide:archive',
-			title: 'Archive',
-			description: 'Zenodo permanent archive',
-			external: true
+			title: 'Zenodo',
+			description: 'Permanent archive'
 		}
 	];
 </script>
 
 <svelte:head>
-	<title>Dashboard - Talent Finder</title>
-	<meta name="description" content="Your personal dashboard on Talent Finder" />
+	<title>Dashboard - ECRIN | Talent finder</title>
+	<meta name="description" content="Your personal dashboard on ECRIN Talent finder" />
 </svelte:head>
 
 <div class="container-app py-12">
@@ -109,6 +107,22 @@
 		</p>
 
 		<div class="grid md:grid-cols-2 gap-6">
+			<!-- Consent Status Card (shown first if not granted) -->
+			{#if !hasOpenAlexConsent}
+				<ConsentStatusCard userEmail={data.user?.email} bind:hasConsent={hasOpenAlexConsent} />
+			{/if}
+
+			<!-- Research Organization Search Card -->
+			<ResearchOrganizationSearch bind:selectedOrganizations hasConsent={hasOpenAlexConsent} />
+
+			<!-- Articles Count Card -->
+			<ArticlesCountCard {selectedOrganizations} hasConsent={hasOpenAlexConsent} />
+
+			<!-- Consent Status Card (shown after research cards if granted) -->
+			{#if hasOpenAlexConsent}
+				<ConsentStatusCard userEmail={data.user?.email} bind:hasConsent={hasOpenAlexConsent} />
+			{/if}
+
 			<!-- Profile Card -->
 			<div class="card">
 				<h2 class="text-xl font-semibold mb-4">Your Profile</h2>
@@ -235,43 +249,102 @@
 				</div>
 			</div>
 
-			<!-- Pages Card -->
-			<div class="card">
-				<h2 class="text-xl font-semibold mb-4">Pages</h2>
-				<div class="space-y-3">
-					{#each quickActions as action (action.href)}
+			<!-- Repository Card (Admin only) -->
+			{#if data.isAdmin}
+				<div class="card">
+					<div class="flex items-center justify-between mb-4">
+						<div class="flex items-center gap-2">
+							<Icon
+								icon="lucide:bar-chart-2"
+								width="20"
+								height="20"
+								class="text-primary-600 dark:text-primary-400"
+							/>
+							<h2 class="text-xl font-semibold">Repository</h2>
+						</div>
 						<a
-							href={action.href}
-							target={action.external ? '_blank' : undefined}
-							rel={action.external ? 'noopener noreferrer' : undefined}
-							title={action.external ? 'Opens in new tab' : undefined}
+							href="/repository"
+							class="text-sm text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1"
+						>
+							<Icon icon="lucide:arrow-right" width="14" height="14" />
+							View stats
+						</a>
+					</div>
+					<p class="text-secondary-600 dark:text-secondary-400">
+						Explore code statistics and analytics for this repository.
+					</p>
+				</div>
+			{/if}
+
+			<!-- API Documentation Card (Admin only) -->
+			{#if data.isAdmin}
+				<div class="card">
+					<div class="flex items-center justify-between mb-4">
+						<div class="flex items-center gap-2">
+							<Icon
+								icon="lucide:code"
+								width="20"
+								height="20"
+								class="text-primary-600 dark:text-primary-400"
+							/>
+							<h2 class="text-xl font-semibold">API Documentation</h2>
+						</div>
+						<a
+							href="/api/docs"
+							class="text-sm text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1"
+						>
+							<Icon icon="lucide:arrow-right" width="14" height="14" />
+							Browse API
+						</a>
+					</div>
+					<p class="text-secondary-600 dark:text-secondary-400">
+						Browse the REST API reference with Swagger UI.
+					</p>
+				</div>
+			{/if}
+
+			<!-- External Links Card -->
+			<div class="card">
+				<div class="flex items-center gap-2 mb-4">
+					<Icon
+						icon="lucide:external-link"
+						width="20"
+						height="20"
+						class="text-primary-600 dark:text-primary-400"
+					/>
+					<h2 class="text-xl font-semibold">External Links</h2>
+				</div>
+				<div class="space-y-3">
+					{#each externalLinks as link (link.href)}
+						<a
+							href={link.href}
+							target="_blank"
+							rel="noopener noreferrer"
+							title="Opens in new tab"
 							class="flex items-center gap-3 p-3 rounded-lg border border-secondary-200 dark:border-secondary-700 hover:border-primary-300 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
 						>
 							<Icon
-								icon={action.icon}
+								icon={link.icon}
 								width="20"
 								height="20"
 								class="text-primary-600 dark:text-primary-400"
 							/>
 							<div class="flex-1">
-								<p class="font-medium">{action.title}</p>
+								<p class="font-medium">{link.title}</p>
 								<p class="text-sm text-secondary-500 dark:text-secondary-400">
-									{action.description}
+									{link.description}
 								</p>
 							</div>
+							<Icon
+								icon="lucide:external-link"
+								width="14"
+								height="14"
+								class="text-secondary-400 dark:text-secondary-500"
+							/>
 						</a>
 					{/each}
 				</div>
 			</div>
-
-			<!-- Consent Status Card -->
-			<ConsentStatusCard userEmail={data.user?.email} bind:hasConsent={hasOpenAlexConsent} />
-
-			<!-- Research Organization Search Card -->
-			<ResearchOrganizationSearch bind:selectedOrganizations hasConsent={hasOpenAlexConsent} />
-
-			<!-- Articles Count Card -->
-			<ArticlesCountCard {selectedOrganizations} hasConsent={hasOpenAlexConsent} />
 
 			<!-- System Health Card (Admin only) -->
 			{#if data.isAdmin}

@@ -15,7 +15,7 @@
 </script>
 
 <svelte:head>
-	<title>Talent Finder</title>
+	<title>ECRIN | Talent finder</title>
 	<meta name="description" content="Find and connect with talented professionals" />
 </svelte:head>
 

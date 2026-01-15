@@ -20,7 +20,6 @@
 	interface Props {
 		data: {
 			user: { email: string } | null;
-			isAdmin: boolean;
 			connectivityError?: 'appwrite_unavailable' | 'no_internet';
 		};
 		form: {
@@ -73,22 +72,9 @@
 
 	const navLinks = $derived([homeLink, ...(data.user ? [dashboardLink] : []), ...publicNavLinks]);
 
-	const themeLink: NavLink = {
-		href: '/theme',
-		label: 'Theme',
-		icon: 'lucide:palette'
-	};
-
 	const mobileNavLinks = $derived([
 		{ href: '/', label: 'Home', icon: 'lucide:home' },
 		...(data.user ? [dashboardLink] : []),
-		...(data.isAdmin ? [themeLink] : []),
-		{
-			href: 'https://doi.org/10.5281/zenodo.18241663',
-			label: 'Archive',
-			icon: 'lucide:archive',
-			external: true
-		},
 		{
 			href: 'https://github.com/univ-lehavre/talent-finder',
 			label: 'GitHub',
@@ -120,7 +106,9 @@
 		<div class="container-app py-4 flex items-center justify-between">
 			<a href="/" class="flex items-center gap-2">
 				<span class="h-8 w-8 [&>svg]:h-full [&>svg]:w-full">{@html logo}</span>
-				<span class="text-xl font-bold text-primary-700 dark:text-primary-400">Talent Finder</span>
+				<span class="text-xl font-bold text-primary-700 dark:text-primary-400"
+					>ECRIN | Talent finder</span
+				>
 			</a>
 
 			<!-- Desktop Navigation -->
@@ -143,26 +131,6 @@
 						{link.label}
 					</a>
 				{/each}
-				<div class="icon-link-wrapper group relative">
-					<a
-						href="https://doi.org/10.5281/zenodo.18241663"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-						aria-describedby="tooltip-archive"
-					>
-						<Icon icon="lucide:archive" width="20" height="20" />
-						<span class="sr-only">Archive</span>
-					</a>
-					<div
-						id="tooltip-archive"
-						role="tooltip"
-						class="icon-tooltip opacity-0 invisible group-hover:opacity-100 group-hover:visible"
-					>
-						<span class="font-semibold">Archive</span>
-						<span class="text-secondary-400 dark:text-secondary-500">Zenodo permanent archive</span>
-					</div>
-				</div>
 				<div class="icon-link-wrapper group relative">
 					<a
 						href="https://github.com/univ-lehavre/talent-finder"
@@ -196,7 +164,6 @@
 
 			<!-- Mobile Navigation -->
 			<div class="md:hidden flex items-center gap-2">
-				<ThemeToggle />
 				<button
 					type="button"
 					class="p-2 text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400"
@@ -227,14 +194,17 @@
 				class="p-4 border-b border-secondary-200 dark:border-secondary-700 flex items-center justify-between"
 			>
 				<span class="text-lg font-bold text-primary-700 dark:text-primary-400">Menu</span>
-				<button
-					type="button"
-					class="p-2 text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400"
-					onclick={closeMobileMenu}
-					aria-label="Close menu"
-				>
-					<Icon icon="lucide:x" width="24" height="24" />
-				</button>
+				<div class="flex items-center gap-2">
+					<ThemeToggle />
+					<button
+						type="button"
+						class="p-2 text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400"
+						onclick={closeMobileMenu}
+						aria-label="Close menu"
+					>
+						<Icon icon="lucide:x" width="24" height="24" />
+					</button>
+				</div>
 			</div>
 			<div class="p-4 flex flex-col gap-4">
 				{#each mobileNavLinks as link (link.href)}
@@ -295,6 +265,14 @@
 	>
 		<div class="container-app">
 			<div class="flex flex-col md:flex-row items-center justify-center gap-8">
+				<a
+					href="https://ecrin.sites.chasset.net"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="flex items-center gap-3 hover:opacity-80 transition-opacity"
+				>
+					<span class="text-lg font-bold text-primary-700 dark:text-primary-400">ECRIN</span>
+				</a>
 				<a
 					href="https://www.univ-lehavre.fr"
 					target="_blank"

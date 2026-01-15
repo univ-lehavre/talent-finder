@@ -8,13 +8,13 @@ import { mapErrorToResponse } from '$lib/server/http';
 const MAX_INSTITUTIONS = 10;
 
 /**
- * GET /api/v1/openalex/works-count
+ * GET /api/v1/works/counts
  * Returns the count of articles published by the specified institutions in the last 5 years.
  *
  * Requires authentication and consent to use the OpenAlex polite pool.
  *
  * Query parameters:
- * - institutions (required): Comma-separated OpenAlex institution IDs
+ * - institutions (required): Comma-separated OpenAlex institution IDs (max 10)
  */
 export const GET: RequestHandler = async ({ url, locals }) => {
 	try {

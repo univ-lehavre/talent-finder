@@ -85,7 +85,8 @@ talent-finder/
 │       ├── repository/      # Repository stats page
 │       └── login/           # Magic link callback
 ├── docs/
-│   └── design-system.md     # UI design guidelines
+│   ├── design-system.md     # UI design guidelines
+│   └── appwrite-setup.md    # Appwrite database setup
 └── CLAUDE.md                # AI assistant instructions
 ```
 

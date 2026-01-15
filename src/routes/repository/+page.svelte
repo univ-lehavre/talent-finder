@@ -21,7 +21,7 @@
 </script>
 
 <svelte:head>
-	<title>Repository Stats - Talent Finder</title>
+	<title>Repository Stats - ECRIN | Talent finder</title>
 </svelte:head>
 
 <div class="min-h-screen bg-secondary-50 dark:bg-secondary-900 py-8 transition-colors duration-200">
