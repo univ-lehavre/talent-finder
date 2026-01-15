@@ -1,5 +1,6 @@
 # Talent Finder
 
+[![CI](https://github.com/univ-lehavre/talent-finder/actions/workflows/ci.yml/badge.svg)](https://github.com/univ-lehavre/talent-finder/actions/workflows/ci.yml)
 [![DOI](https://zenodo.org/badge/1133686064.svg)](https://doi.org/10.5281/zenodo.18241663)
 
 Talent Finder is a web application built with SvelteKit that helps discover and analyze developer talent through git repository statistics and GitHub integration.
