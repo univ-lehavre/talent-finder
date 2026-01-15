@@ -13,12 +13,6 @@ Talent Finder is a sub-project of **ECRIN** (Espace de Coopération pour la Rech
 
 ECRIN aims to foster cooperation between researchers from **[Université Le Havre Normandie](https://www.univ-lehavre.fr/)**, the **[Campus Polytechnique des Territoires Maritimes et Portuaires (CPTMP)](https://www.cptmp.fr/)**, and the European university alliance **[EUNICoast](https://eunicoast.eu/)**.
 
-The program is organized around three major axes:
-
-- **Smart City**: urban logistics, sustainable mobility, reuse, pedagogical innovation, air and water quality
-- **Maritime and Port**: cybersecurity, drones, sail transport, data platforms, financial engineering
-- **Energy and Industry**: digital transition, material recovery, new energy production
-
 ### Université Le Havre Normandie
 
 **[Université Le Havre Normandie](https://www.univ-lehavre.fr/)** is a French public higher education and research institution with over 7,000 students from 85 nationalities. It offers 120+ diplomas across Arts, Law, Human Sciences, and Science & Technology, supported by 12 research laboratories and 174 partner institutions worldwide.
