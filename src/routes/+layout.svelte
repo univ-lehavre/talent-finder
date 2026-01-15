@@ -6,6 +6,7 @@
 	import { Icon, Signup, ThemeToggle, ConnectivityBanner } from '$lib/ui';
 	import { page } from '$app/stores';
 	import { createThemeStore, initTheme } from '$lib/stores';
+	import { version } from '../../package.json';
 
 	const themeStore = createThemeStore();
 
@@ -295,7 +296,7 @@
 				</a>
 			</div>
 			<p class="text-center text-sm text-secondary-500 dark:text-secondary-400 mt-6">
-				Developed at Université Le Havre Normandie
+				Developed at Université Le Havre Normandie (v{version})
 			</p>
 		</div>
 	</footer>
