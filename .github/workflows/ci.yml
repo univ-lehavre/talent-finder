@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  APPWRITE_KEY: ci_placeholder
+  APPWRITE_ENDPOINT: https://cloud.appwrite.io/v1
+  APPWRITE_PROJECT: ci_placeholder
+  PUBLIC_LOGIN_URL: http://localhost:5173/login
+  ALLOWED_DOMAINS_REGEXP: .*
+
 jobs:
   ci:
     name: Lint, Type Check & Test
