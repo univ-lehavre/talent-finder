@@ -15,3 +15,4 @@ feat: add OpenAlex institution statistics with consent management
 - Display institution details (name, location, works count, citations)
 - Lock OpenAlex cards when user has not granted consent
 - Add `/api/v1/institutions/search`, `/api/v1/openalex/institution-stats`, `/api/v1/consent` endpoints
+- Update OpenAPI documentation with consent and openalex endpoints
