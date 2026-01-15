@@ -16,3 +16,5 @@ feat: add OpenAlex institution statistics with consent management
 - Lock OpenAlex cards when user has not granted consent
 - Add `/api/v1/institutions/search`, `/api/v1/openalex/institution-stats`, `/api/v1/consent` endpoints
 - Update OpenAPI documentation with consent and openalex endpoints
+- Add health check service and `/api/v1/health` endpoint
+- Add `ConnectivityBanner` for network/Appwrite errors
