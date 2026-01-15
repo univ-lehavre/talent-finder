@@ -1,5 +1,5 @@
 ---
-"talent-finder": minor
+'talent-finder': minor
 ---
 
 feat: add research organization search card to dashboard
