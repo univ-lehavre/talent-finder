@@ -102,8 +102,8 @@
 </script>
 
 <svelte:head>
-	<title>Theme - Talent Finder</title>
-	<meta name="description" content="Talent Finder theme customization and design system" />
+	<title>Theme - ECRIN | Talent finder</title>
+	<meta name="description" content="ECRIN Talent finder theme customization and design system" />
 </svelte:head>
 
 <!-- Theme Selector Bar -->

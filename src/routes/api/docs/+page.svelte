@@ -25,7 +25,7 @@
 </script>
 
 <svelte:head>
-	<title>API Documentation - Talent Finder</title>
+	<title>API Documentation - ECRIN | Talent finder</title>
 </svelte:head>
 
 <div class="min-h-screen bg-white">

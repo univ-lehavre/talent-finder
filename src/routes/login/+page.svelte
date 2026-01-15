@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>Login - Talent Finder</title>
+	<title>Login - ECRIN | Talent finder</title>
 </svelte:head>
 
 <div

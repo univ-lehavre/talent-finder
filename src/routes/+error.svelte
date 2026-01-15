@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-	<title>{$page.status} - Talent Finder</title>
+	<title>{$page.status} - ECRIN | Talent finder</title>
 	<meta name="description" content="Page not found" />
 </svelte:head>
 
