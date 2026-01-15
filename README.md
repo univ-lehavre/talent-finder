@@ -7,11 +7,9 @@
 
 **Talent Finder** is a web application that enables discovering and analyzing researcher expertise through their publications and contributions. It facilitates connections between researchers, institutions, and partners by identifying skills and areas of expertise.
 
-## Context: ECRIN
+## ECRIN
 
-Talent Finder is a sub-project of **ECRIN** (Espace de Coopération pour la Recherche et l'Innovation Normande).
-
-ECRIN aims to foster cooperation between researchers from **[Université Le Havre Normandie](https://www.univ-lehavre.fr/)**, the **[Campus Polytechnique des Territoires Maritimes et Portuaires (CPTMP)](https://www.cptmp.fr/)**, and the European university alliance **[EUNICoast](https://eunicoast.eu/)**.
+Talent Finder is a sub-project of **ECRIN**, which aims to foster cooperation between researchers from **[Université Le Havre Normandie](https://www.univ-lehavre.fr/)**, the **[Campus Polytechnique des Territoires Maritimes et Portuaires](https://www.cptmp.fr/)**, and the European university alliance **[EUNICoast](https://eunicoast.eu/)**.
 
 ### Université Le Havre Normandie
 
@@ -26,9 +24,9 @@ ECRIN aims to foster cooperation between researchers from **[Université Le Havr
 - 174 partner institutions
 - 3rd place nationally in ERASMUS rankings
 
-### CPTMP
+### Campus Polytechnique des Territoires Maritimes et Portuaires
 
-**[CPTMP](https://www.cptmp.fr/)** (Campus Polytechnique des Territoires Maritimes et Portuaires) is an open-air laboratory unique in Europe. This interdisciplinary consortium unites higher education, research institutions, and economic actors to address major digital, environmental, energy, and social transformations.
+Le **[Campus Polytechnique des Territoires Maritimes et Portuaires](https://www.cptmp.fr/)** is an open-air laboratory unique in Europe. This interdisciplinary consortium unites higher education, research institutions, and economic actors to address major digital, environmental, energy, and social transformations.
 
 **Strategic axes:**
 
@@ -48,7 +46,7 @@ ECRIN aims to foster cooperation between researchers from **[Université Le Havr
 
 ### EUNICoast
 
-**[EUNICoast](https://eunicoast.eu/)** (European University of Islands, Ports and Coastal Territories) is an alliance of 12 higher education institutions and 88 associated partners across 11 European countries, coordinated by Université Le Havre Normandie.
+The European University of Islands, Ports and Coastal Territories, or **[EUNICoast](https://eunicoast.eu/)**, is an alliance of 12 higher education institutions and 88 associated partners across 11 European countries, coordinated by Université Le Havre Normandie.
 
 **Thematic hubs:**
 
