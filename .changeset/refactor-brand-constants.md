@@ -2,26 +2,39 @@
 'talent-finder': minor
 ---
 
-feat(i18n): compléter la centralisation du contenu textuel
+feat(i18n): système d'internationalisation complet avec sélecteur de langue
 
-### Documentation
-- Ajouter `CLAUDE.md` avec l'architecture i18n et les conventions du module
+### Fonctionnalités
+
+- Ajouter le sélecteur de langue dans la navbar (français/anglais)
+- Détection automatique de la langue du navigateur
+- Persistance du choix de langue dans un cookie (1 an)
+- Changement de langue en temps réel sans rechargement de page
+
+### Infrastructure
+
+- Créer `locale.svelte.ts` avec gestion d'état réactif ($state)
+- Créer `i18n.svelte.ts` avec module-level $derived pour réactivité
+- Ajouter traductions anglaises complètes dans `translations/en/`
+
+### Composants
+
+- Créer `LanguageSelector.svelte` avec dropdown et drapeaux
+- Migrer 18 composants UI vers i18n réactif ($derived)
+- Migrer 8 pages routes vers i18n réactif
 
 ### Types
-- Déplacer les interfaces `Challenge`, `Step`, `HomeContent` vers `types.ts`
-- Exporter les nouveaux types depuis `index.ts`
+
+- Ajouter `AccessibilityContent.languageSelector/changeLanguage`
+- Ajouter `UIContent.theme.light/dark/changeTheme`
+- Déplacer `Challenge`, `Step`, `HomeContent` vers `types.ts`
 
 ### Traductions
-- Traduire le contenu de `home.ts` en français (page d'accueil)
-- Traduire `ResearchOrganizationSearch` (Recherche d'organismes)
-- Traduire `ArticlesCountCard` (Production scientifique)
-- Traduire `Footer` (Développé à Université Le Havre Normandie)
 
-### Refactoring
-- Ajouter `statusLabels` dans `commonLabels` (brand.ts)
-- Ajouter `researchOrganization` et `researchOutput` dans `ui.ts`
-- Ajouter `footer.attribution` dans `navigation.ts`
-- Utiliser les labels centralisés dans les composants
+- Contenu français complet (existant)
+- Contenu anglais complet (nouveau)
+- Labels accessibility pour sélecteur de langue
 
 ### Tests
-- Ajouter 39 tests unitaires pour le module content
+
+- 39 tests unitaires pour le module content
