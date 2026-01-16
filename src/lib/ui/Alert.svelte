@@ -2,56 +2,51 @@
 	import type { Snippet } from 'svelte';
 	import Icon from './Icon.svelte';
 
+	/**
+	 * Alert - Message d'alerte avec variants sémantiques
+	 *
+	 * Optimisé avec data-variant + CSS custom properties
+	 * (suppression de 4 $derived pour meilleure performance)
+	 *
+	 * @example
+	 * ```svelte
+	 * <Alert variant="success">Opération réussie!</Alert>
+	 * <Alert variant="error" dismissible>Une erreur est survenue</Alert>
+	 * ```
+	 */
 	interface Props {
+		/** Semantic variant */
 		variant?: 'info' | 'success' | 'warning' | 'error';
+		/** Show dismiss button */
 		dismissible?: boolean;
+		/** Callback when dismissed */
 		ondismiss?: () => void;
+		/** Custom icon (overrides default) */
+		icon?: string;
+		/** Alert content */
 		children: Snippet;
+		/** Additional CSS classes */
+		class?: string;
 	}
 
-	let { variant = 'info', dismissible = false, ondismiss, children }: Props = $props();
+	let {
+		variant = 'info',
+		dismissible = false,
+		ondismiss,
+		icon,
+		children,
+		class: className = ''
+	}: Props = $props();
 
 	let dismissed = $state(false);
 
-	const alertClass = $derived(
-		variant === 'success'
-			? 'alert-success'
-			: variant === 'warning'
-				? 'alert-warning'
-				: variant === 'error'
-					? 'alert-error'
-					: 'alert-info'
-	);
-
-	const iconClass = $derived(
-		variant === 'success'
-			? 'text-success-600'
-			: variant === 'warning'
-				? 'text-warning-600'
-				: variant === 'error'
-					? 'text-error-600'
-					: 'text-primary-600'
-	);
-
-	const iconName = $derived(
-		variant === 'success'
-			? 'lucide:check-circle'
-			: variant === 'warning'
-				? 'lucide:alert-triangle'
-				: variant === 'error'
-					? 'lucide:x-circle'
-					: 'lucide:info'
-	);
-
-	const dismissClass = $derived(
-		variant === 'success'
-			? 'text-success-600 hover:text-success-700'
-			: variant === 'warning'
-				? 'text-warning-600 hover:text-warning-700'
-				: variant === 'error'
-					? 'text-error-600 hover:text-error-700'
-					: 'text-primary-600 hover:text-primary-700'
-	);
+	// Map des icônes par défaut (simple objet, pas de $derived)
+	const defaultIcons: Record<string, string> = {
+		info: 'lucide:info',
+		success: 'lucide:check-circle',
+		warning: 'lucide:alert-triangle',
+		error: 'lucide:x-circle'
+	};
 
 	const handleDismiss = (): void => {
 		dismissed = true;
@@ -60,17 +55,17 @@
 </script>
 
 {#if !dismissed}
-	<div class="{alertClass} flex items-start gap-3" role="alert">
-		<span class="flex-shrink-0 {iconClass}">
-			<Icon icon={iconName} width="20" height="20" />
+	<div class="alert {className}" data-variant={variant} role="alert">
+		<span class="alert-icon">
+			<Icon icon={icon ?? defaultIcons[variant]} width="20" height="20" />
 		</span>
-		<div class="flex-grow">
+		<div class="alert-content">
 			{@render children()}
 		</div>
 		{#if dismissible}
 			<button
 				type="button"
-				class="flex-shrink-0 {dismissClass}"
+				class="alert-dismiss"
 				onclick={handleDismiss}
 				aria-label="Fermer l'alerte"
 			>
@@ -79,3 +74,110 @@
 		{/if}
 	</div>
 {/if}
+
+<style>
+	.alert {
+		--alert-bg: var(--color-primary-50);
+		--alert-border: var(--color-primary-200);
+		--alert-text: var(--color-primary-800);
+		--alert-icon-color: var(--color-primary-600);
+
+		display: flex;
+		align-items: flex-start;
+		gap: var(--spacing-sm);
+		padding: var(--spacing-md);
+		border-radius: var(--radius-lg);
+		border: 1px solid var(--alert-border);
+		background-color: var(--alert-bg);
+		color: var(--alert-text);
+		transition:
+			background-color var(--transition-normal),
+			border-color var(--transition-normal),
+			color var(--transition-normal);
+	}
+
+	/* Variants */
+	.alert[data-variant='success'] {
+		--alert-bg: var(--color-success-50);
+		--alert-border: oklch(from var(--color-success-500) l c h / 0.3);
+		--alert-text: var(--color-success-700);
+		--alert-icon-color: var(--color-success-600);
+	}
+
+	.alert[data-variant='warning'] {
+		--alert-bg: var(--color-warning-50);
+		--alert-border: oklch(from var(--color-warning-500) l c h / 0.3);
+		--alert-text: var(--color-warning-700);
+		--alert-icon-color: var(--color-warning-600);
+	}
+
+	.alert[data-variant='error'] {
+		--alert-bg: var(--color-error-50);
+		--alert-border: oklch(from var(--color-error-500) l c h / 0.3);
+		--alert-text: var(--color-error-700);
+		--alert-icon-color: var(--color-error-600);
+	}
+
+	/* Dark mode */
+	:global(.dark) .alert {
+		--alert-bg: oklch(from var(--color-primary-500) 20% 0.05 h);
+		--alert-border: var(--color-primary-800);
+		--alert-text: var(--color-primary-200);
+		--alert-icon-color: var(--color-primary-400);
+	}
+
+	:global(.dark) .alert[data-variant='success'] {
+		--alert-bg: oklch(from var(--color-success-500) 20% 0.05 h);
+		--alert-border: var(--color-success-800);
+		--alert-text: var(--color-success-200);
+		--alert-icon-color: var(--color-success-400);
+	}
+
+	:global(.dark) .alert[data-variant='warning'] {
+		--alert-bg: oklch(from var(--color-warning-500) 20% 0.05 h);
+		--alert-border: var(--color-warning-800);
+		--alert-text: var(--color-warning-200);
+		--alert-icon-color: var(--color-warning-400);
+	}
+
+	:global(.dark) .alert[data-variant='error'] {
+		--alert-bg: oklch(from var(--color-error-500) 20% 0.05 h);
+		--alert-border: var(--color-error-800);
+		--alert-text: var(--color-error-200);
+		--alert-icon-color: var(--color-error-400);
+	}
+
+	/* Icon */
+	.alert-icon {
+		flex-shrink: 0;
+		color: var(--alert-icon-color);
+	}
+
+	/* Content */
+	.alert-content {
+		flex: 1;
+		min-width: 0;
+	}
+
+	/* Dismiss button */
+	.alert-dismiss {
+		flex-shrink: 0;
+		padding: 0;
+		background: none;
+		border: none;
+		color: var(--alert-icon-color);
+		cursor: pointer;
+		opacity: 0.7;
+		transition: opacity var(--transition-fast);
+	}
+
+	.alert-dismiss:hover {
+		opacity: 1;
+	}
+
+	.alert-dismiss:focus-visible {
+		outline: 2px solid var(--alert-icon-color);
+		outline-offset: 2px;
+		border-radius: var(--radius-sm);
+	}
+</style>

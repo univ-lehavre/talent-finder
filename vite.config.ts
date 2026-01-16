@@ -1,9 +1,16 @@
 import { defineConfig } from 'vitest/config';
 import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
+import { readFileSync } from 'node:fs';
+
+const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
 export default defineConfig({
 	plugins: [sveltekit(), tailwindcss()],
+
+	define: {
+		__APP_VERSION__: JSON.stringify(pkg.version)
+	},
 
 	build: {
 		// Swagger UI is ~1.6MB but loaded dynamically only on /api/docs
