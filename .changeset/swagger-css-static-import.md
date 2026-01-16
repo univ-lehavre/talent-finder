@@ -1,5 +1,5 @@
 ---
-"talent-finder": patch
+'talent-finder': patch
 ---
 
 refactor(api-docs): load Swagger CSS statically to avoid FOUC
