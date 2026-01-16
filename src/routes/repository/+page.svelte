@@ -12,7 +12,7 @@
 		PageHeader,
 		PageLayout,
 		StatCard
-	} from '$lib/ui';
+	} from '$lib/components';
 	import { i18n } from '$lib/content';
 
 	const repository = $derived(i18n.repository);

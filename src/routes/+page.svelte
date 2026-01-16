@@ -10,7 +10,7 @@
 		PartnerSection,
 		TagCard,
 		FeatureCard
-	} from '$lib/ui';
+	} from '$lib/components';
 
 	interface Props {
 		data: {
@@ -29,8 +29,8 @@
 </script>
 
 <svelte:head>
-	<title>ECRIN | Talent finder</title>
-	<meta name="description" content="Find and connect with talented professionals" />
+	<title>{content.meta.title}</title>
+	<meta name="description" content={content.meta.description} />
 </svelte:head>
 
 <!-- Hero Section -->
@@ -110,7 +110,7 @@
 <PartnerSection
 	href="https://www.cptmp.fr/"
 	logoSrc="/logos/cptmp.png"
-	logoAlt="Campus Polytechnique des Territoires Maritimes et Portuaires"
+	logoAlt={partners.footer.cptmpAlt}
 	title={partners.cptmp.title}
 	variant="surface"
 	logoPosition="right"

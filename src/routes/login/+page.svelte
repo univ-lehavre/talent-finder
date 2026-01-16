@@ -1,7 +1,14 @@
 <script lang="ts">
-	import { LoginForm } from '$lib/components';
-	import { CenteredLayout, LoadingState, ErrorState, ButtonGroup, LinkButton } from '$lib/ui';
+	import {
+		LoginForm,
+		CenteredLayout,
+		LoadingState,
+		ErrorState,
+		ButtonGroup,
+		LinkButton
+	} from '$lib/components';
 	import { i18n } from '$lib/content';
+	import type { AuthContent } from '$lib/content/types';
 
 	const auth = $derived(i18n.auth);
 
@@ -9,18 +16,29 @@
 		data: {
 			isMagicLinkCallback: boolean;
 			error?: boolean;
-			message?: string;
-			cause?: string;
+			code?: string;
 		};
 		form: {
 			error?: boolean;
-			message?: string;
-			cause?: string;
+			code?: string;
 			success?: boolean;
 		} | null;
 	}
 
 	let { data, form }: Props = $props();
+
+	/**
+	 * Translate error code to localized message.
+	 */
+	const translateErrorCode = (
+		code: string | undefined,
+		errorCodes: AuthContent['errorCodes']
+	): string => {
+		if (!code) return auth.login.error.message;
+		return errorCodes[code as keyof AuthContent['errorCodes']] ?? errorCodes.unexpected_error;
+	};
+
+	const errorMessage = $derived(translateErrorCode(data.code, auth.errorCodes));
 </script>
 
 <svelte:head>
@@ -32,8 +50,8 @@
 	{#if data.isMagicLinkCallback}
 		{#if data.error}
 			<ErrorState
-				title={data.message ?? auth.login.error.title}
-				message={data.cause ?? auth.login.error.message}
+				title={auth.login.error.title}
+				message={errorMessage}
 				icon="lucide:link-2-off"
 				variant="error"
 				size="md"
