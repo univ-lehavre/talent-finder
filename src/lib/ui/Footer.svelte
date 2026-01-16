@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import PartnerLogo from './PartnerLogo.svelte';
+	import { navigation } from '$lib/content';
 
 	/**
 	 * Footer component with partner logos and version info.
@@ -28,7 +29,7 @@
 	let {
 		partners = [],
 		version,
-		attribution = 'Developed at Université Le Havre Normandie',
+		attribution = navigation.footer.attribution,
 		children,
 		class: className = ''
 	}: Props = $props();
