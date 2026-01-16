@@ -63,5 +63,13 @@ export const fr: AuthContent = {
 		success:
 			"Un courriel d'authentification vous a été envoyé. Veuillez vérifier votre boîte de réception.",
 		footer: "En vous authentifiant, vous acceptez nos conditions d'utilisation."
+	},
+	errorCodes: {
+		invalid_email: "L'adresse email n'est pas valide ou n'appartient pas à un domaine autorisé.",
+		magicurl_login_validation_error: 'Les paramètres du lien de connexion sont invalides.',
+		signup_failed: "L'inscription a échoué.",
+		login_failed: 'La connexion a échoué.',
+		invalid_magic_link: 'Le lien de connexion est invalide ou a expiré.',
+		unexpected_error: 'Une erreur inattendue est survenue.'
 	}
 };
