@@ -2,8 +2,8 @@
  * Dashboard content - French.
  */
 
-import { brand, pageTitle } from '../../../core/brand';
-import type { DashboardContent } from '../../../types';
+import { brand, pageTitle } from '$lib/content/core/brand';
+import type { DashboardContent } from '$lib/content/types';
 
 /**
  * French dashboard content.

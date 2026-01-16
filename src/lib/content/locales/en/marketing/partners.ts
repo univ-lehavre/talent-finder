@@ -2,8 +2,8 @@
  * Partners section content - English.
  */
 
-import { brand } from '../brand';
-import type { PartnersContent } from '../../../types';
+import { brand } from '$lib/content/locales/en/brand';
+import type { PartnersContent } from '$lib/content/types';
 
 /**
  * English partners content.

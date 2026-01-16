@@ -2,8 +2,8 @@
  * Repository page content - English.
  */
 
-import { commonLabels, pageTitle } from '../brand';
-import type { RepositoryContent } from '../../../types';
+import { commonLabels, pageTitle } from '$lib/content/locales/en/brand';
+import type { RepositoryContent } from '$lib/content/types';
 
 /**
  * English repository content.

@@ -3,7 +3,7 @@
  * Content for research organization search and research output features.
  */
 
-import type { ResearchContent } from '../../../types';
+import type { ResearchContent } from '$lib/content/types';
 
 /**
  * English research content.

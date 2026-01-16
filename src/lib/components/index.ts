@@ -16,11 +16,13 @@
  * Use these components in pages/routes for convenience - they come pre-configured
  * with localized content.
  *
- * For testing or custom content scenarios, use the base components from $lib/ui directly.
+ * Generic UI components are also re-exported here for consistency - routes should
+ * import all components from $lib/components, never directly from $lib/ui.
  */
 
 // Common components (shared across routes)
 export {
+	// With i18n
 	Navbar,
 	Footer,
 	Drawer,
@@ -30,7 +32,44 @@ export {
 	Alert,
 	ConnectivityBanner,
 	PageHeader,
-	ThemeToggle
+	ThemeToggle,
+	// Generic UI re-exports
+	Button,
+	ButtonGroup,
+	LinkButton,
+	ErrorState,
+	LoadingState,
+	AsyncContent,
+	LoadingSpinner,
+	Badge,
+	Grid,
+	CenteredLayout,
+	PageLayout,
+	Section,
+	PageHero,
+	Hero,
+	LandingSection,
+	CTASection,
+	PartnerSection,
+	Card,
+	InfoCard,
+	StatCard,
+	StepCard,
+	ChallengeCard,
+	TagCard,
+	FeatureCard,
+	KeyValue,
+	DataTable,
+	DataList,
+	DropdownCategory,
+	DropdownItem,
+	NavLink,
+	IconLink,
+	Icon,
+	ColorSwatch,
+	ColorScaleRow,
+	CodeExample,
+	Tooltip
 } from './common';
 
 // Login route components
@@ -44,5 +83,9 @@ export {
 	HealthStatusCard,
 	ArticlesCountCard,
 	ResearchOrganizationSearch,
-	ComingSoonSection
+	ComingSoonSection,
+	// Generic UI re-exports
+	DashboardLinkCard,
+	ExternalLinkCard,
+	ExternalLinksCard
 } from './dashboard';

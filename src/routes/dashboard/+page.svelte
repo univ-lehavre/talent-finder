@@ -7,9 +7,11 @@
 		ConsentStatusCard,
 		ProfileCard,
 		ThemePreferencesCard,
-		ComingSoonSection
+		ComingSoonSection,
+		DashboardLinkCard,
+		ExternalLinksCard,
+		Grid
 	} from '$lib/components';
-	import { DashboardLinkCard, ExternalLinksCard, Grid } from '$lib/ui';
 	import {
 		createThemeStore,
 		hasThemePreferences,

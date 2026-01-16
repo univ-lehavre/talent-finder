@@ -3,8 +3,8 @@
  * Content for system health monitoring and connectivity features.
  */
 
-import { brand, commonLabels } from '../brand';
-import type { HealthContent } from '../../../types';
+import { brand, commonLabels } from '$lib/content/locales/en/brand';
+import type { HealthContent } from '$lib/content/types';
 
 /**
  * English health content.

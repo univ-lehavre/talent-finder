@@ -3,8 +3,8 @@
  * Content for user profile and data consent features.
  */
 
-import { brand } from '../brand';
-import type { ProfileContent } from '../../../types';
+import { brand } from '$lib/content/locales/en/brand';
+import type { ProfileContent } from '$lib/content/types';
 
 /**
  * English profile content.

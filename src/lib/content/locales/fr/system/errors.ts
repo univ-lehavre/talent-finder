@@ -2,8 +2,8 @@
  * Error page content - French.
  */
 
-import { brand } from '../../../core/brand';
-import type { ErrorContent } from '../../../types';
+import { brand } from '$lib/content/core/brand';
+import type { ErrorContent } from '$lib/content/types';
 
 /**
  * French error content.

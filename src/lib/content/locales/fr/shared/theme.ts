@@ -3,8 +3,8 @@
  * Content for theme customization page and theme preferences card.
  */
 
-import { brand, commonLabels, pageTitle } from '../../../core/brand';
-import type { ThemeContent } from '../../../types';
+import { brand, commonLabels, pageTitle } from '$lib/content/core/brand';
+import type { ThemeContent } from '$lib/content/types';
 
 /**
  * French theme content.

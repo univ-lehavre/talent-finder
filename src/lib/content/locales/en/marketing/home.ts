@@ -2,13 +2,18 @@
  * Homepage content - English.
  */
 
-import { brand } from '../brand';
-import type { HomeContent } from '../../../types';
+import { brand } from '$lib/content/locales/en/brand';
+import type { HomeContent } from '$lib/content/types';
 
 /**
  * English content for the homepage.
  */
 export const en: HomeContent = {
+	meta: {
+		title: `${brand.appName} | Find the right talent for your projects`,
+		description:
+			'Connect with qualified professionals, researchers, and experts. Build your team and bring your ideas to life.'
+	},
 	hero: {
 		title: 'Find the right talent for your projects',
 		subtitle:

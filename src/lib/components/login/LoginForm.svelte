@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { LoginForm as BaseLoginForm } from '$lib/ui';
 	import { i18n } from '$lib/content';
+	import type { AuthContent } from '$lib/content/types';
 
 	/**
 	 * LoginForm - Pre-configured login form with i18n labels.
 	 *
 	 * Wraps $lib/ui/LoginForm and injects content from i18n.
+	 * Translates error codes to localized messages.
 	 *
 	 * @example
 	 * ```svelte
@@ -16,8 +18,7 @@
 		/** Form state from SvelteKit action */
 		form: {
 			error?: boolean;
-			message?: string;
-			cause?: string;
+			code?: string;
 			success?: boolean;
 		} | null;
 		/** Additional CSS classes */
@@ -28,6 +29,29 @@
 
 	const auth = $derived(i18n.auth);
 	const a11y = $derived(i18n.accessibility);
+
+	/**
+	 * Translate error code to localized message.
+	 */
+	const translateErrorCode = (
+		code: string | undefined,
+		errorCodes: AuthContent['errorCodes']
+	): string | undefined => {
+		if (!code) return undefined;
+		return errorCodes[code as keyof AuthContent['errorCodes']] ?? errorCodes.unexpected_error;
+	};
+
+	/**
+	 * Form with translated error message.
+	 */
+	const translatedForm = $derived(
+		form
+			? {
+					...form,
+					message: translateErrorCode(form.code, auth.errorCodes)
+				}
+			: null
+	);
 
 	const content = $derived({
 		title: auth.form.title,
@@ -47,4 +71,4 @@
 	});
 </script>
 
-<BaseLoginForm {form} {content} class={className} />
+<BaseLoginForm form={translatedForm} {content} class={className} />

@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Dropdown, Modal, Signup, ThemeToggle } from '$lib/components';
 	import {
+		Dropdown,
+		Modal,
+		Signup,
+		ThemeToggle,
 		Alert,
 		Badge,
 		Card,
@@ -15,7 +18,7 @@
 		PageHero,
 		Section,
 		StatCard
-	} from '$lib/ui';
+	} from '$lib/components';
 	import {
 		paletteCategories,
 		palettesByCategory,

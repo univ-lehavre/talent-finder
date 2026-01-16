@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { ErrorState, ButtonGroup, LinkButton, Button } from '$lib/ui';
+	import { ErrorState, ButtonGroup, LinkButton, Button } from '$lib/components';
 	import { i18n } from '$lib/content';
 
 	const errors = $derived(i18n.errors);

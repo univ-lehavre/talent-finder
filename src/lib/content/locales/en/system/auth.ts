@@ -2,8 +2,8 @@
  * Authentication content - English.
  */
 
-import { brand, commonLabels, pageTitle } from '../brand';
-import type { AuthContent } from '../../../types';
+import { brand, commonLabels, pageTitle } from '$lib/content/locales/en/brand';
+import type { AuthContent } from '$lib/content/types';
 
 /**
  * English authentication content.
@@ -61,5 +61,13 @@ export const en: AuthContent = {
 		closeAlert: 'Close alert',
 		success: 'An authentication email has been sent to you. Please check your inbox.',
 		footer: 'By signing in, you agree to our terms of service.'
+	},
+	errorCodes: {
+		invalid_email: 'The email address is not valid or does not belong to an allowed domain.',
+		magicurl_login_validation_error: 'The login link parameters are invalid.',
+		signup_failed: 'Signup failed.',
+		login_failed: 'Login failed.',
+		invalid_magic_link: 'The login link is invalid or has expired.',
+		unexpected_error: 'An unexpected error occurred.'
 	}
 };

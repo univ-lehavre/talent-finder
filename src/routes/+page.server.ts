@@ -19,14 +19,12 @@ export const actions = {
 			if (error instanceof ApplicationError) {
 				return fail(error.httpStatus, {
 					error: true,
-					message: error.message,
-					cause: error.cause ?? 'Unknown error'
+					code: error.code
 				});
 			}
 			return fail(500, {
 				error: true,
-				message: 'Signup failed',
-				cause: 'An unexpected error occurred'
+				code: 'signup_failed'
 			});
 		}
 	},

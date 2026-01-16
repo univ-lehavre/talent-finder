@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { Signup as BaseSignup } from '$lib/ui';
 	import { i18n } from '$lib/content';
+	import type { AuthContent } from '$lib/content/types';
 
 	/**
 	 * Signup - Pre-configured signup modal with i18n labels.
 	 *
 	 * Wraps $lib/ui/Signup and injects content from i18n.
+	 * Translates error codes to localized messages.
 	 *
 	 * @example
 	 * ```svelte
@@ -15,8 +17,7 @@
 	interface Props {
 		form: {
 			error?: boolean;
-			message?: string;
-			cause?: string;
+			code?: string;
 			success?: boolean;
 		} | null;
 		open?: boolean;
@@ -26,6 +27,29 @@
 	let { form, open = $bindable(false), onclose }: Props = $props();
 
 	const auth = $derived(i18n.auth);
+
+	/**
+	 * Translate error code to localized message.
+	 */
+	const translateErrorCode = (
+		code: string | undefined,
+		errorCodes: AuthContent['errorCodes']
+	): string | undefined => {
+		if (!code) return undefined;
+		return errorCodes[code as keyof AuthContent['errorCodes']] ?? errorCodes.unexpected_error;
+	};
+
+	/**
+	 * Form with translated error message.
+	 */
+	const translatedForm = $derived(
+		form
+			? {
+					...form,
+					message: translateErrorCode(form.code, auth.errorCodes)
+				}
+			: null
+	);
 
 	const content = $derived({
 		title: auth.modal.title,
@@ -44,4 +68,4 @@
 	});
 </script>
 
-<BaseSignup {form} bind:open {onclose} {content} />
+<BaseSignup form={translatedForm} bind:open {onclose} {content} />

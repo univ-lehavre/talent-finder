@@ -2,8 +2,8 @@
  * Navigation content - English.
  */
 
-import { brand, commonLabels } from '../brand';
-import type { NavigationContent } from '../../../types';
+import { brand, commonLabels } from '$lib/content/locales/en/brand';
+import type { NavigationContent } from '$lib/content/types';
 
 /**
  * English navigation content.

@@ -2,6 +2,7 @@
  * Dashboard route components.
  *
  * Components specific to the /dashboard route.
+ * Generic UI components are re-exported from $lib/ui for consistency.
  */
 
 // Profile
@@ -18,3 +19,6 @@ export { default as ResearchOrganizationSearch } from './ResearchOrganizationSea
 
 // Sections
 export { default as ComingSoonSection } from './ComingSoonSection.svelte';
+
+// Generic UI re-exports (no i18n needed - content passed via props)
+export { DashboardLinkCard, ExternalLinkCard, ExternalLinksCard } from '$lib/ui';

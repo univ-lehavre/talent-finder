@@ -2,13 +2,18 @@
  * Homepage content - French.
  */
 
-import { brand } from '../../../core/brand';
-import type { HomeContent } from '../../../types';
+import { brand } from '$lib/content/core/brand';
+import type { HomeContent } from '$lib/content/types';
 
 /**
  * French content for the homepage.
  */
 export const fr: HomeContent = {
+	meta: {
+		title: `${brand.appName} | Trouvez les talents pour vos projets`,
+		description:
+			'Connectez-vous avec des professionnels qualifiés, chercheurs et experts. Constituez votre équipe et donnez vie à vos idées.'
+	},
 	hero: {
 		title: 'Trouvez les talents adaptés à vos projets',
 		subtitle:
