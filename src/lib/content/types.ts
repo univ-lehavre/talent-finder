@@ -119,6 +119,21 @@ export interface AuthContent {
 		success: string;
 		footer: string;
 	};
+	/** Server error codes translations */
+	errorCodes: {
+		/** Invalid email format or not allowed domain */
+		invalid_email: string;
+		/** Invalid magic link parameters */
+		magicurl_login_validation_error: string;
+		/** Generic signup failure */
+		signup_failed: string;
+		/** Generic login failure */
+		login_failed: string;
+		/** Invalid or expired magic link */
+		invalid_magic_link: string;
+		/** Unexpected server error */
+		unexpected_error: string;
+	};
 }
 
 /**
@@ -771,6 +786,11 @@ export interface Step {
  * Homepage content structure.
  */
 export interface HomeContent {
+	/** Page metadata */
+	meta: {
+		title: string;
+		description: string;
+	};
 	/** Hero section */
 	hero: {
 		title: string;
