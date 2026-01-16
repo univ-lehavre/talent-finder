@@ -41,7 +41,6 @@ export { default as DropdownItem } from './navigation/DropdownItem.svelte';
 // Data display components
 export { default as Card } from './data-display/Card.svelte';
 export { default as InfoCard } from './data-display/InfoCard.svelte';
-export { default as DataList } from './data-display/DataList.svelte';
 export { default as DataTable } from './data-display/DataTable.svelte';
 export { default as StatCard } from './data-display/StatCard.svelte';
 export { default as KeyValue } from './data-display/KeyValue.svelte';
@@ -56,7 +55,6 @@ export { default as Alert } from './feedback/Alert.svelte';
 export { default as Badge } from './feedback/Badge.svelte';
 export { default as LoadingSpinner } from './feedback/LoadingSpinner.svelte';
 export { default as LoadingState } from './feedback/LoadingState.svelte';
-export { default as AsyncContent } from './feedback/AsyncContent.svelte';
 export { default as ErrorState } from './feedback/ErrorState.svelte';
 
 // Action components
@@ -70,7 +68,6 @@ export { default as Signup } from './forms/Signup.svelte';
 export { default as LoginForm } from './forms/LoginForm.svelte';
 
 // Theme components
-export { default as ThemeSection } from './theme/ThemeSection.svelte';
 export { default as ThemeToggle } from './theme/ThemeToggle.svelte';
 export { default as ThemeToggleRow } from './theme/ThemeToggleRow.svelte';
 

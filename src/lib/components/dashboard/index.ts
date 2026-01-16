@@ -21,4 +21,4 @@ export { default as ResearchOrganizationSearch } from './ResearchOrganizationSea
 export { default as ComingSoonSection } from './ComingSoonSection.svelte';
 
 // Generic UI re-exports (no i18n needed - content passed via props)
-export { DashboardLinkCard, ExternalLinkCard, ExternalLinksCard } from '$lib/ui';
+export { DashboardLinkCard, ExternalLinksCard } from '$lib/ui';
