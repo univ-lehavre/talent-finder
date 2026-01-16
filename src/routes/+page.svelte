@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 	import {
 		Hero,
 		LandingSection,
@@ -20,6 +20,7 @@
 
 	let { data }: Props = $props();
 
+	const i18n = useI18n();
 	const content = $derived(i18n.home);
 	const partners = $derived(i18n.partners);
 

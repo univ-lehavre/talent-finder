@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Navbar as BaseNavbar } from '$lib/ui';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 	import ThemeToggle from './ThemeToggle.svelte';
 	import LanguageSelector from './LanguageSelector.svelte';
 
@@ -73,6 +73,7 @@
 		class: className = ''
 	}: Props = $props();
 
+	const i18n = useI18n();
 	const a11y = $derived(i18n.accessibility);
 </script>
 

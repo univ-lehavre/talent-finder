@@ -34,9 +34,10 @@
 		setPalette,
 		setFont
 	} from '$lib/stores';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 
 	const themeStore = createThemeStore();
+	const i18n = useI18n();
 	const themePage = $derived(i18n.themePage);
 
 	let modalOpen = $state(false);

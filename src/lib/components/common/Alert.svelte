@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Alert as BaseAlert } from '$lib/ui';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 
 	/**
 	 * Alert - Pre-configured alert with i18n labels.
@@ -38,6 +38,7 @@
 		class: className = ''
 	}: Props = $props();
 
+	const i18n = useI18n();
 	const a11y = $derived(i18n.accessibility);
 </script>
 

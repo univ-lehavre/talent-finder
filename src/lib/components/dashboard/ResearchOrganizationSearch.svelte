@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ResearchOrganizationSearch as BaseResearchOrganizationSearch } from '$lib/ui';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 	import type { TInstitution } from '$lib/server/openalex';
 
 	/**
@@ -28,6 +28,7 @@
 		hasConsent = false
 	}: Props = $props();
 
+	const i18n = useI18n();
 	const ui = $derived(i18n.ui);
 
 	const content = $derived({

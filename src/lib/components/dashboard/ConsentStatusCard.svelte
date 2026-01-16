@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ConsentStatusCard as BaseConsentStatusCard } from '$lib/ui';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 
 	/**
 	 * ConsentStatusCard - Pre-configured consent status card with i18n labels.
@@ -21,6 +21,7 @@
 
 	let { userEmail, hasConsent = $bindable(false) }: Props = $props();
 
+	const i18n = useI18n();
 	const ui = $derived(i18n.ui);
 
 	const content = $derived({

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Dropdown as BaseDropdown } from '$lib/ui';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 
 	/**
 	 * Dropdown - Pre-configured dropdown with i18n labels.
@@ -48,6 +48,7 @@
 		panelClass
 	}: Props = $props();
 
+	const i18n = useI18n();
 	const a11y = $derived(i18n.accessibility);
 </script>
 

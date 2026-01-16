@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Signup as BaseSignup } from '$lib/ui';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 	import type { AuthContent } from '$lib/content/types';
 
 	/**
@@ -26,6 +26,7 @@
 
 	let { form, open = $bindable(false), onclose }: Props = $props();
 
+	const i18n = useI18n();
 	const auth = $derived(i18n.auth);
 
 	/**
