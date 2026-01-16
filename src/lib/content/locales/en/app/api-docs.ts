@@ -2,8 +2,8 @@
  * API documentation page content - English.
  */
 
-import { pageTitle } from '../brand';
-import type { ApiDocsContent } from '../../../types';
+import { pageTitle } from '$lib/content/locales/en/brand';
+import type { ApiDocsContent } from '$lib/content/types';
 
 /**
  * English API documentation page content.

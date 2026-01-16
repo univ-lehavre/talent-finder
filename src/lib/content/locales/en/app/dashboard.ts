@@ -2,8 +2,8 @@
  * Dashboard content - English.
  */
 
-import { brand, pageTitle } from '../brand';
-import type { DashboardContent } from '../../../types';
+import { brand, pageTitle } from '$lib/content/locales/en/brand';
+import type { DashboardContent } from '$lib/content/types';
 
 /**
  * English dashboard content.
