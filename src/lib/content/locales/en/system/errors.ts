@@ -2,8 +2,8 @@
  * Error page content - English.
  */
 
-import { brand } from '../brand';
-import type { ErrorContent } from '../../../types';
+import { brand } from '$lib/content/locales/en/brand';
+import type { ErrorContent } from '$lib/content/types';
 
 /**
  * English error content.

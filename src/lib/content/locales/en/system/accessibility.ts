@@ -3,7 +3,7 @@
  * Labels for screen readers and accessibility features.
  */
 
-import type { AccessibilityContent, LanguageSelectorContent } from '../../../types';
+import type { AccessibilityContent, LanguageSelectorContent } from '$lib/content/types';
 
 /**
  * English accessibility content.

@@ -2,8 +2,8 @@
  * Authentication content - English.
  */
 
-import { brand, commonLabels, pageTitle } from '../brand';
-import type { AuthContent } from '../../../types';
+import { brand, commonLabels, pageTitle } from '$lib/content/locales/en/brand';
+import type { AuthContent } from '$lib/content/types';
 
 /**
  * English authentication content.
