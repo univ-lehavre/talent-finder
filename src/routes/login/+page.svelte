@@ -1,12 +1,6 @@
 <script lang="ts">
-	import {
-		CenteredLayout,
-		LoadingState,
-		LoginForm,
-		ErrorState,
-		ButtonGroup,
-		LinkButton
-	} from '$lib/ui';
+	import { LoginForm } from '$lib/components';
+	import { CenteredLayout, LoadingState, ErrorState, ButtonGroup, LinkButton } from '$lib/ui';
 	import { i18n } from '$lib/content';
 
 	const auth = $derived(i18n.auth);

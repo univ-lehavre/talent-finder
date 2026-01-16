@@ -1,9 +1,34 @@
 <script lang="ts">
 	import { Icon, LoadingSpinner, Alert, Badge } from '$lib/ui';
-	import { i18n } from '$lib/content';
 	import type { TInstitution } from '$lib/server/openalex';
 
-	const ui = $derived(i18n.ui);
+	/**
+	 * ResearchOrganizationSearch - Search and select research organizations.
+	 *
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via the content prop.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/ResearchOrganizationSearch.
+	 *
+	 * @example
+	 * ```svelte
+	 * <ResearchOrganizationSearch hasConsent={true} content={searchContent} />
+	 * ```
+	 */
+	interface ResearchOrganizationContent {
+		title: string;
+		consentRequired: string;
+		consentMessage: string;
+		searchPlaceholder: string;
+		maxReached: string;
+		works: string;
+		citations: string;
+		noResults: string;
+		selectedTitle: string;
+		maxLabel: string;
+		noSelection: string;
+		removeLabel: string;
+	}
 
 	/** Debounce delay in milliseconds */
 	const DEBOUNCE_MS = 300;
@@ -21,12 +46,15 @@
 		maxOrganizations?: number;
 		/** Whether user has granted consent for OpenAlex API usage */
 		hasConsent?: boolean;
+		/** Content for the component (required) */
+		content: ResearchOrganizationContent;
 	}
 
 	let {
 		selectedOrganizations = $bindable([]),
 		maxOrganizations = DEFAULT_MAX_ORGANIZATIONS,
-		hasConsent = false
+		hasConsent = false,
+		content
 	}: Props = $props();
 
 	let searchQuery = $state('');
@@ -42,9 +70,6 @@
 
 	/** Whether the component is disabled (no consent) */
 	const isDisabled = $derived(!hasConsent);
-
-	/** Content labels */
-	const content = $derived(ui.researchOrganization);
 
 	/**
 	 * Searches for institutions using the API.

@@ -2,15 +2,14 @@
 	import InfoCard from './InfoCard.svelte';
 	import ThemeToggleRow from './ThemeToggleRow.svelte';
 	import Icon from './Icon.svelte';
-	import { i18n } from '$lib/content';
-
-	const ui = $derived(i18n.ui);
 
 	/**
 	 * ThemePreferencesCard - Card displaying theme settings with toggles
 	 *
-	 * Shows current palette, font, and dark mode settings with ability
-	 * to toggle between fixed and random modes.
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via the content prop.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/ThemePreferencesCard.
 	 *
 	 * @example
 	 * ```svelte
@@ -21,10 +20,23 @@
 	 *   savedPreferences={{ palette: true, font: false }}
 	 *   onPaletteToggle={togglePalette}
 	 *   onFontToggle={toggleFont}
-	 *   showCustomizeLink={true}
+	 *   content={themePreferencesContent}
 	 * />
 	 * ```
 	 */
+	interface ThemePreferencesContent {
+		/** Card title */
+		title: string;
+		/** Palette label */
+		paletteLabel: string;
+		/** Font label */
+		fontLabel: string;
+		/** Mode label */
+		modeLabel: string;
+		/** Customize link text */
+		customizeLabel: string;
+	}
+
 	interface Props {
 		/** Current palette name */
 		palette: string;
@@ -42,6 +54,8 @@
 		showCustomizeLink?: boolean;
 		/** Additional CSS classes */
 		class?: string;
+		/** Content for the card (required) */
+		content: ThemePreferencesContent;
 	}
 
 	let {
@@ -52,7 +66,8 @@
 		onPaletteToggle,
 		onFontToggle,
 		showCustomizeLink = false,
-		class: className = ''
+		class: className = '',
+		content
 	}: Props = $props();
 
 	const darkModeIcon = $derived(
@@ -60,13 +75,13 @@
 	);
 </script>
 
-<InfoCard title={ui.theme.title} icon="lucide:palette" class={className}>
+<InfoCard title={content.title} icon="lucide:palette" class={className}>
 	{#snippet trailing()}
 		{#if showCustomizeLink}
 			<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- internal navigation link -->
 			<a href="/theme" class="customize-link">
 				<Icon icon="lucide:settings" width="14" height="14" />
-				{ui.common.customize}
+				{content.customizeLabel}
 			</a>
 		{/if}
 	{/snippet}
@@ -74,7 +89,7 @@
 	<div class="theme-settings">
 		<!-- Palette -->
 		<ThemeToggleRow
-			label={ui.theme.palette}
+			label={content.paletteLabel}
 			value={palette}
 			isSaved={savedPreferences.palette}
 			onToggle={onPaletteToggle}
@@ -90,7 +105,7 @@
 
 		<!-- Font -->
 		<ThemeToggleRow
-			label={ui.theme.font}
+			label={content.fontLabel}
 			value={fontName}
 			isSaved={savedPreferences.font}
 			onToggle={onFontToggle}
@@ -109,7 +124,7 @@
 					<Icon icon={darkModeIcon} width="20" height="20" class="theme-icon" />
 				</div>
 				<div class="row-info">
-					<span class="row-label">{ui.theme.mode}</span>
+					<span class="row-label">{content.modeLabel}</span>
 					<p class="row-value">{darkMode}</p>
 				</div>
 			</div>

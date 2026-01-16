@@ -1,20 +1,22 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Icon from './Icon.svelte';
-	import { i18n } from '$lib/content';
 
 	/**
-	 * Dropdown component with trigger button and popover content.
-	 * Handles backdrop click, keyboard navigation, and scroll-to-selected.
+	 * Dropdown - Menu déroulant générique
+	 *
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via props.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/Dropdown.
 	 *
 	 * @example Basic usage
 	 * ```svelte
-	 * <Dropdown bind:open={isOpen}>
+	 * <Dropdown bind:open={isOpen} closeMenuLabel="Close">
 	 *   {#snippet trigger()}
 	 *     <span>Select option</span>
 	 *   {/snippet}
 	 *   <DropdownItem onclick={() => select('a')}>Option A</DropdownItem>
-	 *   <DropdownItem onclick={() => select('b')}>Option B</DropdownItem>
 	 * </Dropdown>
 	 * ```
 	 */
@@ -27,6 +29,8 @@
 		maxHeight?: string;
 		/** Horizontal alignment */
 		align?: 'left' | 'right';
+		/** Close button aria-label */
+		closeMenuLabel: string;
 		/** Trigger button content */
 		trigger: Snippet;
 		/** Dropdown content (items, categories, etc.) */
@@ -42,6 +46,7 @@
 		width = 'w-80',
 		maxHeight = 'max-h-[32rem]',
 		align = 'right',
+		closeMenuLabel,
 		trigger,
 		children,
 		triggerClass = '',
@@ -72,8 +77,6 @@
 			close();
 		}
 	};
-
-	const a11y = $derived(i18n.accessibility);
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
@@ -96,7 +99,7 @@
 	</button>
 
 	{#if open}
-		<button type="button" class="fixed inset-0 z-10" onclick={close} aria-label={a11y.closeMenu}
+		<button type="button" class="fixed inset-0 z-10" onclick={close} aria-label={closeMenuLabel}
 		></button>
 
 		<div

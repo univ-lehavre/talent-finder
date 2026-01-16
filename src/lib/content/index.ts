@@ -2,13 +2,12 @@
  * Content exports for internationalization.
  * All user-facing text content is centralized here for easy translation.
  *
- * @example Using i18n getters (recommended for reactive content)
+ * @example Using i18n object (recommended for reactive content)
  * ```typescript
- * import { getNavigation, getAuth, getErrors } from '$lib/content';
+ * import { i18n } from '$lib/content';
  *
- * // In components, call getters to get current locale content
- * const nav = getNavigation();
- * const title = nav.links.home;
+ * // In components, access reactive content directly
+ * const title = i18n.navigation.links.home;
  * ```
  *
  * @example Using static exports (for non-reactive contexts)
@@ -20,7 +19,7 @@
  */
 
 // Brand constants (locale-independent)
-export { brand, commonLabels, pageTitle } from './brand';
+export { brand, commonLabels, pageTitle } from './core/brand';
 
 // i18n reactive object and getters
 export {
@@ -38,19 +37,47 @@ export {
 	getUI,
 	i18n,
 	t
-} from './i18n.svelte';
+} from './core/i18n.svelte';
 
 // Static exports (French default - for backwards compatibility)
-export { content } from './home';
-export { navigation } from './navigation';
-export { auth } from './auth';
-export { errors } from './errors';
-export { dashboard } from './dashboard';
-export { repository } from './repository';
-export { ui } from './ui';
-export { partners } from './partners';
-export { themePage } from './theme-page';
-export { apiDocs } from './api-docs';
+export { fr as content } from './locales/fr/marketing/home';
+export { fr as navigation } from './locales/fr/shared/navigation';
+export { fr as auth } from './locales/fr/system/auth';
+export { fr as errors } from './locales/fr/system/errors';
+export { fr as dashboard } from './locales/fr/app/dashboard';
+export { fr as repository } from './locales/fr/app/repository';
+export { fr as partners } from './locales/fr/marketing/partners';
+export { fr as apiDocs } from './locales/fr/app/api-docs';
+
+// Build UIContent for backwards compatibility
+import { fr as commonFr } from './locales/fr/shared/common';
+import { fr as healthFr } from './locales/fr/system/health';
+import { fr as profileFr } from './locales/fr/app/profile';
+import { fr as researchFr } from './locales/fr/app/research';
+import { fr as themeFr } from './locales/fr/shared/theme';
+import type { UIContent } from './types';
+
+/**
+ * UI content for backwards compatibility.
+ * @deprecated Use modular imports instead
+ */
+export const ui: UIContent = {
+	common: commonFr.labels,
+	relativeTime: commonFr.relativeTime,
+	connectivity: healthFr.connectivity,
+	consent: profileFr.consent,
+	profile: profileFr.card,
+	theme: themeFr.card,
+	comingSoon: commonFr.comingSoon,
+	health: healthFr.card,
+	researchOrganization: researchFr.organization,
+	researchOutput: researchFr.output
+};
+
+/**
+ * Theme page content for backwards compatibility.
+ */
+export const themePage = themeFr.page;
 
 // Type exports
 export type {
@@ -58,14 +85,19 @@ export type {
 	ApiDocsContent,
 	AuthContent,
 	Challenge,
+	CommonContent,
 	DashboardContent,
 	ErrorContent,
+	HealthContent,
 	HomeContent,
 	LanguageSelectorContent,
 	NavigationContent,
 	PartnersContent,
+	ProfileContent,
 	RepositoryContent,
+	ResearchContent,
 	Step,
+	ThemeContent,
 	ThemePageContent,
 	UIContent
 } from './types';

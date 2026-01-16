@@ -1,17 +1,29 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Icon from './Icon.svelte';
-	import { i18n } from '$lib/content';
 
 	/**
-	 * Drawer (offcanvas) component with slide-in animation.
-	 * Displays a side panel that slides in from the right.
+	 * Drawer - Panneau coulissant (offcanvas)
+	 *
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via props.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/Drawer.
+	 *
+	 * @example
+	 * ```svelte
+	 * <Drawer bind:open title="Menu" closeLabel="Fermer le menu">
+	 *   <nav>...</nav>
+	 * </Drawer>
+	 * ```
 	 */
 	interface Props {
 		/** Whether the drawer is open */
 		open?: boolean;
 		/** Drawer title */
-		title?: string;
+		title: string;
+		/** Close button aria-label */
+		closeLabel: string;
 		/** Position of the drawer */
 		position?: 'left' | 'right';
 		/** Width class */
@@ -29,6 +41,7 @@
 	let {
 		open = $bindable(false),
 		title,
+		closeLabel,
 		position = 'right',
 		width = 'w-72',
 		onclose,
@@ -36,9 +49,6 @@
 		children,
 		class: className = ''
 	}: Props = $props();
-
-	const a11y = $derived(i18n.accessibility);
-	const drawerTitle = $derived(title ?? a11y.toggleMenu);
 
 	const closeDrawer = (): void => {
 		open = false;
@@ -62,7 +72,7 @@
 		type="button"
 		class="fixed inset-0 bg-black/50 z-40 md:hidden"
 		onclick={closeDrawer}
-		aria-label={a11y.closeMenu}
+		aria-label={closeLabel}
 	></button>
 
 	<!-- Drawer Panel -->
@@ -76,13 +86,13 @@
 		"
 		role="dialog"
 		aria-modal="true"
-		aria-label={drawerTitle}
+		aria-label={title}
 	>
 		<!-- Header -->
 		<div
 			class="p-4 border-b border-secondary-200 dark:border-secondary-700 flex items-center justify-between"
 		>
-			<span class="text-lg font-bold text-primary-700 dark:text-primary-400">{drawerTitle}</span>
+			<span class="text-lg font-bold text-primary-700 dark:text-primary-400">{title}</span>
 			<div class="flex items-center gap-2">
 				{#if header}
 					{@render header()}
@@ -91,7 +101,7 @@
 					type="button"
 					class="p-2 text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400"
 					onclick={closeDrawer}
-					aria-label={a11y.closeMenu}
+					aria-label={closeLabel}
 				>
 					<Icon icon="lucide:x" width="24" height="24" />
 				</button>
