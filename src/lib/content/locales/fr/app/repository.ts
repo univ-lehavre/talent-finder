@@ -2,8 +2,8 @@
  * Repository page content - French.
  */
 
-import { commonLabels, pageTitle } from '../../../core/brand';
-import type { RepositoryContent } from '../../../types';
+import { commonLabels, pageTitle } from '$lib/content/core/brand';
+import type { RepositoryContent } from '$lib/content/types';
 
 /**
  * French repository content.
