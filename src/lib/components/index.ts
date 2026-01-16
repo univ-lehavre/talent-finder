@@ -25,9 +25,7 @@ export {
 	// With i18n
 	Navbar,
 	Footer,
-	Drawer,
 	Dropdown,
-	LanguageSelector,
 	Modal,
 	Alert,
 	ConnectivityBanner,
@@ -39,7 +37,6 @@ export {
 	LinkButton,
 	ErrorState,
 	LoadingState,
-	AsyncContent,
 	LoadingSpinner,
 	Badge,
 	Grid,
@@ -60,16 +57,12 @@ export {
 	FeatureCard,
 	KeyValue,
 	DataTable,
-	DataList,
 	DropdownCategory,
 	DropdownItem,
-	NavLink,
-	IconLink,
 	Icon,
 	ColorSwatch,
 	ColorScaleRow,
-	CodeExample,
-	Tooltip
+	CodeExample
 } from './common';
 
 // Login route components
@@ -86,6 +79,5 @@ export {
 	ComingSoonSection,
 	// Generic UI re-exports
 	DashboardLinkCard,
-	ExternalLinkCard,
 	ExternalLinksCard
 } from './dashboard';

@@ -26,7 +26,7 @@ export interface FontPairing {
 }
 
 /** Category metadata for display */
-export interface FontCategoryInfo {
+interface FontCategoryInfo {
 	id: FontCategory;
 	name: string;
 	description: string;
@@ -466,12 +466,6 @@ export const fontPairings: FontPairing[] = [
 			'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap'
 	}
 ];
-
-/** List of all font names */
-export const fontNames = fontPairings.map((f) => f.name);
-
-/** Type for font name */
-export type FontName = (typeof fontNames)[number];
 
 /**
  * Get font pairings filtered by category

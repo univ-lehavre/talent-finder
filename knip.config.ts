@@ -6,15 +6,7 @@ import type { KnipConfig } from 'knip';
  */
 const config: KnipConfig = {
 	// Entry points for the application
-	entry: [
-		'src/routes/**/+*.{ts,svelte}',
-		'src/hooks.server.ts',
-		'src/app.d.ts',
-		'vite.config.ts',
-		'svelte.config.js',
-		'eslint.config.js',
-		'commitlint.config.ts'
-	],
+	entry: ['src/routes/**/+*.{ts,svelte}'],
 
 	// Project source files
 	project: ['src/**/*.{ts,svelte}'],
@@ -35,14 +27,15 @@ const config: KnipConfig = {
 		'src/lib/components/home/index.ts',
 		'src/lib/components/repository/index.ts',
 		'src/lib/components/theme/index.ts',
-		'src/lib/index.ts'
+		'src/lib/index.ts',
+		// Internal module types (Zod schemas composed internally)
+		'src/lib/server/*/types.ts',
+		'src/lib/server/*/repository.ts',
+		'src/lib/server/http/response.ts'
 	],
 
 	// Ignore specific dependencies
 	ignoreDependencies: [
-		// Vite/build plugins
-		'prettier-plugin-svelte',
-		'@tailwindcss/vite',
 		// Tailwind is used via @tailwindcss/vite
 		'tailwindcss'
 	],

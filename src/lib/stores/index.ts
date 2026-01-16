@@ -6,10 +6,6 @@ export {
 	clearPalettePreference,
 	clearThemePreferences,
 	createThemeStore,
-	getDarkMode,
-	getFont,
-	getFontName,
-	getPalette,
 	hasThemePreferences,
 	initTheme,
 	setDarkMode,
@@ -18,25 +14,6 @@ export {
 	type DarkMode
 } from './theme.svelte.ts';
 
-export {
-	fontCategories,
-	fontNames,
-	fontPairings,
-	getFontByName,
-	getFontsByCategory,
-	type FontCategory,
-	type FontCategoryInfo,
-	type FontName,
-	type FontPairing
-} from './fonts.svelte.ts';
+export { fontCategories, getFontsByCategory } from './fonts.svelte.ts';
 
-export {
-	createLocaleStore,
-	defaultLocale,
-	getLocale,
-	initLocale,
-	locales,
-	localeState,
-	setLocale,
-	type Locale
-} from './locale.svelte.ts';
+export { initLocale, locales, localeState, setLocale, type Locale } from './locale.svelte.ts';

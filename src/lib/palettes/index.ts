@@ -37,17 +37,17 @@ export const paletteNames = [
 export type PaletteName = (typeof paletteNames)[number];
 
 /** Palette category type */
-export type PaletteCategory = 'professional' | 'nature' | 'vibrant' | 'minimal' | 'warm' | 'cool';
+type PaletteCategory = 'professional' | 'nature' | 'vibrant' | 'minimal' | 'warm' | 'cool';
 
 /** Category metadata */
-export interface PaletteCategoryInfo {
+interface PaletteCategoryInfo {
 	id: PaletteCategory;
 	name: string;
 	description: string;
 }
 
 /** Palette color data (hues and chroma for OKLCH) */
-export interface PaletteColors {
+interface PaletteColors {
 	primary: number;
 	accent: number;
 	secondary: number;
@@ -78,7 +78,7 @@ export const palettesByCategory: Record<PaletteCategory, PaletteName[]> = {
 };
 
 /** Palette color definitions (hues in degrees 0-360, chroma 0-1) */
-export const paletteColors: Record<PaletteName, PaletteColors> = {
+const paletteColors: Record<PaletteName, PaletteColors> = {
 	// Professional
 	default: {
 		primary: 250,
@@ -279,30 +279,4 @@ export const getPalettePreviewColors = (
 		warning: `oklch(75% ${c} ${colors.warning})`,
 		error: `oklch(55% ${c * 1.33} ${colors.error})`
 	};
-};
-
-/**
- * Get the category for a given palette name
- */
-export const getCategoryForPalette = (palette: PaletteName): PaletteCategory | undefined => {
-	for (const [category, palettes] of Object.entries(palettesByCategory)) {
-		if (palettes.includes(palette)) {
-			return category as PaletteCategory;
-		}
-	}
-	return undefined;
-};
-
-/**
- * Get palettes for a specific category
- */
-export const getPalettesByCategory = (category: PaletteCategory): PaletteName[] => {
-	return palettesByCategory[category];
-};
-
-/**
- * Check if a string is a valid palette name
- */
-export const isValidPalette = (name: string): name is PaletteName => {
-	return paletteNames.includes(name as PaletteName);
 };

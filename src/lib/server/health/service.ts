@@ -333,28 +333,3 @@ export const performHealthCheck = async (): Promise<THealthCheckResponse> => {
 		services
 	};
 };
-
-/**
- * Gets a human-readable error message based on health check results.
- * @param health - The health check response
- * @returns A user-friendly error message or null if healthy
- */
-export const getHealthErrorMessage = (health: THealthCheckResponse): string | null => {
-	if (health.status === 'healthy') return null;
-
-	const appwrite = health.services.find((s) => s.name === 'appwrite');
-	const internet = health.services.find((s) => s.name === 'internet');
-
-	// No internet connection
-	if (internet?.status === 'unhealthy') {
-		return 'No internet connection. Please check your network settings.';
-	}
-
-	// Appwrite is down but internet works
-	if (appwrite?.status === 'unhealthy' && internet?.status === 'healthy') {
-		return `Authentication server is unavailable. ${appwrite.error || 'Please try again later.'}`;
-	}
-
-	// Generic error
-	return 'Service is temporarily unavailable. Please try again later.';
-};

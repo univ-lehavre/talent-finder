@@ -9,4 +9,4 @@ export {
 	InvalidContentTypeError
 } from './errors';
 
-export { mapErrorToResponse, type ApiError } from './response';
+export { mapErrorToResponse } from './response';

@@ -21,23 +21,8 @@
 // Brand constants (locale-independent)
 export { brand, commonLabels, pageTitle } from './core/brand';
 
-// i18n reactive object and getters
-export {
-	getAccessibility,
-	getApiDocs,
-	getAuth,
-	getDashboard,
-	getErrors,
-	getHome,
-	getLanguageSelector,
-	getNavigation,
-	getPartners,
-	getRepository,
-	getThemePage,
-	getUI,
-	i18n,
-	t
-} from './core/i18n.svelte';
+// i18n reactive object
+export { i18n } from './core/i18n.svelte';
 
 // Static exports (French default - for backwards compatibility)
 export { fr as content } from './locales/fr/marketing/home';
@@ -78,26 +63,3 @@ export const ui: UIContent = {
  * Theme page content for backwards compatibility.
  */
 export const themePage = themeFr.page;
-
-// Type exports
-export type {
-	AccessibilityContent,
-	ApiDocsContent,
-	AuthContent,
-	Challenge,
-	CommonContent,
-	DashboardContent,
-	ErrorContent,
-	HealthContent,
-	HomeContent,
-	LanguageSelectorContent,
-	NavigationContent,
-	PartnersContent,
-	ProfileContent,
-	RepositoryContent,
-	ResearchContent,
-	Step,
-	ThemeContent,
-	ThemePageContent,
-	UIContent
-} from './types';

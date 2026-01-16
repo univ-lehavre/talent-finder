@@ -4,10 +4,7 @@
  */
 
 // Types
-export { User, type TUser, type UserRepository } from './types';
+export { type TUser } from './types';
 
 // Service
 export { getProfile, isAdmin } from './service';
-
-// Repository
-export { AppwriteUserRepository } from './repository';

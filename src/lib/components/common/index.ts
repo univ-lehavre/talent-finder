@@ -10,9 +10,7 @@
 // Navigation (with i18n)
 export { default as Navbar } from './Navbar.svelte';
 export { default as Footer } from './Footer.svelte';
-export { default as Drawer } from './Drawer.svelte';
 export { default as Dropdown } from './Dropdown.svelte';
-export { default as LanguageSelector } from './LanguageSelector.svelte';
 
 // Feedback (with i18n)
 export { default as Modal } from './Modal.svelte';
@@ -34,7 +32,6 @@ export {
 	// Feedback
 	ErrorState,
 	LoadingState,
-	AsyncContent,
 	LoadingSpinner,
 	Badge,
 	// Layout
@@ -57,16 +54,12 @@ export {
 	FeatureCard,
 	KeyValue,
 	DataTable,
-	DataList,
 	// Navigation
 	DropdownCategory,
 	DropdownItem,
-	NavLink,
-	IconLink,
 	// Utils
 	Icon,
 	ColorSwatch,
 	ColorScaleRow,
-	CodeExample,
-	Tooltip
+	CodeExample
 } from '$lib/ui';
