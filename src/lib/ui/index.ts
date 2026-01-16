@@ -71,6 +71,7 @@ export { default as DropdownItem } from './DropdownItem.svelte';
 // Navigation components
 export { default as NavLink } from './NavLink.svelte';
 export { default as IconLink } from './IconLink.svelte';
+export { default as LanguageSelector } from './LanguageSelector.svelte';
 
 // Dashboard components
 export { default as ProfileCard } from './ProfileCard.svelte';

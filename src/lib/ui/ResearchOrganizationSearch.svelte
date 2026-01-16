@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { Icon, LoadingSpinner, Alert, Badge } from '$lib/ui';
+	import { i18n } from '$lib/content';
 	import type { TInstitution } from '$lib/server/openalex';
+
+	const ui = $derived(i18n.ui);
 
 	/** Debounce delay in milliseconds */
 	const DEBOUNCE_MS = 300;
@@ -39,6 +42,9 @@
 
 	/** Whether the component is disabled (no consent) */
 	const isDisabled = $derived(!hasConsent);
+
+	/** Content labels */
+	const content = $derived(ui.researchOrganization);
 
 	/**
 	 * Searches for institutions using the API.
@@ -110,7 +116,7 @@
 	 */
 	const formatNumber = (num: number | null): string => {
 		if (num === null) return 'N/A';
-		return new Intl.NumberFormat().format(num);
+		return new Intl.NumberFormat('fr-FR').format(num);
 	};
 </script>
 
@@ -124,9 +130,9 @@
 				? 'text-secondary-400 dark:text-secondary-500'
 				: 'text-primary-600 dark:text-primary-400'}
 		/>
-		<h2 class="text-xl font-semibold">Research Organization Search</h2>
+		<h2 class="text-xl font-semibold">{content.title}</h2>
 		{#if isDisabled}
-			<span title="Consent required" class="ml-auto">
+			<span title={content.consentRequired} class="ml-auto">
 				<Icon
 					icon="lucide:lock"
 					width="16"
@@ -142,7 +148,7 @@
 			class="p-4 rounded-lg bg-secondary-100 dark:bg-secondary-700/50 border border-secondary-200 dark:border-secondary-600"
 		>
 			<p class="text-sm text-secondary-600 dark:text-secondary-400 text-center">
-				Grant consent in the "Data Consent" card to search research organizations.
+				{content.consentMessage}
 			</p>
 		</div>
 	{:else}
@@ -161,8 +167,8 @@
 					oninput={handleInput}
 					disabled={!canAddMore}
 					placeholder={canAddMore
-						? 'Search for research organizations...'
-						: `Maximum ${maxOrganizations} organizations reached`}
+						? content.searchPlaceholder
+						: `${content.maxReached} (${maxOrganizations})`}
 					class="w-full pl-10 pr-10 py-2.5 border border-secondary-300 dark:border-secondary-600 rounded-lg bg-white dark:bg-secondary-800 text-secondary-900 dark:text-secondary-100 placeholder-secondary-400 dark:placeholder-secondary-500 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 				/>
 				{#if isLoading}
@@ -192,7 +198,9 @@
 								</p>
 							{/if}
 							<p class="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
-								{formatNumber(result.worksCount)} works &middot; {formatNumber(result.citedByCount)} citations
+								{formatNumber(result.worksCount)}
+								{content.works} &middot; {formatNumber(result.citedByCount)}
+								{content.citations}
 							</p>
 						</button>
 					{/each}
@@ -205,7 +213,7 @@
 					class="absolute z-10 w-full mt-1 bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 rounded-lg shadow-lg p-4"
 				>
 					<p class="text-secondary-500 dark:text-secondary-400 text-center">
-						No organizations found for "{searchQuery}"
+						{content.noResults} "{searchQuery}"
 					</p>
 				</div>
 			{/if}
@@ -225,18 +233,18 @@
 			<h3
 				class="text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-3 flex items-center gap-2"
 			>
-				Selected Organizations
+				{content.selectedTitle}
 				<Badge variant={selectedOrganizations.length > 0 ? 'primary' : 'accent'}>
 					{selectedOrganizations.length}
 				</Badge>
 				<span class="text-xs text-secondary-500 dark:text-secondary-400"
-					>(max {maxOrganizations})</span
+					>({content.maxLabel} {maxOrganizations})</span
 				>
 			</h3>
 
 			{#if selectedOrganizations.length === 0}
 				<p class="text-sm text-secondary-500 dark:text-secondary-400 italic">
-					No organizations selected. Use the search above to add organizations.
+					{content.noSelection}
 				</p>
 			{:else}
 				<div class="space-y-2">
@@ -258,7 +266,7 @@
 								type="button"
 								onclick={() => removeOrganization(organization.id)}
 								class="ml-3 p-1.5 text-secondary-400 hover:text-error-600 dark:hover:text-error-400 hover:bg-error-50 dark:hover:bg-error-900/20 rounded transition-colors"
-								aria-label="Remove {organization.displayName}"
+								aria-label="{content.removeLabel} {organization.displayName}"
 							>
 								<Icon icon="lucide:x" width="18" height="18" />
 							</button>

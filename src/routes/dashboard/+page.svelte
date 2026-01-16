@@ -21,8 +21,10 @@
 		setFont
 	} from '$lib/stores';
 	import type { TInstitution } from '$lib/server/openalex';
+	import { i18n } from '$lib/content';
 
 	const themeStore = createThemeStore();
+	const dashboard = $derived(i18n.dashboard);
 
 	let savedPreferences = $state({ palette: false, font: false });
 
@@ -70,52 +72,39 @@
 
 	let { data }: Props = $props();
 
-	interface ExternalLink {
-		href: string;
-		icon: string;
-		title: string;
-		description: string;
-	}
-
-	const externalLinks: ExternalLink[] = [
+	const externalLinks = $derived([
 		{
 			href: 'https://ecrin.sites.chasset.net',
 			icon: 'lucide:globe',
-			title: 'ECRIN',
-			description: 'Main project website'
+			title: dashboard.externalLinks.ecrin.title,
+			description: dashboard.externalLinks.ecrin.description
 		},
 		{
 			href: 'https://github.com/univ-lehavre/talent-finder',
 			icon: 'mdi:github',
-			title: 'GitHub',
-			description: 'Source code repository'
+			title: dashboard.externalLinks.github.title,
+			description: dashboard.externalLinks.github.description
 		},
 		{
 			href: 'https://doi.org/10.5281/zenodo.18241663',
 			icon: 'lucide:archive',
-			title: 'Zenodo',
-			description: 'Permanent archive'
+			title: dashboard.externalLinks.zenodo.title,
+			description: dashboard.externalLinks.zenodo.description
 		}
-	];
-
-	const comingSoonFeatures = [
-		'Complete profile with skills and expertise',
-		'Search and discover other researchers',
-		'Connect and collaborate on projects'
-	];
+	]);
 </script>
 
 <svelte:head>
-	<title>Dashboard - ECRIN | Talent finder</title>
-	<meta name="description" content="Your personal dashboard on ECRIN Talent finder" />
+	<title>{dashboard.meta.title}</title>
+	<meta name="description" content={dashboard.meta.description} />
 </svelte:head>
 
 <div class="container-app py-12">
 	<div class="max-w-4xl mx-auto">
 		<header class="dashboard-header">
-			<h1 class="text-3xl font-bold mb-2">Dashboard</h1>
+			<h1 class="text-3xl font-bold mb-2">{dashboard.header.title}</h1>
 			<p class="text-secondary-600 dark:text-secondary-400 mb-8">
-				Welcome back{data.user ? `, ${data.user.email}` : ''}.
+				{dashboard.header.welcomeBack}{data.user ? `, ${data.user.email}` : ''}.
 			</p>
 		</header>
 
@@ -153,22 +142,22 @@
 			<!-- Repository Card (Admin only) -->
 			{#if data.isAdmin}
 				<DashboardLinkCard
-					title="Repository"
-					description="Explore code statistics and analytics for this repository."
+					title={dashboard.cards.repository.title}
+					description={dashboard.cards.repository.description}
 					icon="lucide:bar-chart-2"
 					href="/repository"
-					linkText="View stats"
+					linkText={dashboard.cards.repository.linkText}
 				/>
 			{/if}
 
 			<!-- API Documentation Card (Admin only) -->
 			{#if data.isAdmin}
 				<DashboardLinkCard
-					title="API Documentation"
-					description="Browse the REST API reference with Swagger UI."
+					title={dashboard.cards.apiDocs.title}
+					description={dashboard.cards.apiDocs.description}
 					icon="lucide:code"
 					href="/api/docs"
-					linkText="Browse API"
+					linkText={dashboard.cards.apiDocs.linkText}
 				/>
 			{/if}
 
@@ -183,8 +172,9 @@
 
 		<!-- Coming Soon Section -->
 		<ComingSoonSection
-			description="We're working on new features to help you manage your profile and discover collaborators."
-			features={comingSoonFeatures}
+			title={dashboard.comingSoon.title}
+			description={dashboard.comingSoon.description}
+			features={dashboard.comingSoon.features}
 		/>
 	</div>
 </div>

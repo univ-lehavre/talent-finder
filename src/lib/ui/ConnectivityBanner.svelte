@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { Icon } from '$lib/ui';
+	import { i18n } from '$lib/content';
+
+	const ui = $derived(i18n.ui);
 
 	interface Props {
 		/** Type of connectivity error */
@@ -8,19 +11,23 @@
 
 	let { error }: Props = $props();
 
-	const messages: Record<typeof error, { title: string; description: string; icon: string }> = {
+	const messages = $derived<
+		Record<
+			'appwrite_unavailable' | 'no_internet',
+			{ title: string; description: string; icon: string }
+		>
+	>({
 		appwrite_unavailable: {
-			title: 'Authentication server unavailable',
-			description:
-				'Unable to connect to the authentication server. Some features may not work properly.',
+			title: ui.connectivity.appwriteUnavailable.title,
+			description: ui.connectivity.appwriteUnavailable.description,
 			icon: 'lucide:server-off'
 		},
 		no_internet: {
-			title: 'No internet connection',
-			description: 'Please check your network settings and try again.',
+			title: ui.connectivity.noInternet.title,
+			description: ui.connectivity.noInternet.description,
 			icon: 'lucide:wifi-off'
 		}
-	};
+	});
 
 	const message = $derived(messages[error]);
 </script>
@@ -50,7 +57,7 @@
 				target="_blank"
 				class="text-xs text-warning-600 dark:text-warning-400 hover:underline flex-shrink-0"
 			>
-				Check status
+				{ui.common.checkStatus}
 			</a>
 		</div>
 	</div>

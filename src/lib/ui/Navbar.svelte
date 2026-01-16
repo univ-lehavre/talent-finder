@@ -6,6 +6,8 @@
 	import IconLink from './IconLink.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
 	import Drawer from './Drawer.svelte';
+	import LanguageSelector from './LanguageSelector.svelte';
+	import { i18n } from '$lib/content';
 
 	/**
 	 * Navigation bar component with desktop and mobile views.
@@ -43,6 +45,8 @@
 		mobileExtraLinks?: NavLinkItem[];
 		/** Show theme toggle */
 		showThemeToggle?: boolean;
+		/** Show language selector */
+		showLanguageSelector?: boolean;
 		/** User actions slot (login/logout buttons) */
 		actions?: Snippet;
 		/** Additional CSS classes */
@@ -58,6 +62,7 @@
 		iconLinks = [],
 		mobileExtraLinks = [],
 		showThemeToggle = true,
+		showLanguageSelector = true,
 		actions,
 		class: className = ''
 	}: Props = $props();
@@ -83,6 +88,8 @@
 	};
 
 	const allMobileLinks = $derived([...navLinks, ...mobileExtraLinks]);
+
+	const a11y = $derived(i18n.accessibility);
 </script>
 
 <nav
@@ -140,6 +147,10 @@
 				/>
 			{/each}
 
+			{#if showLanguageSelector}
+				<LanguageSelector />
+			{/if}
+
 			{#if showThemeToggle}
 				<ThemeToggle />
 			{/if}
@@ -155,7 +166,7 @@
 				type="button"
 				class="p-2 text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400"
 				onclick={toggleMobileMenu}
-				aria-label="Toggle menu"
+				aria-label={a11y.toggleMenu}
 			>
 				<Icon icon={mobileMenuOpen ? 'lucide:x' : 'lucide:menu'} width="24" height="24" />
 			</button>
@@ -164,8 +175,11 @@
 </nav>
 
 <!-- Mobile Drawer -->
-<Drawer bind:open={mobileMenuOpen} title="Menu" onclose={closeMobileMenu}>
+<Drawer bind:open={mobileMenuOpen} onclose={closeMobileMenu}>
 	{#snippet header()}
+		{#if showLanguageSelector}
+			<LanguageSelector compact />
+		{/if}
 		{#if showThemeToggle}
 			<ThemeToggle />
 		{/if}

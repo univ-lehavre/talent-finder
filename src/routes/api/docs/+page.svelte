@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import 'swagger-ui-dist/swagger-ui.css';
+	import { i18n } from '$lib/content';
+
+	const apiDocs = $derived(i18n.apiDocs);
 
 	interface Props {
 		data: {
@@ -25,7 +28,7 @@
 </script>
 
 <svelte:head>
-	<title>API Documentation - ECRIN | Talent finder</title>
+	<title>{apiDocs.meta.title}</title>
 </svelte:head>
 
 <div class="min-h-screen bg-white">

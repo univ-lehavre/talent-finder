@@ -1,6 +1,9 @@
 <script lang="ts">
 	import Alert from './Alert.svelte';
 	import Icon from './Icon.svelte';
+	import { i18n } from '$lib/content';
+
+	const ui = $derived(i18n.ui);
 
 	/**
 	 * ComingSoonSection - Section displaying upcoming features
@@ -17,9 +20,9 @@
 	 * ```
 	 */
 	interface Props {
-		/** Section title */
+		/** Section title (defaults to i18n content) */
 		title?: string;
-		/** Section description */
+		/** Section description (defaults to i18n content) */
 		description?: string;
 		/** List of upcoming features */
 		features: string[];
@@ -27,18 +30,16 @@
 		class?: string;
 	}
 
-	let {
-		title = 'Coming Soon',
-		description = "We're working on new features to improve your experience.",
-		features,
-		class: className = ''
-	}: Props = $props();
+	let { title, description, features, class: className = '' }: Props = $props();
+
+	const resolvedTitle = $derived(title ?? ui.comingSoon.defaultTitle);
+	const resolvedDescription = $derived(description ?? ui.comingSoon.defaultDescription);
 </script>
 
 <Alert variant="info" icon="lucide:sparkles" class="coming-soon-section {className}">
 	<div class="section-content">
-		<h2 class="section-title">{title}</h2>
-		<p class="section-description">{description}</p>
+		<h2 class="section-title">{resolvedTitle}</h2>
+		<p class="section-description">{resolvedDescription}</p>
 		<ul class="feature-list">
 			{#each features as feature (feature)}
 				<li class="feature-item">

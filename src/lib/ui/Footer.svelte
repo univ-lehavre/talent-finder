@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import PartnerLogo from './PartnerLogo.svelte';
+	import { i18n } from '$lib/content';
 
 	/**
 	 * Footer component with partner logos and version info.
@@ -17,7 +18,7 @@
 		partners?: Partner[];
 		/** Version string to display */
 		version?: string;
-		/** Attribution text */
+		/** Attribution text (optional, defaults to i18n content) */
 		attribution?: string;
 		/** Additional content (rendered below partners) */
 		children?: Snippet;
@@ -25,15 +26,12 @@
 		class?: string;
 	}
 
-	let {
-		partners = [],
-		version,
-		attribution = 'Developed at Université Le Havre Normandie',
-		children,
-		class: className = ''
-	}: Props = $props();
+	let { partners = [], version, attribution, children, class: className = '' }: Props = $props();
 
-	const versionText = $derived(version ? `${attribution} (v${version})` : attribution);
+	const navigation = $derived(i18n.navigation);
+	const attributionText = $derived(attribution ?? navigation.footer.attribution);
+
+	const versionText = $derived(version ? `${attributionText} (v${version})` : attributionText);
 </script>
 
 <footer

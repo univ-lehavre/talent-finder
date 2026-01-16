@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { Icon, LoadingSpinner, Alert } from '$lib/ui';
+	import { i18n } from '$lib/content';
 	import type { TInstitution, TInstitutionStatsResponse } from '$lib/server/openalex';
+
+	const ui = $derived(i18n.ui);
 
 	interface Props {
 		/** Selected organizations to count articles for */
@@ -20,6 +23,9 @@
 
 	/** Whether the component is disabled (no consent) */
 	const isDisabled = $derived(!hasConsent);
+
+	/** Content labels */
+	const content = $derived(ui.researchOutput);
 
 	/**
 	 * Formats a number for display using French locale.
@@ -94,9 +100,9 @@
 				? 'text-secondary-400 dark:text-secondary-500'
 				: 'text-primary-600 dark:text-primary-400'}
 		/>
-		<h2 class="text-xl font-semibold">Research Output</h2>
+		<h2 class="text-xl font-semibold">{content.title}</h2>
 		{#if isDisabled}
-			<span title="Consent required" class="ml-auto">
+			<span title={ui.researchOrganization.consentRequired} class="ml-auto">
 				<Icon
 					icon="lucide:lock"
 					width="16"
@@ -112,7 +118,7 @@
 			class="p-4 rounded-lg bg-secondary-100 dark:bg-secondary-700/50 border border-secondary-200 dark:border-secondary-600"
 		>
 			<p class="text-sm text-secondary-600 dark:text-secondary-400 text-center">
-				Grant consent in the "Data Consent" card to view research output statistics.
+				{content.consentMessage}
 			</p>
 		</div>
 	{:else if selectedOrganizations.length === 0}
@@ -124,13 +130,13 @@
 				class="mx-auto mb-3 text-secondary-300 dark:text-secondary-600"
 			/>
 			<p class="text-secondary-500 dark:text-secondary-400">
-				Select organizations above to see their research output.
+				{content.selectOrganizations}
 			</p>
 		</div>
 	{:else if isLoading}
 		<div class="flex flex-col items-center justify-center py-8">
 			<LoadingSpinner size="lg" />
-			<p class="mt-3 text-sm text-secondary-500 dark:text-secondary-400">Loading statistics...</p>
+			<p class="mt-3 text-sm text-secondary-500 dark:text-secondary-400">{content.loading}</p>
 		</div>
 	{:else if error}
 		<Alert variant="error">{error}</Alert>
@@ -140,7 +146,7 @@
 			{#if stats.articlesByYear && stats.articlesByYear.length > 0}
 				<div class="space-y-2">
 					<p class="text-sm font-medium text-secondary-600 dark:text-secondary-400">
-						Articles by year
+						{content.articlesByYear}
 					</p>
 					<div class="flex flex-wrap justify-start gap-1.5">
 						{#each stats.articlesByYear as yearData (yearData.year)}
@@ -150,7 +156,7 @@
 									: 'bg-secondary-50 dark:bg-secondary-700/50'}"
 							>
 								<p class="text-[10px] text-secondary-500 dark:text-secondary-400">
-									{yearData.year === 'before' ? 'Avant' : yearData.year}
+									{yearData.year === 'before' ? content.before : yearData.year}
 								</p>
 								<p
 									class="text-xs font-semibold {yearData.year === 'before'
@@ -168,11 +174,11 @@
 			<!-- Authors count -->
 			<div class="space-y-2">
 				<p class="text-sm font-medium text-secondary-600 dark:text-secondary-400">
-					Affiliated authors
+					{content.affiliatedAuthors}
 				</p>
 				<div class="flex flex-wrap justify-start gap-1.5">
 					<div class="text-center px-2 py-1 rounded bg-secondary-50 dark:bg-secondary-700/50">
-						<p class="text-[10px] text-secondary-500 dark:text-secondary-400">Total</p>
+						<p class="text-[10px] text-secondary-500 dark:text-secondary-400">{content.total}</p>
 						<p class="text-xs font-semibold text-primary-600 dark:text-primary-400">
 							{formatNumber(stats.authorsCount)}
 						</p>

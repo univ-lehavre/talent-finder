@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Icon, LoadingSpinner } from '$lib/ui';
+	import { i18n } from '$lib/content';
+
+	const ui = $derived(i18n.ui);
 
 	interface ConsentStatus {
 		consentType: string;
@@ -38,14 +41,14 @@
 		const hours = Math.floor(minutes / 60);
 		const days = Math.floor(hours / 24);
 
-		if (seconds < 5) return 'just now';
-		if (seconds < 60) return `${seconds}s ago`;
-		if (minutes < 60) return `${minutes}m ago`;
-		if (hours < 24) return `${hours}h ago`;
-		if (days === 1) return 'yesterday';
-		if (days < 7) return `${days} days ago`;
+		if (seconds < 5) return ui.relativeTime.justNow;
+		if (seconds < 60) return ui.relativeTime.secondsAgo.replace('{count}', String(seconds));
+		if (minutes < 60) return ui.relativeTime.minutesAgo.replace('{count}', String(minutes));
+		if (hours < 24) return ui.relativeTime.hoursAgo.replace('{count}', String(hours));
+		if (days === 1) return ui.relativeTime.yesterday;
+		if (days < 7) return ui.relativeTime.daysAgo.replace('{count}', String(days));
 
-		return date.toLocaleDateString('en-US', {
+		return date.toLocaleDateString('fr-FR', {
 			month: 'short',
 			day: 'numeric',
 			year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
@@ -156,7 +159,7 @@
 			height="20"
 			class="text-primary-600 dark:text-primary-400"
 		/>
-		<h2 class="text-xl font-semibold">Data Consent</h2>
+		<h2 class="text-xl font-semibold">{ui.consent.title}</h2>
 	</div>
 
 	{#if isLoading}
@@ -172,7 +175,7 @@
 				onclick={fetchStatus}
 				class="mt-4 text-sm text-primary-600 dark:text-primary-400 hover:underline"
 			>
-				Try again
+				{ui.common.tryAgain}
 			</button>
 		</div>
 	{:else}
@@ -202,29 +205,29 @@
 					/>
 					<div class="flex-1">
 						<p class="font-medium text-secondary-900 dark:text-secondary-100">
-							OpenAlex API Priority Access
+							{ui.consent.openAlexTitle}
 						</p>
 						<p class="text-sm text-secondary-600 dark:text-secondary-400 mt-1">
 							{#if status?.granted === true}
-								Your email is shared with OpenAlex for faster queries (10x speed).
+								{ui.consent.grantedMessage}
 							{:else if status?.granted === false}
-								You have declined to share your email with OpenAlex.
+								{ui.consent.declinedMessage}
 							{:else}
-								Share your email with OpenAlex for faster research queries.
+								{ui.consent.pendingMessage}
 							{/if}
 						</p>
 
 						{#if status?.updatedAt}
 							<p class="text-xs text-secondary-500 dark:text-secondary-500 mt-2">
-								Updated {formatRelativeTime(status.updatedAt)}
+								{ui.common.updated}
+								{formatRelativeTime(status.updatedAt)}
 							</p>
 						{/if}
 
 						{#if userEmail && (status?.granted === null || status?.granted === false)}
 							<p class="text-xs text-secondary-500 dark:text-secondary-500 mt-2">
-								Email: <strong class="text-secondary-700 dark:text-secondary-300"
-									>{userEmail}</strong
-								>
+								{ui.common.email} :
+								<strong class="text-secondary-700 dark:text-secondary-300">{userEmail}</strong>
 							</p>
 						{/if}
 					</div>
@@ -245,7 +248,7 @@
 							{#if isSaving}
 								<LoadingSpinner size="sm" />
 							{:else}
-								Revoke consent
+								{ui.consent.revokeButton}
 							{/if}
 						</button>
 					{:else}
@@ -258,7 +261,7 @@
 							{#if isSaving}
 								<LoadingSpinner size="sm" />
 							{:else}
-								Grant consent
+								{ui.consent.grantButton}
 							{/if}
 						</button>
 						{#if status?.granted === null}
@@ -268,7 +271,7 @@
 								disabled={isSaving}
 								class="px-4 py-2 text-sm font-medium text-secondary-600 dark:text-secondary-400 hover:text-secondary-700 dark:hover:text-secondary-300 transition-colors disabled:opacity-50"
 							>
-								Decline
+								{ui.consent.declineButton}
 							</button>
 						{/if}
 					{/if}

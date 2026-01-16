@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Icon from './Icon.svelte';
+	import { i18n } from '$lib/content';
 
 	/**
 	 * Dropdown component with trigger button and popover content.
@@ -71,6 +72,8 @@
 			close();
 		}
 	};
+
+	const a11y = $derived(i18n.accessibility);
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
@@ -93,7 +96,7 @@
 	</button>
 
 	{#if open}
-		<button type="button" class="fixed inset-0 z-10" onclick={close} aria-label="Close menu"
+		<button type="button" class="fixed inset-0 z-10" onclick={close} aria-label={a11y.closeMenu}
 		></button>
 
 		<div

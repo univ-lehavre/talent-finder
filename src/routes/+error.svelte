@@ -1,30 +1,28 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { ErrorState, ButtonGroup, LinkButton, Button } from '$lib/ui';
+	import { i18n } from '$lib/content';
 
-	const getErrorInfo = (
-		status: number,
-		errorMessage?: string
-	): { title: string; message: string; variant: 'default' | 'warning' | 'error' } => {
-		if (status === 404) {
+	const errors = $derived(i18n.errors);
+
+	const errorInfo = $derived.by(() => {
+		if ($page.status === 404) {
 			return {
-				title: 'Page not found',
-				message: "The page you're looking for doesn't exist or has been moved.",
-				variant: 'default'
+				title: errors.notFound.title,
+				message: errors.notFound.message,
+				variant: 'default' as const
 			};
 		}
 		return {
-			title: 'Something went wrong',
-			message: errorMessage ?? 'An unexpected error occurred.',
-			variant: 'error'
+			title: errors.generic.title,
+			message: $page.error?.message ?? errors.generic.message,
+			variant: 'error' as const
 		};
-	};
-
-	const errorInfo = $derived(getErrorInfo($page.status, $page.error?.message));
+	});
 </script>
 
 <svelte:head>
-	<title>{$page.status} - ECRIN | Talent finder</title>
+	<title>{$page.status} {errors.titleSuffix}</title>
 	<meta name="description" content={errorInfo.title} />
 </svelte:head>
 
@@ -37,9 +35,11 @@
 	>
 		{#snippet actions()}
 			<ButtonGroup justify="center">
-				<LinkButton href="/" variant="primary" icon="lucide:home">Back to Home</LinkButton>
+				<LinkButton href="/" variant="primary" icon="lucide:home"
+					>{errors.buttons.backToHome}</LinkButton
+				>
 				<Button variant="outline" icon="lucide:arrow-left" onclick={() => history.back()}>
-					Go Back
+					{errors.buttons.goBack}
 				</Button>
 			</ButtonGroup>
 		{/snippet}

@@ -2,6 +2,9 @@
 	import InfoCard from './InfoCard.svelte';
 	import ThemeToggleRow from './ThemeToggleRow.svelte';
 	import Icon from './Icon.svelte';
+	import { i18n } from '$lib/content';
+
+	const ui = $derived(i18n.ui);
 
 	/**
 	 * ThemePreferencesCard - Card displaying theme settings with toggles
@@ -57,13 +60,13 @@
 	);
 </script>
 
-<InfoCard title="Theme Preferences" icon="lucide:palette" class={className}>
+<InfoCard title={ui.theme.title} icon="lucide:palette" class={className}>
 	{#snippet trailing()}
 		{#if showCustomizeLink}
 			<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- internal navigation link -->
 			<a href="/theme" class="customize-link">
 				<Icon icon="lucide:settings" width="14" height="14" />
-				Customize
+				{ui.common.customize}
 			</a>
 		{/if}
 	{/snippet}
@@ -71,7 +74,7 @@
 	<div class="theme-settings">
 		<!-- Palette -->
 		<ThemeToggleRow
-			label="Palette"
+			label={ui.theme.palette}
 			value={palette}
 			isSaved={savedPreferences.palette}
 			onToggle={onPaletteToggle}
@@ -87,7 +90,7 @@
 
 		<!-- Font -->
 		<ThemeToggleRow
-			label="Font"
+			label={ui.theme.font}
 			value={fontName}
 			isSaved={savedPreferences.font}
 			onToggle={onFontToggle}
@@ -106,7 +109,7 @@
 					<Icon icon={darkModeIcon} width="20" height="20" class="theme-icon" />
 				</div>
 				<div class="row-info">
-					<span class="row-label">Mode</span>
+					<span class="row-label">{ui.theme.mode}</span>
 					<p class="row-value">{darkMode}</p>
 				</div>
 			</div>

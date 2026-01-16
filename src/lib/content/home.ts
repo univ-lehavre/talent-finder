@@ -1,115 +1,83 @@
 /**
  * Homepage content - prepared for internationalization.
- * All user-facing text should be defined here for easy translation.
+ * Contains all homepage-related text content.
  */
 
-export interface Challenge {
-	title: string;
-	problem: string;
-	solution: string;
-}
-
-export interface Step {
-	number: string;
-	title: string;
-	description: string;
-}
-
-export interface HomeContent {
-	hero: {
-		title: string;
-		subtitle: string;
-		ctaLoggedIn: string;
-		ctaLoggedOut: string;
-		learnMore: string;
-	};
-	howItWorks: {
-		title: string;
-		subtitle: string;
-		steps: Step[];
-	};
-	challenges: {
-		title: string;
-		subtitle: string;
-		items: Challenge[];
-	};
-	cta: {
-		title: string;
-		subtitle: string;
-		buttonLoggedIn: string;
-		buttonLoggedOut: string;
-	};
-}
+import { brand } from './brand';
+import type { HomeContent } from './types';
 
 /**
- * English content for the homepage.
+ * French content for the homepage.
  */
-export const en: HomeContent = {
+export const fr: HomeContent = {
 	hero: {
-		title: 'Find the Right Talent for Your Projects',
+		title: 'Trouvez les talents adaptés à vos projets',
 		subtitle:
-			'Connect with skilled professionals, researchers, and experts. Build your team and bring your ideas to life.',
-		ctaLoggedIn: 'Dashboard',
-		ctaLoggedOut: 'Get Started',
-		learnMore: 'Learn More'
+			'Connectez-vous avec des professionnels qualifiés, chercheurs et experts. Constituez votre équipe et donnez vie à vos idées.',
+		ctaLoggedIn: 'Tableau de bord',
+		ctaLoggedOut: 'Commencer',
+		learnMore: 'En savoir plus'
 	},
 	howItWorks: {
-		title: 'How it Works',
-		subtitle:
-			'Getting started with Talent Finder is simple. Follow these three steps to find your next collaborator.',
+		title: 'Comment ça marche',
+		subtitle: `Démarrer avec ${brand.appName} est simple. Suivez ces trois étapes pour trouver votre prochain collaborateur.`,
 		steps: [
 			{
 				number: '1',
-				title: 'Create Your Profile',
-				description: 'Sign up and describe your skills, expertise, and research interests'
+				title: 'Créez votre profil',
+				description:
+					'Inscrivez-vous et décrivez vos compétences, votre expertise et vos intérêts de recherche'
 			},
 			{
 				number: '2',
-				title: 'Discover Talent',
-				description: 'Search the repository to find collaborators matching your project needs'
+				title: 'Découvrez les talents',
+				description:
+					'Parcourez le répertoire pour trouver des collaborateurs correspondant aux besoins de votre projet'
 			},
 			{
 				number: '3',
-				title: 'Connect & Collaborate',
-				description: 'Reach out directly and start working together on innovative projects'
+				title: 'Connectez-vous et collaborez',
+				description:
+					'Contactez directement et commencez à travailler ensemble sur des projets innovants'
 			}
 		]
 	},
 	challenges: {
-		title: 'Why We Built Talent Finder',
+		title: `Pourquoi nous avons créé ${brand.appName}`,
 		subtitle:
-			"Finding the right collaborators in academia and research remains a challenge. Here's what we're solving.",
+			'Trouver les bons collaborateurs dans le monde académique et de la recherche reste un défi. Voici ce que nous résolvons.',
 		items: [
 			{
-				title: 'Scattered Information',
+				title: 'Informations dispersées',
 				problem:
-					'Researcher profiles are spread across LinkedIn, ResearchGate, university pages, and personal websites.',
-				solution: 'Talent Finder centralizes expertise in one searchable repository.'
+					'Les profils des chercheurs sont éparpillés entre LinkedIn, ResearchGate, les pages universitaires et les sites personnels.',
+				solution: `${brand.appName} centralise les expertises dans un répertoire unique et consultable.`
 			},
 			{
-				title: 'Limited Discovery',
+				title: 'Découverte limitée',
 				problem:
-					'Finding collaborators often relies on word-of-mouth or conferences, missing potential matches.',
+					'Trouver des collaborateurs repose souvent sur le bouche-à-oreille ou les conférences, manquant des correspondances potentielles.',
 				solution:
-					'Our platform enables discovery based on skills, research interests, and availability.'
+					'Notre plateforme permet la découverte basée sur les compétences, les intérêts de recherche et la disponibilité.'
 			},
 			{
-				title: 'Cross-Border Barriers',
-				problem: 'International collaboration within university alliances lacks dedicated tools.',
-				solution: 'Built for EUNICoast, Talent Finder connects talent across partner institutions.'
+				title: 'Barrières transfrontalières',
+				problem:
+					"La collaboration internationale au sein des alliances universitaires manque d'outils dédiés.",
+				solution: `Conçu pour ${brand.eunicoast}, ${brand.appName} connecte les talents à travers les institutions partenaires.`
 			}
 		]
 	},
 	cta: {
-		title: 'Ready to Find Your Next Collaborator?',
+		title: 'Prêt à trouver votre prochain collaborateur ?',
 		subtitle:
-			'Join our platform today and start connecting with talented professionals from around the world.',
-		buttonLoggedIn: 'Access Dashboard',
-		buttonLoggedOut: 'Explore Repository'
+			"Rejoignez notre plateforme dès aujourd'hui et commencez à vous connecter avec des professionnels talentueux du monde entier.",
+		buttonLoggedIn: 'Accéder au tableau de bord',
+		buttonLoggedOut: 'Explorer le répertoire'
 	}
 };
 
 /**
  * Default content export - can be replaced with locale-based selection.
  */
-export const content = en;
+export const content = fr;
