@@ -2,8 +2,8 @@
  * Homepage content - French.
  */
 
-import { brand } from '../../../core/brand';
-import type { HomeContent } from '../../../types';
+import { brand } from '$lib/content/core/brand';
+import type { HomeContent } from '$lib/content/types';
 
 /**
  * French content for the homepage.

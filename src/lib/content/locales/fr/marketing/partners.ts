@@ -2,8 +2,8 @@
  * Partners section content - French.
  */
 
-import { brand } from '../../../core/brand';
-import type { PartnersContent } from '../../../types';
+import { brand } from '$lib/content/core/brand';
+import type { PartnersContent } from '$lib/content/types';
 
 /**
  * French partners content.
