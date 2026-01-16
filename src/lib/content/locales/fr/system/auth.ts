@@ -2,8 +2,8 @@
  * Authentication content - French.
  */
 
-import { brand, commonLabels, pageTitle } from '../../../core/brand';
-import type { AuthContent } from '../../../types';
+import { brand, commonLabels, pageTitle } from '$lib/content/core/brand';
+import type { AuthContent } from '$lib/content/types';
 
 /**
  * French authentication content.
