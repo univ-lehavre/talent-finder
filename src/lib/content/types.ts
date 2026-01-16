@@ -195,6 +195,145 @@ export interface DashboardContent {
 }
 
 /**
+ * Common shared content structure.
+ */
+export interface CommonContent {
+	/** Common labels */
+	labels: {
+		tryAgain: string;
+		checkStatus: string;
+		email: string;
+		notLoggedIn: string;
+		customize: string;
+		updated: string;
+	};
+	/** Relative time labels */
+	relativeTime: {
+		justNow: string;
+		secondsAgo: string;
+		minutesAgo: string;
+		hoursAgo: string;
+		yesterday: string;
+		daysAgo: string;
+	};
+	/** Coming soon section */
+	comingSoon: {
+		defaultTitle: string;
+		defaultDescription: string;
+	};
+}
+
+/**
+ * Health status content structure.
+ */
+export interface HealthContent {
+	/** Health card */
+	card: {
+		title: string;
+		refreshLabel: string;
+		status: {
+			healthy: string;
+			degraded: string;
+			unhealthy: string;
+		};
+		services: {
+			appwrite: string;
+			internet: string;
+		};
+		checked: string;
+		apiKey: string;
+		valid: string;
+		invalid: string;
+		notFound: string;
+		missing: string;
+	};
+	/** Connectivity banner */
+	connectivity: {
+		appwriteUnavailable: {
+			title: string;
+			description: string;
+		};
+		noInternet: {
+			title: string;
+			description: string;
+		};
+	};
+}
+
+/**
+ * Profile content structure.
+ */
+export interface ProfileContent {
+	/** Profile card */
+	card: {
+		title: string;
+		complete: string;
+		incomplete: string;
+	};
+	/** Consent card */
+	consent: {
+		title: string;
+		openAlexTitle: string;
+		grantedMessage: string;
+		declinedMessage: string;
+		pendingMessage: string;
+		grantButton: string;
+		revokeButton: string;
+		declineButton: string;
+	};
+}
+
+/**
+ * Research content structure.
+ */
+export interface ResearchContent {
+	/** Research organization search */
+	organization: {
+		title: string;
+		consentRequired: string;
+		consentMessage: string;
+		searchPlaceholder: string;
+		maxReached: string;
+		noResults: string;
+		selectedTitle: string;
+		maxLabel: string;
+		noSelection: string;
+		works: string;
+		citations: string;
+		removeLabel: string;
+	};
+	/** Research output card */
+	output: {
+		title: string;
+		consentMessage: string;
+		selectOrganizations: string;
+		loading: string;
+		articlesByYear: string;
+		before: string;
+		affiliatedAuthors: string;
+		total: string;
+	};
+}
+
+/**
+ * Theme content structure (card + page).
+ */
+export interface ThemeContent {
+	/** Theme preferences card */
+	card: {
+		title: string;
+		palette: string;
+		font: string;
+		mode: string;
+		light: string;
+		dark: string;
+		changeTheme: string;
+	};
+	/** Theme page content */
+	page: ThemePageContent;
+}
+
+/**
  * Repository page content structure.
  */
 export interface RepositoryContent {
