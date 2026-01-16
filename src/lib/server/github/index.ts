@@ -1,16 +1,6 @@
-export {
-	type TGitHubItemStats,
-	type TGitHubStats,
-	type TGitHubRepo,
-	GitHubItemStats,
-	GitHubStats,
-	GitHubRepo,
-	emptyGitHubItemStats,
-	emptyGitHubStats
-} from './types';
+export { type TGitHubStats, GitHubStats, emptyGitHubStats } from './types';
 
 export {
-	parseGitHubUrl,
 	buildGitHubUrl,
 	buildIssuesUrl,
 	buildNewIssueUrl,

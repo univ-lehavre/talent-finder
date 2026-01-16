@@ -1,5 +1,5 @@
 import { AppwriteConsentEventRepository, AppwriteCurrentConsentRepository } from './repository';
-import type { TConsentType, TConsentEvent, TCurrentConsent, TConsentStatusResponse } from './types';
+import type { TConsentType, TCurrentConsent, TConsentStatusResponse } from './types';
 
 const consentEventRepo = new AppwriteConsentEventRepository();
 const currentConsentRepo = new AppwriteCurrentConsentRepository();
@@ -85,19 +85,6 @@ export const revokeConsent = async (
 		granted: current.granted,
 		updatedAt: current.$updatedAt
 	};
-};
-
-/**
- * Gets consent history for a user and consent type.
- * @param userId - The user ID
- * @param consentType - Optional consent type filter
- * @returns List of consent events
- */
-export const getConsentHistory = async (
-	userId: string,
-	consentType?: TConsentType
-): Promise<TConsentEvent[]> => {
-	return consentEventRepo.getByUserId(userId, consentType);
 };
 
 /**
