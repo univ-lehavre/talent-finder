@@ -7,7 +7,9 @@
 		ButtonGroup,
 		LinkButton
 	} from '$lib/ui';
-	import { auth } from '$lib/content';
+	import { i18n } from '$lib/content';
+
+	const auth = $derived(i18n.auth);
 
 	interface Props {
 		data: {

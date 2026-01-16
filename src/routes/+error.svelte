@@ -1,27 +1,24 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { ErrorState, ButtonGroup, LinkButton, Button } from '$lib/ui';
-	import { errors } from '$lib/content';
+	import { i18n } from '$lib/content';
 
-	const getErrorInfo = (
-		status: number,
-		errorMessage?: string
-	): { title: string; message: string; variant: 'default' | 'warning' | 'error' } => {
-		if (status === 404) {
+	const errors = $derived(i18n.errors);
+
+	const errorInfo = $derived.by(() => {
+		if ($page.status === 404) {
 			return {
 				title: errors.notFound.title,
 				message: errors.notFound.message,
-				variant: 'default'
+				variant: 'default' as const
 			};
 		}
 		return {
 			title: errors.generic.title,
-			message: errorMessage ?? errors.generic.message,
-			variant: 'error'
+			message: $page.error?.message ?? errors.generic.message,
+			variant: 'error' as const
 		};
-	};
-
-	const errorInfo = $derived(getErrorInfo($page.status, $page.error?.message));
+	});
 </script>
 
 <svelte:head>

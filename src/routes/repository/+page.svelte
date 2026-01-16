@@ -13,7 +13,9 @@
 		PageLayout,
 		StatCard
 	} from '$lib/ui';
-	import { repository } from '$lib/content';
+	import { i18n } from '$lib/content';
+
+	const repository = $derived(i18n.repository);
 
 	interface Props {
 		data: PageData;
@@ -61,13 +63,13 @@
 		authors: string[];
 	};
 
-	const activityColumns = [
+	const activityColumns = $derived([
 		{ key: 'period', label: repository.columns.period },
 		{ key: 'commits', label: repository.columns.commits },
 		{ key: 'additions', label: repository.columns.additions },
 		{ key: 'deletions', label: repository.columns.deletions },
 		{ key: 'authors', label: repository.columns.authors }
-	];
+	]);
 
 	/**
 	 * Reversed activity data (most recent first)

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { content, partners } from '$lib/content';
+	import { i18n } from '$lib/content';
 	import {
 		Hero,
 		LandingSection,
@@ -19,6 +19,9 @@
 	}
 
 	let { data }: Props = $props();
+
+	const content = $derived(i18n.home);
+	const partners = $derived(i18n.partners);
 
 	const scrollToHowItWorks = (): void => {
 		document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });

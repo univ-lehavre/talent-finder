@@ -34,9 +34,10 @@
 		setPalette,
 		setFont
 	} from '$lib/stores';
-	import { themePage } from '$lib/content';
+	import { i18n } from '$lib/content';
 
 	const themeStore = createThemeStore();
+	const themePage = $derived(i18n.themePage);
 
 	let modalOpen = $state(false);
 	let signupOpen = $state(false);
@@ -82,13 +83,13 @@
 	});
 
 	// Color scale configuration
-	const fullScaleColors = [
+	const fullScaleColors = $derived([
 		{ name: themePage.colorScales.colorNames.primary, cssPrefix: 'primary' },
 		{ name: themePage.colorScales.colorNames.accent, cssPrefix: 'accent' },
 		{ name: themePage.colorScales.colorNames.secondary, cssPrefix: 'secondary' }
-	];
+	]);
 
-	const sparseScaleColors = [
+	const sparseScaleColors = $derived([
 		{
 			name: themePage.colorScales.colorNames.success,
 			cssPrefix: 'success',
@@ -104,7 +105,7 @@
 			cssPrefix: 'error',
 			sparseShades: [50, 500, 600, 700]
 		}
-	];
+	]);
 
 	const shades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 </script>

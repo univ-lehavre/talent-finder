@@ -21,9 +21,10 @@
 		setFont
 	} from '$lib/stores';
 	import type { TInstitution } from '$lib/server/openalex';
-	import { dashboard } from '$lib/content';
+	import { i18n } from '$lib/content';
 
 	const themeStore = createThemeStore();
+	const dashboard = $derived(i18n.dashboard);
 
 	let savedPreferences = $state({ palette: false, font: false });
 
@@ -71,14 +72,7 @@
 
 	let { data }: Props = $props();
 
-	interface ExternalLink {
-		href: string;
-		icon: string;
-		title: string;
-		description: string;
-	}
-
-	const externalLinks: ExternalLink[] = [
+	const externalLinks = $derived([
 		{
 			href: 'https://ecrin.sites.chasset.net',
 			icon: 'lucide:globe',
@@ -97,7 +91,7 @@
 			title: dashboard.externalLinks.zenodo.title,
 			description: dashboard.externalLinks.zenodo.description
 		}
-	];
+	]);
 </script>
 
 <svelte:head>

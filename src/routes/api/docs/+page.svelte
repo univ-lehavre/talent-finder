@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import 'swagger-ui-dist/swagger-ui.css';
-	import { apiDocs } from '$lib/content';
+	import { i18n } from '$lib/content';
+
+	const apiDocs = $derived(i18n.apiDocs);
 
 	interface Props {
 		data: {
