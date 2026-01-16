@@ -15,6 +15,9 @@ export { default as Hero } from './Hero.svelte';
 export { default as CTASection } from './CTASection.svelte';
 export { default as PartnerSection } from './PartnerSection.svelte';
 export { default as LandingSection } from './LandingSection.svelte';
+export { default as Navbar } from './Navbar.svelte';
+export { default as Footer } from './Footer.svelte';
+export { default as Drawer } from './Drawer.svelte';
 
 // Data display components
 export { default as Card } from './Card.svelte';
@@ -42,6 +45,11 @@ export { default as ThemeToggle } from './ThemeToggle.svelte';
 // Utility components
 export { default as Icon } from './Icon.svelte';
 export { default as ConnectivityBanner } from './ConnectivityBanner.svelte';
+export { default as Tooltip } from './Tooltip.svelte';
+
+// Navigation components
+export { default as NavLink } from './NavLink.svelte';
+export { default as IconLink } from './IconLink.svelte';
 
 // Domain-specific components
 export { default as ResearchOrganizationSearch } from './ResearchOrganizationSearch.svelte';
