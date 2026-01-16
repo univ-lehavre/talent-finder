@@ -1,5 +1,12 @@
 <script lang="ts">
-	import { LoadingSpinner, LoginForm, ErrorState, ButtonGroup, Icon } from '$lib/ui';
+	import {
+		CenteredLayout,
+		LoadingState,
+		LoginForm,
+		ErrorState,
+		ButtonGroup,
+		LinkButton
+	} from '$lib/ui';
 
 	interface Props {
 		data: {
@@ -24,12 +31,9 @@
 	<meta name="description" content="Connectez-vous à votre compte ECRIN Talent Finder" />
 </svelte:head>
 
-<div
-	class="min-h-screen flex items-center justify-center bg-secondary-50 dark:bg-secondary-900 transition-colors duration-200 px-4"
->
+<CenteredLayout>
 	{#if data.isMagicLinkCallback}
 		{#if data.error}
-			<!-- Magic link error -->
 			<ErrorState
 				title={data.message ?? 'Connexion échouée'}
 				message={data.cause ?? 'Le lien de connexion est invalide ou a expiré.'}
@@ -39,31 +43,20 @@
 			>
 				{#snippet actions()}
 					<ButtonGroup justify="center">
-						<a href="/login" class="btn-primary">
-							<Icon icon="lucide:refresh-cw" width="16" height="16" />
+						<LinkButton href="/login" variant="primary" icon="lucide:refresh-cw">
 							Réessayer
-						</a>
-						<a href="/" class="btn-outline">
-							<Icon icon="lucide:home" width="16" height="16" />
-							Accueil
-						</a>
+						</LinkButton>
+						<LinkButton href="/" variant="secondary" icon="lucide:home">Accueil</LinkButton>
 					</ButtonGroup>
 				{/snippet}
 			</ErrorState>
 		{:else}
-			<!-- Magic link processing -->
-			<div class="text-center">
-				<h1 class="text-3xl font-bold text-secondary-900 dark:text-secondary-100 mb-4">
-					Connexion en cours...
-				</h1>
-				<LoadingSpinner size="md" variant="primary" label="Vérification de vos identifiants..." />
-				<p class="mt-4 text-secondary-600 dark:text-secondary-400">
-					Veuillez patienter pendant la vérification de vos identifiants.
-				</p>
-			</div>
+			<LoadingState
+				title="Connexion en cours..."
+				message="Veuillez patienter pendant la vérification de vos identifiants."
+			/>
 		{/if}
 	{:else}
-		<!-- Login form -->
 		<LoginForm {form} />
 	{/if}
-</div>
+</CenteredLayout>

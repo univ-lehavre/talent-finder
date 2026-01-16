@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { ErrorState, ButtonGroup, Icon } from '$lib/ui';
+	import { ErrorState, ButtonGroup, LinkButton, Button } from '$lib/ui';
 
 	const getErrorInfo = (
 		status: number,
@@ -37,14 +37,10 @@
 	>
 		{#snippet actions()}
 			<ButtonGroup justify="center">
-				<a href="/" class="btn-primary">
-					<Icon icon="lucide:home" width="16" height="16" />
-					Back to Home
-				</a>
-				<button type="button" class="btn-outline" onclick={() => history.back()}>
-					<Icon icon="lucide:arrow-left" width="16" height="16" />
+				<LinkButton href="/" variant="primary" icon="lucide:home">Back to Home</LinkButton>
+				<Button variant="outline" icon="lucide:arrow-left" onclick={() => history.back()}>
 					Go Back
-				</button>
+				</Button>
 			</ButtonGroup>
 		{/snippet}
 	</ErrorState>
