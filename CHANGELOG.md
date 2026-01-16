@@ -1,5 +1,250 @@
 # talent-finder
 
+## 0.5.0
+
+### Minor Changes
+
+- 0ebda05: feat(i18n): centraliser le contenu textuel dans $lib/content
+  - Créer des modules de contenu typés pour chaque domaine (navigation, auth, errors, dashboard, repository, ui, partners, themePage, apiDocs)
+  - Définir les interfaces TypeScript pour garantir la cohérence du contenu
+  - Migrer tous les textes visibles des fichiers .svelte vers $lib/content
+  - Préparer l'application pour l'internationalisation future
+
+- 57e7772: feat(ui): add dashboard components and refactor dashboard page
+
+  New UI components:
+  - ProfileCard: User profile summary with email and status badge
+  - ThemePreferencesCard: Theme settings display with palette/font toggles
+  - ThemeToggleRow: Reusable row for theme toggle buttons
+  - DashboardLinkCard: Card with icon, title, description and navigation link
+  - ExternalLinkCard: Clickable card for external links
+  - ExternalLinksCard: Container for multiple external links
+  - ComingSoonSection: Alert-based section for upcoming features
+
+  Dashboard page refactoring:
+  - Replaced ~200 lines of inline HTML with reusable components
+  - Uses Grid component for responsive layout
+  - Components compose existing UI primitives (InfoCard, Badge, Alert, etc.)
+
+- 381a00f: feat(ui): add ErrorState, ButtonGroup, LoginForm components and fix login page
+  - Add ErrorState component for consistent error display with icon, code, title, message, and actions
+  - Add ButtonGroup component for flexible button layouts with orientation and justify options
+  - Add LoginForm component for standalone magic link authentication
+  - Refactor +error.svelte to use new ErrorState and ButtonGroup components
+  - Fix login page to handle both direct access (show form) and magic link callback (validate & redirect)
+  - Add redirect to dashboard when already logged in
+
+- 5518295: Add 9 new landing page UI components:
+  - **Hero**: Gradient hero section with title, subtitle, and action buttons
+  - **LandingSection**: Centered title/description section for marketing pages
+  - **CTASection**: Call-to-action section with surface and gradient variants
+  - **StepCard**: Numbered process step card for "how it works" sections
+  - **ChallengeCard**: Problem/solution card for feature comparisons
+  - **PartnerSection**: Partner display with logo, description, and extra content
+  - **PartnerLogo**: Clickable external logo link with hover effect
+  - **TagCard**: Compact label card for tags and categories
+  - **FeatureCard**: Title + description card for feature highlights
+
+  All components use Svelte 5 snippets for flexible composition and support dark mode.
+
+  Homepage refactored to use these components, reducing code by ~40%.
+
+- 51ce37f: Add reusable navigation and layout components
+
+  New UI components:
+  - `Navbar`: Complete navigation bar with desktop/mobile views, logo, nav links, icon links, and user actions
+  - `Footer`: Footer with partner logos and version info
+  - `Drawer`: Slide-in side panel (offcanvas) with backdrop and keyboard support
+  - `NavLink`: Navigation link with icon and active state
+  - `IconLink`: Clickable icon with tooltip
+  - `Tooltip`: Hover tooltip with title and description
+
+  Refactored `+layout.svelte` to use the new components, reducing code by ~60%.
+
+- 42a310e: feat(ui): add CenteredLayout, LoadingState, Button components and refactor login/error pages
+  - Add CenteredLayout component for full-page centered content (auth, error, confirmation pages)
+  - Add LoadingState component for loading states with title, spinner and message
+  - Add Button component for interactive buttons with variants (primary, secondary, accent, outline, ghost)
+  - Refactor login page to use CenteredLayout, LoadingState and LinkButton components
+  - Refactor error page to use LinkButton and Button components
+  - Export new components from $lib/ui index
+
+- 1e2acce: feat(i18n): système d'internationalisation complet avec sélecteur de langue
+
+  ### Fonctionnalités
+  - Ajouter le sélecteur de langue dans la navbar (français/anglais)
+  - Détection automatique de la langue du navigateur
+  - Persistance du choix de langue dans un cookie (1 an)
+  - Changement de langue en temps réel sans rechargement de page
+
+  ### Infrastructure
+  - Créer `locale.svelte.ts` avec gestion d'état réactif ($state)
+  - Créer `i18n.svelte.ts` avec module-level $derived pour réactivité
+  - Ajouter traductions anglaises complètes dans `translations/en/`
+
+  ### Composants
+  - Créer `LanguageSelector.svelte` avec dropdown et drapeaux
+  - Migrer 18 composants UI vers i18n réactif ($derived)
+  - Migrer 8 pages routes vers i18n réactif
+
+  ### Types
+  - Ajouter `AccessibilityContent.languageSelector/changeLanguage`
+  - Ajouter `UIContent.theme.light/dark/changeTheme`
+  - Déplacer `Challenge`, `Step`, `HomeContent` vers `types.ts`
+
+  ### Traductions
+  - Contenu français complet (existant)
+  - Contenu anglais complet (nouveau)
+  - Labels accessibility pour sélecteur de langue
+
+  ### Tests
+  - 39 tests unitaires pour le module content
+
+- 730b945: ## Découplage des modules `$lib/ui` et `$lib/content`
+
+  ### Architecture à deux niveaux
+
+  **M0 (`$lib/ui`)** - Design system pur :
+  - Composants génériques sans dépendance i18n
+  - Props de contenu obligatoires (plus d'optionnels)
+  - Interfaces définies inline dans chaque composant
+  - Peut être extrait comme package npm externe
+
+  **M1 (`$lib/components`)** - Wrappers applicatifs :
+  - Import des composants de base depuis `$lib/ui`
+  - Injection du contenu i18n via `$derived` réactif
+  - Props simplifiées (pas besoin de passer le contenu)
+
+  ### Réorganisation de `$lib/ui`
+
+  Les 61 composants sont maintenant organisés en sous-répertoires par catégorie :
+
+  ```
+  src/lib/ui/
+  ├── actions/        # Button, ButtonGroup, LinkButton
+  ├── data-display/   # Card, InfoCard, StatCard, DataList, DataTable...
+  ├── feedback/       # Alert, Badge, LoadingSpinner, AsyncContent...
+  ├── forms/          # Modal, Signup, LoginForm
+  ├── layout/         # Section, Grid, PageHeader, Hero, CTASection...
+  ├── navigation/     # Navbar, Footer, Drawer, Dropdown, NavLink...
+  ├── theme/          # ThemeToggle, ThemeSection, ThemeToggleRow
+  ├── dashboard/      # ProfileCard, ThemePreferencesCard...
+  ├── domain/         # ResearchOrganizationSearch, HealthStatusCard...
+  └── utils/          # Icon, Tooltip, ConnectivityBanner...
+  ```
+
+  **Rétrocompatibilité** : Tous les imports via `$lib/ui` restent fonctionnels grâce au barrel export mis à jour.
+
+  ### Migration des routes
+
+  Les pages importent maintenant depuis `$lib/components` :
+  - `+layout.svelte` : Navbar, Footer, Signup, ConnectivityBanner
+  - `dashboard/+page.svelte` : ProfileCard, ThemePreferencesCard, etc.
+  - `login/+page.svelte` : LoginForm
+  - `theme/+page.svelte` : Dropdown, Modal, ThemeToggle
+
+  ### Utilisation
+
+  Pour les pages/routes (avec i18n automatique) :
+
+  ```svelte
+  import {(Navbar, Footer)} from '$lib/components';
+  <Navbar brandName="MyApp" />
+  ```
+
+  Pour les tests ou contenu custom (sans i18n) :
+
+  ```svelte
+  import {Navbar} from '$lib/ui';
+  <Navbar
+  	brandName="MyApp"
+  	toggleMenuLabel="Menu"
+  	mobileMenuTitle="Navigation"
+  	mobileMenuCloseLabel="Fermer"
+  />
+  ```
+
+- 61b10e6: feat(ui): add data display components and refactor repository page
+
+  New components:
+  - **LinkButton**: Styled link that looks like a button with variants, icons, and external link support
+  - **DataTable**: Generic data table with customizable cell rendering via snippets
+  - **KeyValue**: Label/value pair display with color variants
+  - **PageLayout**: Standard page structure with padding and centered container
+
+  Improved components:
+  - **StatCard**: Added dark mode support, new variants (info, warning, error), icons, suffixes, sizes, optional footer, and backwards compatibility with `variant="danger"`
+
+  Repository page refactored to use:
+  - PageLayout, PageHeader, Alert, Card, ButtonGroup, LinkButton
+  - Grid, StatCard, InfoCard, KeyValue, DataTable
+
+  Benefits: ~30% less code, reusable components, consistent styling, native dark mode support
+
+- 7443f2f: feat(ui): add dropdown and theme utility components, refactor theme page
+
+  New UI components:
+  - Dropdown: reusable dropdown menu with trigger, backdrop, and scroll-to-selected
+  - DropdownCategory: sticky category header for dropdown menus
+  - DropdownItem: selectable item with selection indicator
+  - ColorSwatch: color preview (single or grouped colors)
+  - ColorScaleRow: table row for displaying color scale palettes
+  - CodeExample: code snippet block with syntax highlighting
+  - PageHero: simple page hero section with subtle background
+
+  Theme page refactoring:
+  - Replace ThemeSection with Section component for better consistency
+  - Use new Dropdown components for palette and font selectors
+  - Use ColorSwatch for all color previews
+  - Use ColorScaleRow for color scale table (reduces ~400 lines of repetition)
+  - Use CodeExample for usage examples
+  - Reduce page from ~1112 lines to ~545 lines
+
+### Patch Changes
+
+- 69ea936: ## Réorganisation de `$lib/components` par routes
+
+  ### Nouvelle structure
+
+  Les composants applicatifs sont maintenant organisés par route avec un dossier `common/` pour les composants partagés :
+
+  ```
+  src/lib/components/
+  ├── common/      # Partagés (Navbar, Footer, Modal, Alert...)
+  ├── login/       # Route /login (LoginForm, Signup)
+  ├── dashboard/   # Route /dashboard (ProfileCard, HealthStatusCard...)
+  ├── home/        # Route / (préparé)
+  ├── theme/       # Route /theme (préparé)
+  ├── repository/  # Route /repository (préparé)
+  └── api-docs/    # Route /api/docs (préparé)
+  ```
+
+  ### Imports
+
+  Les imports existants restent compatibles :
+
+  ```typescript
+  // Import global (inchangé)
+  import { Navbar, LoginForm, ProfileCard } from '$lib/components';
+
+  // Import par catégorie (nouveau)
+  import { Navbar, Footer } from '$lib/components/common';
+  import { LoginForm } from '$lib/components/login';
+  import { ProfileCard } from '$lib/components/dashboard';
+  ```
+
+  ### Composants déplacés
+
+  **common/** : Navbar, Footer, Drawer, Dropdown, LanguageSelector, Modal, Alert, ConnectivityBanner, PageHeader, ThemeToggle
+
+  **login/** : LoginForm, Signup
+
+  **dashboard/** : ProfileCard, ThemePreferencesCard, ConsentStatusCard, HealthStatusCard, ArticlesCountCard, ResearchOrganizationSearch, ComingSoonSection
+
+- b8add6c: refactor(api-docs): load Swagger CSS statically to avoid FOUC
+
+  Move CSS import from dynamic onMount to static module import for better performance and to prevent flash of unstyled content on API documentation page.
+
 ## 0.4.0
 
 ### Minor Changes
