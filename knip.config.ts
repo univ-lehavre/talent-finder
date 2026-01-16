@@ -7,12 +7,13 @@ import type { KnipConfig } from 'knip';
 const config: KnipConfig = {
 	// Entry points for the application
 	entry: [
-		'src/routes/**/*.{ts,svelte}',
+		'src/routes/**/+*.{ts,svelte}',
 		'src/hooks.server.ts',
 		'src/app.d.ts',
 		'vite.config.ts',
 		'svelte.config.js',
-		'eslint.config.js'
+		'eslint.config.js',
+		'commitlint.config.ts'
 	],
 
 	// Project source files
@@ -28,31 +29,28 @@ const config: KnipConfig = {
 		'**/*.test.ts',
 		'**/*.spec.ts',
 		// Scripts
-		'scripts/**'
+		'scripts/**',
+		// Legacy barrel files (to be cleaned up)
+		'src/lib/components/api-docs/index.ts',
+		'src/lib/components/home/index.ts',
+		'src/lib/components/repository/index.ts',
+		'src/lib/components/theme/index.ts',
+		'src/lib/index.ts'
 	],
 
-	// Ignore specific exports (barrel files, types)
+	// Ignore specific dependencies
 	ignoreDependencies: [
-		// Peer dependencies and plugins
+		// Vite/build plugins
 		'prettier-plugin-svelte',
-		'@tailwindcss/vite'
+		'@tailwindcss/vite',
+		// Tailwind is used via @tailwindcss/vite
+		'tailwindcss'
 	],
 
-	// SvelteKit specific configuration
-	sveltekit: {
-		entry: ['src/routes/**/*.{ts,svelte}', 'src/hooks.server.ts']
-	},
-
-	// Workspaces (if using monorepo)
-	workspaces: {
-		'.': {
-			entry: [
-				'src/routes/**/+*.{ts,svelte}',
-				'src/hooks.server.ts',
-				'vite.config.ts',
-				'svelte.config.js'
-			]
-		}
+	// Paths that Knip cannot resolve (SvelteKit virtual modules)
+	paths: {
+		'$env/*': ['src/app.d.ts'],
+		'$app/*': ['node_modules/@sveltejs/kit/types']
 	}
 };
 
