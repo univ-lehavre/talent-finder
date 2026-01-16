@@ -1,10 +1,11 @@
 ---
-"talent-finder": minor
+'talent-finder': minor
 ---
 
 feat(ui): add dropdown and theme utility components, refactor theme page
 
 New UI components:
+
 - Dropdown: reusable dropdown menu with trigger, backdrop, and scroll-to-selected
 - DropdownCategory: sticky category header for dropdown menus
 - DropdownItem: selectable item with selection indicator
@@ -14,6 +15,7 @@ New UI components:
 - PageHero: simple page hero section with subtle background
 
 Theme page refactoring:
+
 - Replace ThemeSection with Section component for better consistency
 - Use new Dropdown components for palette and font selectors
 - Use ColorSwatch for all color previews
