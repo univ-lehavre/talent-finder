@@ -1,18 +1,51 @@
 <script lang="ts">
 	import { Icon, LoadingSpinner, Alert } from '$lib/ui';
-	import { i18n } from '$lib/content';
 	import type { TInstitution, TInstitutionStatsResponse } from '$lib/server/openalex';
 
-	const ui = $derived(i18n.ui);
+	/**
+	 * ArticlesCountCard - Card displaying article statistics for selected organizations.
+	 *
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via the content prop.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/ArticlesCountCard.
+	 *
+	 * @example
+	 * ```svelte
+	 * <ArticlesCountCard {selectedOrganizations} {hasConsent} content={articlesCountContent} />
+	 * ```
+	 */
+	interface ArticlesCountContent {
+		/** Card title */
+		title: string;
+		/** Consent message when no consent granted */
+		consentMessage: string;
+		/** Message when no organizations selected */
+		selectOrganizations: string;
+		/** Loading message */
+		loading: string;
+		/** Articles by year section label */
+		articlesByYear: string;
+		/** Label for "before" period */
+		beforeLabel: string;
+		/** Affiliated authors section label */
+		affiliatedAuthors: string;
+		/** Total label */
+		totalLabel: string;
+		/** Consent required tooltip */
+		consentRequired: string;
+	}
 
 	interface Props {
 		/** Selected organizations to count articles for */
 		selectedOrganizations: TInstitution[];
 		/** Whether user has granted consent for OpenAlex API usage */
 		hasConsent?: boolean;
+		/** Content for the card (required) */
+		content: ArticlesCountContent;
 	}
 
-	let { selectedOrganizations, hasConsent = false }: Props = $props();
+	let { selectedOrganizations, hasConsent = false, content }: Props = $props();
 
 	let isLoading = $state(false);
 	let error = $state<string | null>(null);
@@ -23,9 +56,6 @@
 
 	/** Whether the component is disabled (no consent) */
 	const isDisabled = $derived(!hasConsent);
-
-	/** Content labels */
-	const content = $derived(ui.researchOutput);
 
 	/**
 	 * Formats a number for display using French locale.
@@ -102,7 +132,7 @@
 		/>
 		<h2 class="text-xl font-semibold">{content.title}</h2>
 		{#if isDisabled}
-			<span title={ui.researchOrganization.consentRequired} class="ml-auto">
+			<span title={content.consentRequired} class="ml-auto">
 				<Icon
 					icon="lucide:lock"
 					width="16"
@@ -156,7 +186,7 @@
 									: 'bg-secondary-50 dark:bg-secondary-700/50'}"
 							>
 								<p class="text-[10px] text-secondary-500 dark:text-secondary-400">
-									{yearData.year === 'before' ? content.before : yearData.year}
+									{yearData.year === 'before' ? content.beforeLabel : yearData.year}
 								</p>
 								<p
 									class="text-xs font-semibold {yearData.year === 'before'
@@ -178,7 +208,9 @@
 				</p>
 				<div class="flex flex-wrap justify-start gap-1.5">
 					<div class="text-center px-2 py-1 rounded bg-secondary-50 dark:bg-secondary-700/50">
-						<p class="text-[10px] text-secondary-500 dark:text-secondary-400">{content.total}</p>
+						<p class="text-[10px] text-secondary-500 dark:text-secondary-400">
+							{content.totalLabel}
+						</p>
 						<p class="text-xs font-semibold text-primary-600 dark:text-primary-400">
 							{formatNumber(stats.authorsCount)}
 						</p>

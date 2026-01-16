@@ -1,11 +1,19 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import PartnerLogo from './PartnerLogo.svelte';
-	import { i18n } from '$lib/content';
 
 	/**
-	 * Footer component with partner logos and version info.
-	 * Displays a footer section with configurable partners and additional content.
+	 * Footer - Pied de page avec logos partenaires
+	 *
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via props.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/Footer.
+	 *
+	 * @example
+	 * ```svelte
+	 * <Footer attribution="© 2024 MyApp" partners={[...]} />
+	 * ```
 	 */
 	interface Partner {
 		href: string;
@@ -14,24 +22,21 @@
 	}
 
 	interface Props {
+		/** Attribution text (e.g., "© 2024 Company") */
+		attribution: string;
 		/** List of partner logos to display */
 		partners?: Partner[];
 		/** Version string to display */
 		version?: string;
-		/** Attribution text (optional, defaults to i18n content) */
-		attribution?: string;
 		/** Additional content (rendered below partners) */
 		children?: Snippet;
 		/** Additional CSS classes */
 		class?: string;
 	}
 
-	let { partners = [], version, attribution, children, class: className = '' }: Props = $props();
+	let { attribution, partners = [], version, children, class: className = '' }: Props = $props();
 
-	const navigation = $derived(i18n.navigation);
-	const attributionText = $derived(attribution ?? navigation.footer.attribution);
-
-	const versionText = $derived(version ? `${attributionText} (v${version})` : attributionText);
+	const versionText = $derived(version ? `${attribution} (v${version})` : attribution);
 </script>
 
 <footer

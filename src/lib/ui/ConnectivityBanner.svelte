@@ -1,15 +1,40 @@
 <script lang="ts">
 	import { Icon } from '$lib/ui';
-	import { i18n } from '$lib/content';
 
-	const ui = $derived(i18n.ui);
+	/**
+	 * ConnectivityBanner - Alert banner for connectivity issues
+	 *
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via the content prop.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/ConnectivityBanner.
+	 *
+	 * @example
+	 * ```svelte
+	 * <ConnectivityBanner error="no_internet" content={connectivityContent} />
+	 * ```
+	 */
+	interface ConnectivityContent {
+		/** Appwrite unavailable title */
+		appwriteUnavailableTitle: string;
+		/** Appwrite unavailable description */
+		appwriteUnavailableDescription: string;
+		/** No internet title */
+		noInternetTitle: string;
+		/** No internet description */
+		noInternetDescription: string;
+		/** Check status link text */
+		checkStatusLabel: string;
+	}
 
 	interface Props {
 		/** Type of connectivity error */
 		error: 'appwrite_unavailable' | 'no_internet';
+		/** Content for the banner (required) */
+		content: ConnectivityContent;
 	}
 
-	let { error }: Props = $props();
+	let { error, content }: Props = $props();
 
 	const messages = $derived<
 		Record<
@@ -18,13 +43,13 @@
 		>
 	>({
 		appwrite_unavailable: {
-			title: ui.connectivity.appwriteUnavailable.title,
-			description: ui.connectivity.appwriteUnavailable.description,
+			title: content.appwriteUnavailableTitle,
+			description: content.appwriteUnavailableDescription,
 			icon: 'lucide:server-off'
 		},
 		no_internet: {
-			title: ui.connectivity.noInternet.title,
-			description: ui.connectivity.noInternet.description,
+			title: content.noInternetTitle,
+			description: content.noInternetDescription,
 			icon: 'lucide:wifi-off'
 		}
 	});
@@ -57,7 +82,7 @@
 				target="_blank"
 				class="text-xs text-warning-600 dark:text-warning-400 hover:underline flex-shrink-0"
 			>
-				{ui.common.checkStatus}
+				{content.checkStatusLabel}
 			</a>
 		</div>
 	</div>

@@ -2,9 +2,48 @@
 	import { isEmail } from '$lib/validators';
 	import { enhance } from '$app/forms';
 	import Icon from './Icon.svelte';
-	import { i18n } from '$lib/content';
 
-	const auth = $derived(i18n.auth);
+	/**
+	 * Signup - Modal d'inscription par magic link
+	 *
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via the content prop.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/Signup.
+	 *
+	 * @example
+	 * ```svelte
+	 * <Signup {form} bind:open content={signupContent} />
+	 * ```
+	 */
+	interface SignupContent {
+		/** Modal title */
+		title: string;
+		/** Close button label */
+		closeLabel: string;
+		/** Modal description */
+		description: string;
+		/** Email field label */
+		emailLabel: string;
+		/** Email field placeholder */
+		emailPlaceholder: string;
+		/** Email field hint text */
+		emailHint: string;
+		/** Submit button text */
+		submitButton: string;
+		/** Submit button text when submitting */
+		submitting: string;
+		/** Error message prefix */
+		errorPrefix: string;
+		/** Default error message */
+		errorDefault: string;
+		/** Close alert label */
+		closeAlert: string;
+		/** Success message */
+		success: string;
+		/** Footer text */
+		footer: string;
+	}
 
 	interface Props {
 		form: {
@@ -15,9 +54,11 @@
 		} | null;
 		open?: boolean;
 		onclose?: () => void;
+		/** Content for the modal (required) */
+		content: SignupContent;
 	}
 
-	let { form, open = $bindable(false), onclose }: Props = $props();
+	let { form, open = $bindable(false), onclose, content }: Props = $props();
 
 	let email = $state('');
 	let signuping = $state(false);
@@ -52,7 +93,7 @@
 		onkeydown={(e) => e.key === 'Enter' && closeModal()}
 		role="button"
 		tabindex="-1"
-		aria-label="Close modal"
+		aria-label={content.closeLabel}
 	></div>
 
 	<!-- Modal Container -->
@@ -79,13 +120,13 @@
 						id="signup-modal-title"
 						class="text-lg font-semibold text-secondary-900 dark:text-white"
 					>
-						{auth.modal.title}
+						{content.title}
 					</h2>
 					<button
 						type="button"
 						class="transition-colors p-1 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300"
 						onclick={closeModal}
-						aria-label={auth.modal.closeLabel}
+						aria-label={content.closeLabel}
 					>
 						<Icon icon="lucide:x" width="20" height="20" />
 					</button>
@@ -94,7 +135,7 @@
 				<!-- Body -->
 				<div class="p-4">
 					<p class="text-sm mb-4 text-secondary-600 dark:text-secondary-400">
-						{auth.modal.description}
+						{content.description}
 					</p>
 
 					<form
@@ -111,18 +152,18 @@
 						}}
 					>
 						<div>
-							<label for="email" class="label">{auth.modal.emailLabel}</label>
+							<label for="email" class="label">{content.emailLabel}</label>
 							<input
 								id="email"
 								name="email"
 								type="email"
 								class="input"
-								placeholder={auth.modal.emailPlaceholder}
+								placeholder={content.emailPlaceholder}
 								aria-describedby="email-help"
 								bind:value={email}
 							/>
 							<p id="email-help" class="text-xs mt-1 text-secondary-500 dark:text-secondary-400">
-								{auth.modal.emailHint}
+								{content.emailHint}
 							</p>
 						</div>
 
@@ -132,10 +173,10 @@
 									<span
 										class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
 									></span>
-									{auth.modal.submitting}
+									{content.submitting}
 								</span>
 							{:else}
-								{auth.modal.submitButton}
+								{content.submitButton}
 							{/if}
 						</button>
 					</form>
@@ -145,8 +186,8 @@
 						{#if form?.error}
 							<div class="alert-error mt-4 flex items-start justify-between" role="alert">
 								<span>
-									<strong>{auth.modal.error.prefix}</strong>
-									{form.message ?? auth.modal.error.default}
+									<strong>{content.errorPrefix}</strong>
+									{form.message ?? content.errorDefault}
 									{#if form.cause}
 										: {form.cause}
 									{/if}
@@ -155,7 +196,7 @@
 									type="button"
 									class="text-error-600 hover:text-error-700 ml-2 flex-shrink-0"
 									onclick={dismissAlert}
-									aria-label={auth.modal.closeAlert}
+									aria-label={content.closeAlert}
 								>
 									<Icon icon="lucide:x" width="16" height="16" />
 								</button>
@@ -165,13 +206,13 @@
 						{#if form?.success}
 							<div class="alert-success mt-4 flex items-start justify-between" role="alert">
 								<span>
-									{auth.modal.success}
+									{content.success}
 								</span>
 								<button
 									type="button"
 									class="text-success-600 hover:text-success-700 ml-2 flex-shrink-0"
 									onclick={dismissAlert}
-									aria-label={auth.modal.closeAlert}
+									aria-label={content.closeAlert}
 								>
 									<Icon icon="lucide:x" width="16" height="16" />
 								</button>
@@ -185,7 +226,7 @@
 					class="p-4 border-t border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-900"
 				>
 					<p class="text-xs text-center text-secondary-500 dark:text-secondary-400">
-						{auth.modal.footer}
+						{content.footer}
 					</p>
 				</div>
 			</div>

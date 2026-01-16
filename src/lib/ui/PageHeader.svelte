@@ -1,14 +1,18 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Icon from './Icon.svelte';
-	import { i18n } from '$lib/content';
 
 	/**
 	 * PageHeader - En-tête de page avec composition flexible
 	 *
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via props.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/PageHeader.
+	 *
 	 * @example Simple
 	 * ```svelte
-	 * <PageHeader title="Dashboard" description="Vue d'ensemble de vos données" />
+	 * <PageHeader title="Dashboard" description="Vue d'ensemble" breadcrumbsLabel="Fil d'Ariane" />
 	 * ```
 	 *
 	 * @example Avec actions et filtres
@@ -17,12 +21,10 @@
 	 *   title="Organisations"
 	 *   icon="lucide:building-2"
 	 *   variant="hero"
+	 *   breadcrumbsLabel="Navigation"
 	 * >
 	 *   {#snippet actions()}
 	 *     <button class="btn-primary">Ajouter</button>
-	 *   {/snippet}
-	 *   {#snippet filters()}
-	 *     <input type="search" placeholder="Rechercher..." />
 	 *   {/snippet}
 	 * </PageHeader>
 	 * ```
@@ -42,6 +44,8 @@
 		icon?: string;
 		/** Breadcrumb navigation */
 		breadcrumbs?: BreadcrumbItem[];
+		/** Breadcrumbs aria-label (required if breadcrumbs provided) */
+		breadcrumbsLabel?: string;
 		/** Visual variant */
 		variant?: 'default' | 'surface' | 'hero';
 		/** Action buttons area */
@@ -57,19 +61,18 @@
 		description,
 		icon,
 		breadcrumbs,
+		breadcrumbsLabel = '',
 		variant = 'default',
 		actions,
 		filters,
 		class: className = ''
 	}: Props = $props();
-
-	const a11y = $derived(i18n.accessibility);
 </script>
 
 <header class="page-header {className}" data-variant={variant}>
 	<div class="container-app">
 		{#if breadcrumbs && breadcrumbs.length > 0}
-			<nav class="breadcrumbs" aria-label={a11y.breadcrumbs}>
+			<nav class="breadcrumbs" aria-label={breadcrumbsLabel}>
 				{#each breadcrumbs as item, idx (item.href ?? item.label)}
 					{#if idx > 0}
 						<Icon icon="lucide:chevron-right" width="16" height="16" class="breadcrumb-separator" />

@@ -2,9 +2,54 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { SvelteSet } from 'svelte/reactivity';
 	import { Icon, LoadingSpinner } from '$lib/ui';
-	import { i18n } from '$lib/content';
 
-	const ui = $derived(i18n.ui);
+	/**
+	 * HealthStatusCard - Card displaying system health status.
+	 *
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via the content prop.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/HealthStatusCard.
+	 *
+	 * @example
+	 * ```svelte
+	 * <HealthStatusCard content={healthContent} />
+	 * ```
+	 */
+	interface RelativeTimeContent {
+		justNow: string;
+		secondsAgo: string;
+		minutesAgo: string;
+		hoursAgo: string;
+		yesterday: string;
+		daysAgo: string;
+	}
+
+	interface HealthStatusContent {
+		title: string;
+		refreshLabel: string;
+		statusHealthy: string;
+		statusDegraded: string;
+		statusUnhealthy: string;
+		serviceAppwrite: string;
+		serviceInternet: string;
+		checkedLabel: string;
+		apiKeyLabel: string;
+		validLabel: string;
+		invalidLabel: string;
+		notFoundLabel: string;
+		missingLabel: string;
+		tryAgainLabel: string;
+		relativeTime: RelativeTimeContent;
+	}
+
+	interface Props {
+		/** Content for the card (required) */
+		content: HealthStatusContent;
+	}
+
+	// eslint-disable-next-line svelte/no-unused-props -- relativeTime fields reserved for longer durations
+	let { content }: Props = $props();
 
 	interface AttributeHealth {
 		name: string;
@@ -111,23 +156,23 @@
 		healthy: {
 			icon: 'lucide:check-circle',
 			color: 'text-secondary-600 dark:text-secondary-400',
-			label: ui.health.status.healthy
+			label: content.statusHealthy
 		},
 		degraded: {
 			icon: 'lucide:alert-triangle',
 			color: 'text-warning-600 dark:text-warning-400',
-			label: ui.health.status.degraded
+			label: content.statusDegraded
 		},
 		unhealthy: {
 			icon: 'lucide:x-circle',
 			color: 'text-error-600 dark:text-error-400',
-			label: ui.health.status.unhealthy
+			label: content.statusUnhealthy
 		}
 	});
 
 	const serviceLabels = $derived<Record<string, string>>({
-		appwrite: ui.health.services.appwrite,
-		internet: ui.health.services.internet
+		appwrite: content.serviceAppwrite,
+		internet: content.serviceInternet
 	});
 
 	/** Track which services have their details expanded */
@@ -194,9 +239,9 @@
 		const elapsed = currentTime - date.getTime();
 		const seconds = Math.floor(elapsed / 1000);
 
-		if (seconds < 5) return ui.relativeTime.justNow;
-		if (seconds < 60) return ui.relativeTime.secondsAgo.replace('{count}', String(seconds));
-		return ui.relativeTime.minutesAgo.replace('{count}', String(Math.floor(seconds / 60)));
+		if (seconds < 5) return content.relativeTime.justNow;
+		if (seconds < 60) return content.relativeTime.secondsAgo.replace('{count}', String(seconds));
+		return content.relativeTime.minutesAgo.replace('{count}', String(Math.floor(seconds / 60)));
 	};
 
 	/**
@@ -247,14 +292,14 @@
 				height="20"
 				class="text-primary-600 dark:text-primary-400"
 			/>
-			<h2 class="text-xl font-semibold">{ui.health.title}</h2>
+			<h2 class="text-xl font-semibold">{content.title}</h2>
 		</div>
 		<button
 			type="button"
 			onclick={fetchHealth}
 			disabled={isLoading}
 			class="p-2 text-secondary-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-secondary-100 dark:hover:bg-secondary-700 rounded-lg transition-colors disabled:opacity-50"
-			aria-label={ui.health.refreshLabel}
+			aria-label={content.refreshLabel}
 		>
 			<Icon
 				icon="lucide:refresh-cw"
@@ -278,7 +323,7 @@
 				onclick={fetchHealth}
 				class="mt-4 text-sm text-primary-600 dark:text-primary-400 hover:underline"
 			>
-				{ui.common.tryAgain}
+				{content.tryAgainLabel}
 			</button>
 		</div>
 	{:else if health}
@@ -299,7 +344,7 @@
 					{statusConfig[health.status].label}
 				</p>
 				<p class="text-xs text-secondary-500 dark:text-secondary-400">
-					{ui.health.checked}
+					{content.checkedLabel}
 					{formatTimeSinceLastCheck(lastChecked)}
 				</p>
 			</div>
@@ -395,13 +440,15 @@
 											? 'text-success-600 dark:text-success-400'
 											: 'text-error-600 dark:text-error-400'}
 									/>
-									<span class="text-secondary-700 dark:text-secondary-300">{ui.health.apiKey}</span>
+									<span class="text-secondary-700 dark:text-secondary-300"
+										>{content.apiKeyLabel}</span
+									>
 									<span
 										class="text-xs {service.database.apiKeyValid
 											? 'text-success-600 dark:text-success-400'
 											: 'text-error-600 dark:text-error-400'}"
 									>
-										({service.database.apiKeyValid ? ui.health.valid : ui.health.invalid})
+										({service.database.apiKeyValid ? content.validLabel : content.invalidLabel})
 									</span>
 								</div>
 							{/if}
@@ -421,7 +468,7 @@
 								</span>
 								{#if !service.database.exists}
 									<span class="text-xs text-error-600 dark:text-error-400">
-										({service.database.error || ui.health.notFound})
+										({service.database.error || content.notFoundLabel})
 									</span>
 								{/if}
 							</div>
@@ -445,7 +492,7 @@
 												</span>
 												{#if !collection.exists}
 													<span class="text-xs text-error-500">
-														({collection.error || ui.health.missing})
+														({collection.error || content.missingLabel})
 													</span>
 												{/if}
 											</div>

@@ -1,19 +1,38 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Icon from './Icon.svelte';
-	import { i18n } from '$lib/content';
 
+	/**
+	 * Modal - Generic modal dialog component
+	 *
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via props.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/Modal.
+	 *
+	 * @example
+	 * ```svelte
+	 * <Modal bind:open title="Confirmation" closeLabel="Close">
+	 *   <p>Are you sure?</p>
+	 * </Modal>
+	 * ```
+	 */
 	interface Props {
+		/** Whether the modal is open */
 		open?: boolean;
+		/** Modal title */
 		title: string;
+		/** Close button aria-label */
+		closeLabel: string;
+		/** Callback when modal is closed */
 		onclose?: () => void;
+		/** Modal body content */
 		children: Snippet;
+		/** Optional footer content */
 		footer?: Snippet;
 	}
 
-	let { open = $bindable(false), title, onclose, children, footer }: Props = $props();
-
-	const a11y = $derived(i18n.accessibility);
+	let { open = $bindable(false), title, closeLabel, onclose, children, footer }: Props = $props();
 
 	const closeModal = (): void => {
 		open = false;
@@ -37,7 +56,7 @@
 		onkeydown={(e) => e.key === 'Enter' && closeModal()}
 		role="button"
 		tabindex="-1"
-		aria-label={a11y.closeModal}
+		aria-label={closeLabel}
 	></div>
 
 	<!-- Modal Container -->
@@ -67,7 +86,7 @@
 						type="button"
 						class="transition-colors p-1 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300"
 						onclick={closeModal}
-						aria-label={a11y.closeModal}
+						aria-label={closeLabel}
 					>
 						<Icon icon="lucide:x" width="20" height="20" />
 					</button>

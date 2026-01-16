@@ -1,29 +1,29 @@
 <script lang="ts">
 	import Alert from './Alert.svelte';
 	import Icon from './Icon.svelte';
-	import { i18n } from '$lib/content';
-
-	const ui = $derived(i18n.ui);
 
 	/**
 	 * ComingSoonSection - Section displaying upcoming features
 	 *
-	 * Shows a list of planned features with checkmarks.
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via props.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/ComingSoonSection.
 	 *
 	 * @example
 	 * ```svelte
 	 * <ComingSoonSection
 	 *   title="Coming Soon"
-	 *   description="We're working on new features."
+	 *   description="These features are on the way"
 	 *   features={['Feature 1', 'Feature 2']}
 	 * />
 	 * ```
 	 */
 	interface Props {
-		/** Section title (defaults to i18n content) */
-		title?: string;
-		/** Section description (defaults to i18n content) */
-		description?: string;
+		/** Section title */
+		title: string;
+		/** Section description */
+		description: string;
 		/** List of upcoming features */
 		features: string[];
 		/** Additional CSS classes */
@@ -31,15 +31,12 @@
 	}
 
 	let { title, description, features, class: className = '' }: Props = $props();
-
-	const resolvedTitle = $derived(title ?? ui.comingSoon.defaultTitle);
-	const resolvedDescription = $derived(description ?? ui.comingSoon.defaultDescription);
 </script>
 
 <Alert variant="info" icon="lucide:sparkles" class="coming-soon-section {className}">
 	<div class="section-content">
-		<h2 class="section-title">{resolvedTitle}</h2>
-		<p class="section-description">{resolvedDescription}</p>
+		<h2 class="section-title">{title}</h2>
+		<p class="section-description">{description}</p>
 		<ul class="feature-list">
 			{#each features as feature (feature)}
 				<li class="feature-item">

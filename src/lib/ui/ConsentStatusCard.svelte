@@ -1,9 +1,43 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Icon, LoadingSpinner } from '$lib/ui';
-	import { i18n } from '$lib/content';
 
-	const ui = $derived(i18n.ui);
+	/**
+	 * ConsentStatusCard - Manages user consent status display and actions.
+	 *
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via the content prop.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/ConsentStatusCard.
+	 *
+	 * @example
+	 * ```svelte
+	 * <ConsentStatusCard userEmail="user@example.com" content={consentContent} />
+	 * ```
+	 */
+	interface RelativeTimeContent {
+		justNow: string;
+		secondsAgo: string;
+		minutesAgo: string;
+		hoursAgo: string;
+		yesterday: string;
+		daysAgo: string;
+	}
+
+	interface ConsentStatusContent {
+		title: string;
+		openAlexTitle: string;
+		grantedMessage: string;
+		declinedMessage: string;
+		pendingMessage: string;
+		grantButton: string;
+		revokeButton: string;
+		declineButton: string;
+		updatedLabel: string;
+		emailLabel: string;
+		tryAgainLabel: string;
+		relativeTime: RelativeTimeContent;
+	}
 
 	interface ConsentStatus {
 		consentType: string;
@@ -16,9 +50,11 @@
 		userEmail?: string | null;
 		/** Whether consent has been granted (bindable for parent components) */
 		hasConsent?: boolean;
+		/** Content for the card (required) */
+		content: ConsentStatusContent;
 	}
 
-	let { userEmail, hasConsent = $bindable(false) }: Props = $props();
+	let { userEmail, hasConsent = $bindable(false), content }: Props = $props();
 
 	let isLoading = $state(true);
 	let isSaving = $state(false);
@@ -41,12 +77,12 @@
 		const hours = Math.floor(minutes / 60);
 		const days = Math.floor(hours / 24);
 
-		if (seconds < 5) return ui.relativeTime.justNow;
-		if (seconds < 60) return ui.relativeTime.secondsAgo.replace('{count}', String(seconds));
-		if (minutes < 60) return ui.relativeTime.minutesAgo.replace('{count}', String(minutes));
-		if (hours < 24) return ui.relativeTime.hoursAgo.replace('{count}', String(hours));
-		if (days === 1) return ui.relativeTime.yesterday;
-		if (days < 7) return ui.relativeTime.daysAgo.replace('{count}', String(days));
+		if (seconds < 5) return content.relativeTime.justNow;
+		if (seconds < 60) return content.relativeTime.secondsAgo.replace('{count}', String(seconds));
+		if (minutes < 60) return content.relativeTime.minutesAgo.replace('{count}', String(minutes));
+		if (hours < 24) return content.relativeTime.hoursAgo.replace('{count}', String(hours));
+		if (days === 1) return content.relativeTime.yesterday;
+		if (days < 7) return content.relativeTime.daysAgo.replace('{count}', String(days));
 
 		return date.toLocaleDateString('fr-FR', {
 			month: 'short',
@@ -159,7 +195,7 @@
 			height="20"
 			class="text-primary-600 dark:text-primary-400"
 		/>
-		<h2 class="text-xl font-semibold">{ui.consent.title}</h2>
+		<h2 class="text-xl font-semibold">{content.title}</h2>
 	</div>
 
 	{#if isLoading}
@@ -175,7 +211,7 @@
 				onclick={fetchStatus}
 				class="mt-4 text-sm text-primary-600 dark:text-primary-400 hover:underline"
 			>
-				{ui.common.tryAgain}
+				{content.tryAgainLabel}
 			</button>
 		</div>
 	{:else}
@@ -205,28 +241,28 @@
 					/>
 					<div class="flex-1">
 						<p class="font-medium text-secondary-900 dark:text-secondary-100">
-							{ui.consent.openAlexTitle}
+							{content.openAlexTitle}
 						</p>
 						<p class="text-sm text-secondary-600 dark:text-secondary-400 mt-1">
 							{#if status?.granted === true}
-								{ui.consent.grantedMessage}
+								{content.grantedMessage}
 							{:else if status?.granted === false}
-								{ui.consent.declinedMessage}
+								{content.declinedMessage}
 							{:else}
-								{ui.consent.pendingMessage}
+								{content.pendingMessage}
 							{/if}
 						</p>
 
 						{#if status?.updatedAt}
 							<p class="text-xs text-secondary-500 dark:text-secondary-500 mt-2">
-								{ui.common.updated}
+								{content.updatedLabel}
 								{formatRelativeTime(status.updatedAt)}
 							</p>
 						{/if}
 
 						{#if userEmail && (status?.granted === null || status?.granted === false)}
 							<p class="text-xs text-secondary-500 dark:text-secondary-500 mt-2">
-								{ui.common.email} :
+								{content.emailLabel} :
 								<strong class="text-secondary-700 dark:text-secondary-300">{userEmail}</strong>
 							</p>
 						{/if}
@@ -248,7 +284,7 @@
 							{#if isSaving}
 								<LoadingSpinner size="sm" />
 							{:else}
-								{ui.consent.revokeButton}
+								{content.revokeButton}
 							{/if}
 						</button>
 					{:else}
@@ -261,7 +297,7 @@
 							{#if isSaving}
 								<LoadingSpinner size="sm" />
 							{:else}
-								{ui.consent.grantButton}
+								{content.grantButton}
 							{/if}
 						</button>
 						{#if status?.granted === null}
@@ -271,7 +307,7 @@
 								disabled={isSaving}
 								class="px-4 py-2 text-sm font-medium text-secondary-600 dark:text-secondary-400 hover:text-secondary-700 dark:hover:text-secondary-300 transition-colors disabled:opacity-50"
 							>
-								{ui.consent.declineButton}
+								{content.declineButton}
 							</button>
 						{/if}
 					{/if}

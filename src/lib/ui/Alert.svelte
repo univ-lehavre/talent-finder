@@ -1,18 +1,19 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Icon from './Icon.svelte';
-	import { i18n } from '$lib/content';
 
 	/**
 	 * Alert - Message d'alerte avec variants sémantiques
 	 *
-	 * Optimisé avec data-variant + CSS custom properties
-	 * (suppression de 4 $derived pour meilleure performance)
+	 * Pure UI component with no i18n dependency.
+	 * Optimized with data-variant + CSS custom properties.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/Alert.
 	 *
 	 * @example
 	 * ```svelte
 	 * <Alert variant="success">Opération réussie!</Alert>
-	 * <Alert variant="error" dismissible>Une erreur est survenue</Alert>
+	 * <Alert variant="error" dismissible closeLabel="Fermer">Une erreur</Alert>
 	 * ```
 	 */
 	interface Props {
@@ -20,6 +21,8 @@
 		variant?: 'info' | 'success' | 'warning' | 'error';
 		/** Show dismiss button */
 		dismissible?: boolean;
+		/** Dismiss button aria-label (required if dismissible) */
+		closeLabel?: string;
 		/** Callback when dismissed */
 		ondismiss?: () => void;
 		/** Custom icon (overrides default) */
@@ -33,6 +36,7 @@
 	let {
 		variant = 'info',
 		dismissible = false,
+		closeLabel = '',
 		ondismiss,
 		icon,
 		children,
@@ -40,8 +44,6 @@
 	}: Props = $props();
 
 	let dismissed = $state(false);
-
-	const a11y = $derived(i18n.accessibility);
 
 	// Map des icônes par défaut (simple objet, pas de $derived)
 	const defaultIcons: Record<string, string> = {
@@ -66,12 +68,7 @@
 			{@render children()}
 		</div>
 		{#if dismissible}
-			<button
-				type="button"
-				class="alert-dismiss"
-				onclick={handleDismiss}
-				aria-label={a11y.closeAlert}
-			>
+			<button type="button" class="alert-dismiss" onclick={handleDismiss} aria-label={closeLabel}>
 				<Icon icon="lucide:x" width="16" height="16" />
 			</button>
 		{/if}

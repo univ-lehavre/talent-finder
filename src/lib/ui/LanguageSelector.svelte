@@ -1,24 +1,47 @@
 <script lang="ts">
 	import Icon from './Icon.svelte';
 	import { localeState, setLocale, locales, type Locale } from '$lib/stores';
-	import { i18n } from '$lib/content';
 
 	/**
-	 * Language selector dropdown for switching between supported locales.
-	 * Displays current language flag and name, with dropdown for selection.
+	 * LanguageSelector - Sélecteur de langue
+	 *
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via props.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/LanguageSelector.
+	 *
+	 * @example
+	 * ```svelte
+	 * <LanguageSelector
+	 *   selectorLabel="Select language"
+	 *   closeMenuLabel="Close"
+	 *   changeLanguageLabel="Change language"
+	 * />
+	 * ```
 	 */
 	interface Props {
 		/** Compact mode (only shows flag) */
 		compact?: boolean;
+		/** Selector button aria-label */
+		selectorLabel: string;
+		/** Close menu aria-label */
+		closeMenuLabel: string;
+		/** Change language listbox aria-label */
+		changeLanguageLabel: string;
 		/** Additional CSS classes */
 		class?: string;
 	}
 
-	let { compact = false, class: className = '' }: Props = $props();
+	let {
+		compact = false,
+		selectorLabel,
+		closeMenuLabel,
+		changeLanguageLabel,
+		class: className = ''
+	}: Props = $props();
 
 	let open = $state(false);
 
-	const a11y = $derived(i18n.accessibility);
 	const currentLocale = $derived(locales[localeState.current]);
 	const localeEntries = $derived(
 		Object.entries(locales) as [Locale, { name: string; flag: string }][]
@@ -51,7 +74,7 @@
 		type="button"
 		class="flex items-center gap-2 px-2 py-1.5 rounded-lg text-secondary-600 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors"
 		onclick={toggle}
-		aria-label={a11y.languageSelector}
+		aria-label={selectorLabel}
 		aria-expanded={open}
 		aria-haspopup="listbox"
 	>
@@ -68,13 +91,13 @@
 	</button>
 
 	{#if open}
-		<button type="button" class="fixed inset-0 z-10" onclick={close} aria-label={a11y.closeMenu}
+		<button type="button" class="fixed inset-0 z-10" onclick={close} aria-label={closeMenuLabel}
 		></button>
 
 		<div
 			class="absolute right-0 mt-2 py-1 w-40 bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-600 rounded-lg shadow-lg z-20"
 			role="listbox"
-			aria-label={a11y.changeLanguage}
+			aria-label={changeLanguageLabel}
 		>
 			{#each localeEntries as [locale, info] (locale)}
 				<button

@@ -3,21 +3,51 @@
 	import { enhance } from '$app/forms';
 	import Icon from './Icon.svelte';
 	import Alert from './Alert.svelte';
-	import { i18n } from '$lib/content';
-
-	const auth = $derived(i18n.auth);
 
 	/**
 	 * LoginForm - Formulaire de connexion standalone
 	 *
-	 * Version page complète du formulaire d'authentification par magic link.
-	 * Utilisable sur la page /login ou intégrable dans d'autres layouts.
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via the content prop.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/LoginForm.
 	 *
 	 * @example
 	 * ```svelte
-	 * <LoginForm {form} />
+	 * <LoginForm {form} content={loginFormContent} />
 	 * ```
 	 */
+	interface LoginFormContent {
+		/** Form title */
+		title: string;
+		/** Form description */
+		description: string;
+		/** Email field label */
+		emailLabel: string;
+		/** Email field placeholder */
+		emailPlaceholder: string;
+		/** Email field hint text */
+		emailHint: string;
+		/** Submit button text */
+		submitButton: string;
+		/** Submit button text when submitting */
+		submitting: string;
+		/** Error message prefix */
+		errorPrefix: string;
+		/** Default error message */
+		errorDefault: string;
+		/** Success title */
+		successTitle: string;
+		/** Success message */
+		successMessage: string;
+		/** Footer text */
+		footer: string;
+		/** Terms link text */
+		termsLink: string;
+		/** Close alert aria-label */
+		closeAlertLabel: string;
+	}
+
 	interface Props {
 		/** Form state from SvelteKit action */
 		form: {
@@ -26,11 +56,13 @@
 			cause?: string;
 			success?: boolean;
 		} | null;
+		/** Content for the form (required) */
+		content: LoginFormContent;
 		/** Additional CSS classes */
 		class?: string;
 	}
 
-	let { form, class: className = '' }: Props = $props();
+	let { form, content, class: className = '' }: Props = $props();
 
 	let email = $state('');
 	let signuping = $state(false);
@@ -43,9 +75,9 @@
 		<div class="login-form-icon">
 			<Icon icon="lucide:mail" width="32" height="32" />
 		</div>
-		<h1 class="login-form-title">{auth.form.title}</h1>
+		<h1 class="login-form-title">{content.title}</h1>
 		<p class="login-form-description">
-			{auth.form.description}
+			{content.description}
 		</p>
 	</div>
 
@@ -62,19 +94,19 @@
 		}}
 	>
 		<div class="login-form-field">
-			<label for="email" class="label">{auth.form.emailLabel}</label>
+			<label for="email" class="label">{content.emailLabel}</label>
 			<input
 				id="email"
 				name="email"
 				type="email"
 				class="input"
-				placeholder={auth.form.emailPlaceholder}
+				placeholder={content.emailPlaceholder}
 				aria-describedby="email-help"
 				bind:value={email}
 				disabled={signuping}
 			/>
 			<p id="email-help" class="login-form-hint">
-				{auth.form.emailHint}
+				{content.emailHint}
 			</p>
 		</div>
 
@@ -83,18 +115,18 @@
 				<span class="inline-flex items-center gap-2">
 					<span class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
 					></span>
-					{auth.form.submitting}
+					{content.submitting}
 				</span>
 			{:else}
 				<Icon icon="lucide:send" width="16" height="16" />
-				{auth.form.submitButton}
+				{content.submitButton}
 			{/if}
 		</button>
 
 		{#if form?.error}
-			<Alert variant="error" dismissible>
-				<strong>{auth.form.error.prefix}</strong>
-				{form.message ?? auth.form.error.default}
+			<Alert variant="error" dismissible closeLabel={content.closeAlertLabel}>
+				<strong>{content.errorPrefix}</strong>
+				{form.message ?? content.errorDefault}
 				{#if form.cause}
 					— {form.cause}
 				{/if}
@@ -102,17 +134,17 @@
 		{/if}
 
 		{#if form?.success}
-			<Alert variant="success" dismissible>
-				<strong>{auth.form.success.title}</strong>
-				{auth.form.success.message}
+			<Alert variant="success" dismissible closeLabel={content.closeAlertLabel}>
+				<strong>{content.successTitle}</strong>
+				{content.successMessage}
 			</Alert>
 		{/if}
 	</form>
 
 	<div class="login-form-footer">
 		<p>
-			{auth.form.footer}
-			<a href="/terms" class="login-form-link">{auth.form.termsLink}</a>.
+			{content.footer}
+			<a href="/terms" class="login-form-link">{content.termsLink}</a>.
 		</p>
 	</div>
 </div>

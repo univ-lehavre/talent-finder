@@ -4,14 +4,26 @@
 	import Icon from './Icon.svelte';
 	import NavLink from './NavLink.svelte';
 	import IconLink from './IconLink.svelte';
-	import ThemeToggle from './ThemeToggle.svelte';
 	import Drawer from './Drawer.svelte';
-	import LanguageSelector from './LanguageSelector.svelte';
-	import { i18n } from '$lib/content';
 
 	/**
-	 * Navigation bar component with desktop and mobile views.
-	 * Includes logo, navigation links, icon links, and user actions.
+	 * Navbar - Barre de navigation responsive
+	 *
+	 * Pure UI component with no i18n dependency.
+	 * All text content must be provided via props.
+	 *
+	 * For a pre-configured version with i18n, use $lib/components/Navbar.
+	 *
+	 * @example
+	 * ```svelte
+	 * <Navbar
+	 *   brandName="MyApp"
+	 *   navLinks={[{ href: '/', label: 'Home', icon: 'lucide:home' }]}
+	 *   toggleMenuLabel="Toggle menu"
+	 *   mobileMenuTitle="Menu"
+	 *   mobileMenuCloseLabel="Close menu"
+	 * />
+	 * ```
 	 */
 	interface NavLinkItem {
 		href: string;
@@ -43,12 +55,16 @@
 		iconLinks?: IconLinkItem[];
 		/** Additional links for mobile menu only */
 		mobileExtraLinks?: NavLinkItem[];
-		/** Show theme toggle */
-		showThemeToggle?: boolean;
-		/** Show language selector */
-		showLanguageSelector?: boolean;
+		/** Toggle menu button aria-label */
+		toggleMenuLabel: string;
+		/** Mobile drawer title */
+		mobileMenuTitle: string;
+		/** Mobile drawer close button aria-label */
+		mobileMenuCloseLabel: string;
 		/** User actions slot (login/logout buttons) */
 		actions?: Snippet;
+		/** Header slot for mobile drawer (theme toggle, language selector, etc.) */
+		mobileHeader?: Snippet;
 		/** Additional CSS classes */
 		class?: string;
 	}
@@ -61,9 +77,11 @@
 		navLinks = [],
 		iconLinks = [],
 		mobileExtraLinks = [],
-		showThemeToggle = true,
-		showLanguageSelector = true,
+		toggleMenuLabel,
+		mobileMenuTitle,
+		mobileMenuCloseLabel,
 		actions,
+		mobileHeader,
 		class: className = ''
 	}: Props = $props();
 
@@ -88,8 +106,6 @@
 	};
 
 	const allMobileLinks = $derived([...navLinks, ...mobileExtraLinks]);
-
-	const a11y = $derived(i18n.accessibility);
 </script>
 
 <nav
@@ -147,14 +163,6 @@
 				/>
 			{/each}
 
-			{#if showLanguageSelector}
-				<LanguageSelector />
-			{/if}
-
-			{#if showThemeToggle}
-				<ThemeToggle />
-			{/if}
-
 			{#if actions}
 				{@render actions()}
 			{/if}
@@ -166,7 +174,7 @@
 				type="button"
 				class="p-2 text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400"
 				onclick={toggleMobileMenu}
-				aria-label={a11y.toggleMenu}
+				aria-label={toggleMenuLabel}
 			>
 				<Icon icon={mobileMenuOpen ? 'lucide:x' : 'lucide:menu'} width="24" height="24" />
 			</button>
@@ -175,13 +183,15 @@
 </nav>
 
 <!-- Mobile Drawer -->
-<Drawer bind:open={mobileMenuOpen} onclose={closeMobileMenu}>
+<Drawer
+	bind:open={mobileMenuOpen}
+	onclose={closeMobileMenu}
+	title={mobileMenuTitle}
+	closeLabel={mobileMenuCloseLabel}
+>
 	{#snippet header()}
-		{#if showLanguageSelector}
-			<LanguageSelector compact />
-		{/if}
-		{#if showThemeToggle}
-			<ThemeToggle />
+		{#if mobileHeader}
+			{@render mobileHeader()}
 		{/if}
 	{/snippet}
 
