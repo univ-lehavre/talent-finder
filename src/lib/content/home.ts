@@ -3,6 +3,8 @@
  * All user-facing text should be defined here for easy translation.
  */
 
+import { brand } from './brand';
+
 export interface Challenge {
 	title: string;
 	problem: string;
@@ -55,8 +57,7 @@ export const en: HomeContent = {
 	},
 	howItWorks: {
 		title: 'How it Works',
-		subtitle:
-			'Getting started with Talent Finder is simple. Follow these three steps to find your next collaborator.',
+		subtitle: `Getting started with ${brand.appName} is simple. Follow these three steps to find your next collaborator.`,
 		steps: [
 			{
 				number: '1',
@@ -76,7 +77,7 @@ export const en: HomeContent = {
 		]
 	},
 	challenges: {
-		title: 'Why We Built Talent Finder',
+		title: `Why We Built ${brand.appName}`,
 		subtitle:
 			"Finding the right collaborators in academia and research remains a challenge. Here's what we're solving.",
 		items: [
@@ -84,7 +85,7 @@ export const en: HomeContent = {
 				title: 'Scattered Information',
 				problem:
 					'Researcher profiles are spread across LinkedIn, ResearchGate, university pages, and personal websites.',
-				solution: 'Talent Finder centralizes expertise in one searchable repository.'
+				solution: `${brand.appName} centralizes expertise in one searchable repository.`
 			},
 			{
 				title: 'Limited Discovery',
@@ -96,7 +97,7 @@ export const en: HomeContent = {
 			{
 				title: 'Cross-Border Barriers',
 				problem: 'International collaboration within university alliances lacks dedicated tools.',
-				solution: 'Built for EUNICoast, Talent Finder connects talent across partner institutions.'
+				solution: `Built for ${brand.eunicoast}, ${brand.appName} connects talent across partner institutions.`
 			}
 		]
 	},

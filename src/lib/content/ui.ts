@@ -3,6 +3,7 @@
  * Contains all shared UI component text content.
  */
 
+import { brand, commonLabels } from './brand';
 import type { UIContent } from './types';
 
 /**
@@ -10,7 +11,7 @@ import type { UIContent } from './types';
  */
 export const fr: UIContent = {
 	common: {
-		tryAgain: 'Réessayer',
+		tryAgain: commonLabels.retry,
 		checkStatus: 'Vérifier le statut',
 		email: 'Email',
 		notLoggedIn: 'Non connecté',
@@ -38,11 +39,10 @@ export const fr: UIContent = {
 	},
 	consent: {
 		title: 'Consentement des données',
-		openAlexTitle: 'Accès prioritaire à OpenAlex',
-		grantedMessage:
-			'Votre email est partagé avec OpenAlex pour des requêtes plus rapides (10x plus rapide).',
-		declinedMessage: 'Vous avez refusé de partager votre email avec OpenAlex.',
-		pendingMessage: 'Partagez votre email avec OpenAlex pour des recherches plus rapides.',
+		openAlexTitle: `Accès prioritaire à ${brand.openAlex}`,
+		grantedMessage: `Votre email est partagé avec ${brand.openAlex} pour des requêtes plus rapides (10x plus rapide).`,
+		declinedMessage: `Vous avez refusé de partager votre email avec ${brand.openAlex}.`,
+		pendingMessage: `Partagez votre email avec ${brand.openAlex} pour des recherches plus rapides.`,
 		grantButton: 'Accorder le consentement',
 		revokeButton: 'Révoquer le consentement',
 		declineButton: 'Refuser'
@@ -72,7 +72,7 @@ export const fr: UIContent = {
 			unhealthy: 'Hors service'
 		},
 		services: {
-			appwrite: 'Appwrite',
+			appwrite: brand.appwrite,
 			internet: 'Internet'
 		},
 		checked: 'Vérifié',

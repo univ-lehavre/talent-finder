@@ -3,6 +3,7 @@
  * Contains all API docs page text content.
  */
 
+import { pageTitle } from './brand';
 import type { ApiDocsContent } from './types';
 
 /**
@@ -10,7 +11,7 @@ import type { ApiDocsContent } from './types';
  */
 export const fr: ApiDocsContent = {
 	meta: {
-		title: 'Documentation API - ECRIN | Talent finder'
+		title: pageTitle('Documentation API')
 	}
 };
 

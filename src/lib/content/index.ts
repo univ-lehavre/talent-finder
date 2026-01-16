@@ -4,13 +4,17 @@
  *
  * @example
  * ```typescript
- * import { navigation, auth, errors } from '$lib/content';
+ * import { navigation, auth, errors, brand } from '$lib/content';
  *
  * // Use content in components
  * const title = navigation.links.home;
  * const errorMessage = errors.notFound.message;
+ * const appName = brand.appName;
  * ```
  */
+
+// Brand constants and common labels
+export { brand, commonLabels, pageTitle } from './brand';
 
 // Home page content
 export * from './home';

@@ -3,6 +3,7 @@
  * Contains all navigation-related text content.
  */
 
+import { brand, commonLabels } from './brand';
 import type { NavigationContent } from './types';
 
 /**
@@ -10,18 +11,18 @@ import type { NavigationContent } from './types';
  */
 export const fr: NavigationContent = {
 	links: {
-		home: 'Accueil',
+		home: commonLabels.home,
 		dashboard: 'Tableau de bord'
 	},
 	external: {
-		github: 'GitHub',
+		github: brand.github,
 		githubDescription: 'Voir le code source'
 	},
 	actions: {
 		signIn: 'Se connecter',
 		signOut: 'Déconnexion'
 	},
-	brand: 'ECRIN | Talent finder'
+	brand: brand.appNameFull
 };
 
 /**

@@ -3,6 +3,7 @@
  * Contains all partners-related text content for the homepage.
  */
 
+import { brand } from './brand';
 import type { PartnersContent } from './types';
 
 /**
@@ -11,23 +12,21 @@ import type { PartnersContent } from './types';
 export const fr: PartnersContent = {
 	header: {
 		title: 'Nos partenaires',
-		subtitle:
-			"Talent Finder est un sous-projet d'ECRIN, favorisant la coopération entre les chercheurs de l'Université Le Havre Normandie, du Campus Polytechnique des Territoires Maritimes et Portuaires, et d'EUNICoast."
+		subtitle: `${brand.appName} est un sous-projet d'${brand.ecrin}, favorisant la coopération entre les chercheurs de l'${brand.ulhn}, du ${brand.cptmp}, et d'${brand.eunicoast}.`
 	},
 	footer: {
-		cptmpAlt: 'Campus Polytechnique des Territoires Maritimes et Portuaires',
-		ulhnAlt: 'Université Le Havre Normandie',
-		eunicoastAlt: 'EUNICoast'
+		cptmpAlt: brand.cptmp,
+		ulhnAlt: brand.ulhn,
+		eunicoastAlt: brand.eunicoast
 	},
 	ulhn: {
-		title: 'Université Le Havre Normandie',
+		title: brand.ulhn,
 		description:
 			"L'Université Le Havre Normandie est un établissement public français d'enseignement supérieur et de recherche comptant plus de 7 000 étudiants de 85 nationalités. Elle propose plus de 120 diplômes en Arts, Droit, Sciences Humaines et Sciences & Technologies, soutenus par 12 laboratoires de recherche."
 	},
 	cptmp: {
-		title: 'CPTMP',
-		description:
-			"Le Campus Polytechnique des Territoires Maritimes et Portuaires est un laboratoire à ciel ouvert unique en Europe. Ce consortium interdisciplinaire réunit 12 partenaires dont le CNRS, l'INSA Rouen Normandie, l'ENSM, l'ENSA Normandie et Sciences Po.",
+		title: brand.cptmpShort,
+		description: `Le ${brand.cptmp} est un laboratoire à ciel ouvert unique en Europe. Ce consortium interdisciplinaire réunit 12 partenaires dont le CNRS, l'INSA Rouen Normandie, l'ENSM, l'ENSA Normandie et Sciences Po.`,
 		features: {
 			smartCity: {
 				title: 'Ville intelligente',
@@ -47,9 +46,8 @@ export const fr: PartnersContent = {
 		}
 	},
 	eunicoast: {
-		title: 'EUNICoast',
-		description:
-			"EUNICoast (European University of Islands, Ports and Coastal Territories) est une alliance de 12 établissements d'enseignement supérieur et 88 partenaires associés dans 11 pays européens, coordonnée par l'Université Le Havre Normandie.",
+		title: brand.eunicoast,
+		description: `${brand.eunicoast} (European University of Islands, Ports and Coastal Territories) est une alliance de 12 établissements d'enseignement supérieur et 88 partenaires associés dans 11 pays européens, coordonnée par l'${brand.ulhn}.`,
 		tags: [
 			'Identités et cultures locales',
 			'Économie bleue et tourisme durable',

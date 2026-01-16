@@ -3,6 +3,7 @@
  * Contains all repository statistics page text content.
  */
 
+import { commonLabels, pageTitle } from './brand';
 import type { RepositoryContent } from './types';
 
 /**
@@ -10,7 +11,7 @@ import type { RepositoryContent } from './types';
  */
 export const fr: RepositoryContent = {
 	meta: {
-		title: 'Statistiques du dépôt - ECRIN | Talent finder'
+		title: pageTitle('Statistiques du dépôt')
 	},
 	header: {
 		title: 'Statistiques du dépôt'
@@ -41,7 +42,7 @@ export const fr: RepositoryContent = {
 		commits: 'Commits',
 		additions: 'Additions',
 		deletions: 'Deletions',
-		net: 'Net',
+		net: commonLabels.net,
 		firstCommit: 'Premier commit',
 		lastCommit: 'Dernier commit',
 		files: 'Fichiers',

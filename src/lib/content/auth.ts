@@ -3,6 +3,7 @@
  * Contains all authentication-related text content.
  */
 
+import { brand, commonLabels, pageTitle } from './brand';
 import type { AuthContent } from './types';
 
 /**
@@ -10,8 +11,8 @@ import type { AuthContent } from './types';
  */
 export const fr: AuthContent = {
 	login: {
-		title: 'Connexion - ECRIN | Talent finder',
-		description: 'Connectez-vous à votre compte ECRIN Talent Finder',
+		title: pageTitle('Connexion'),
+		description: `Connectez-vous à votre compte ${brand.ecrin} ${brand.appName}`,
 		loading: {
 			title: 'Connexion en cours...',
 			message: 'Veuillez patienter pendant la vérification de vos identifiants.'
@@ -21,8 +22,8 @@ export const fr: AuthContent = {
 			message: 'Le lien de connexion est invalide ou a expiré.'
 		},
 		buttons: {
-			retry: 'Réessayer',
-			home: 'Accueil'
+			retry: commonLabels.retry,
+			home: commonLabels.home
 		}
 	},
 	form: {
@@ -33,7 +34,7 @@ export const fr: AuthContent = {
 		emailPlaceholder: 'prenom.nom@universite.fr',
 		emailHint: 'Seules les adresses email universitaires sont acceptées',
 		submitButton: 'Envoyer le lien de connexion',
-		submitting: 'Envoi en cours...',
+		submitting: commonLabels.submitting,
 		error: {
 			prefix: 'Erreur :',
 			default: 'Une erreur est survenue'
@@ -54,7 +55,7 @@ export const fr: AuthContent = {
 		emailPlaceholder: 'prenom.nom@univ-lehavre.fr',
 		emailHint: 'Entrez votre adresse email universitaire',
 		submitButton: "S'authentifier",
-		submitting: 'Envoi en cours...',
+		submitting: commonLabels.submitting,
 		error: {
 			prefix: 'Erreur :',
 			default: 'Une erreur est survenue'

@@ -3,6 +3,7 @@
  * Contains all dashboard-related text content.
  */
 
+import { brand, pageTitle } from './brand';
 import type { DashboardContent } from './types';
 
 /**
@@ -10,8 +11,8 @@ import type { DashboardContent } from './types';
  */
 export const fr: DashboardContent = {
 	meta: {
-		title: 'Tableau de bord - ECRIN | Talent finder',
-		description: 'Votre tableau de bord personnel sur ECRIN Talent finder'
+		title: pageTitle('Tableau de bord'),
+		description: `Votre tableau de bord personnel sur ${brand.ecrin} ${brand.appName}`
 	},
 	header: {
 		title: 'Tableau de bord',
@@ -19,15 +20,15 @@ export const fr: DashboardContent = {
 	},
 	externalLinks: {
 		ecrin: {
-			title: 'ECRIN',
+			title: brand.ecrin,
 			description: 'Site principal du projet'
 		},
 		github: {
-			title: 'GitHub',
+			title: brand.github,
 			description: 'Dépôt du code source'
 		},
 		zenodo: {
-			title: 'Zenodo',
+			title: brand.zenodo,
 			description: 'Archive permanente'
 		}
 	},

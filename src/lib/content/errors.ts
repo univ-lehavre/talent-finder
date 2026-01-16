@@ -3,13 +3,14 @@
  * Contains all error-related text content.
  */
 
+import { brand } from './brand';
 import type { ErrorContent } from './types';
 
 /**
  * French error content.
  */
 export const fr: ErrorContent = {
-	titleSuffix: '- ECRIN | Talent finder',
+	titleSuffix: brand.titleSuffix,
 	notFound: {
 		title: 'Page non trouvée',
 		message: "La page que vous recherchez n'existe pas ou a été déplacée."

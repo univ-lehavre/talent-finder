@@ -3,6 +3,7 @@
  * Contains all theme page text content.
  */
 
+import { brand, commonLabels, pageTitle } from './brand';
 import type { ThemePageContent } from './types';
 
 /**
@@ -10,15 +11,15 @@ import type { ThemePageContent } from './types';
  */
 export const fr: ThemePageContent = {
 	meta: {
-		title: 'Thème - ECRIN | Talent finder',
-		description: 'Personnalisation du thème et système de design ECRIN Talent finder'
+		title: pageTitle('Thème'),
+		description: `Personnalisation du thème et système de design ${brand.ecrin} ${brand.appName}`
 	},
 	selectorBar: {
 		title: 'Personnalisation du thème',
 		fontLabels: {
-			heading: 'Titre',
-			body: 'Corps',
-			mono: 'Mono'
+			heading: commonLabels.heading,
+			body: commonLabels.body,
+			mono: commonLabels.mono
 		},
 		resetButton: 'Réinitialiser',
 		resetFeedback: 'Aléatoire !',
@@ -35,9 +36,9 @@ export const fr: ThemePageContent = {
 		paletteTitle: 'Palette',
 		fontTitle: 'Polices',
 		fontLabels: {
-			heading: 'Titre',
-			body: 'Corps',
-			mono: 'Mono'
+			heading: commonLabels.heading,
+			body: commonLabels.body,
+			mono: commonLabels.mono
 		},
 		fontDemo: {
 			headingText: 'Le vif zéphyr jubile',
@@ -46,24 +47,24 @@ export const fr: ThemePageContent = {
 			monoText: 'const exemple = "code";'
 		},
 		colorLabels: {
-			primary: 'Primaire',
-			accent: 'Accent',
+			primary: commonLabels.primary,
+			accent: commonLabels.accent,
 			neutral: 'Neutre',
-			success: 'Succès',
-			warning: 'Attention',
-			error: 'Erreur'
+			success: commonLabels.success,
+			warning: commonLabels.warning,
+			error: commonLabels.error
 		}
 	},
 	colorScales: {
 		title: 'Échelles de couleurs',
 		scaleHeader: 'Échelle',
 		colorNames: {
-			primary: 'Primaire',
-			accent: 'Accent',
-			secondary: 'Secondaire',
-			success: 'Succès',
-			warning: 'Attention',
-			error: 'Erreur'
+			primary: commonLabels.primary,
+			accent: commonLabels.accent,
+			secondary: commonLabels.secondary,
+			success: commonLabels.success,
+			warning: commonLabels.warning,
+			error: commonLabels.error
 		},
 		usageExamples: {
 			title: "Exemples d'utilisation",
@@ -78,9 +79,9 @@ export const fr: ThemePageContent = {
 		variantsTitle: 'Variantes',
 		withIconsTitle: 'Avec icônes',
 		variants: {
-			primary: 'Primaire',
-			secondary: 'Secondaire',
-			accent: 'Accent',
+			primary: commonLabels.primary,
+			secondary: commonLabels.secondary,
+			accent: commonLabels.accent,
 			outline: 'Contour',
 			ghost: 'Fantôme'
 		},
@@ -93,10 +94,10 @@ export const fr: ThemePageContent = {
 	alerts: {
 		title: 'Alertes',
 		labels: {
-			info: 'Info :',
-			success: 'Succès :',
-			warning: 'Attention :',
-			error: 'Erreur :'
+			info: `${commonLabels.info} :`,
+			success: `${commonLabels.success} :`,
+			warning: `${commonLabels.warning} :`,
+			error: `${commonLabels.error} :`
 		},
 		info: 'Ceci est un message informatif utilisant les couleurs du thème.',
 		success: 'Opération terminée avec succès !',
@@ -129,19 +130,19 @@ export const fr: ThemePageContent = {
 		title: 'Cartes de statistiques',
 		labels: {
 			default: 'Par défaut',
-			success: 'Succès',
+			success: commonLabels.success,
 			danger: 'Danger',
-			net: 'Net'
+			net: commonLabels.net
 		}
 	},
 	badges: {
 		title: 'Badges',
 		labels: {
-			primary: 'Primaire',
-			accent: 'Accent',
-			success: 'Succès',
-			warning: 'Attention',
-			error: 'Erreur'
+			primary: commonLabels.primary,
+			accent: commonLabels.accent,
+			success: commonLabels.success,
+			warning: commonLabels.warning,
+			error: commonLabels.error
 		}
 	},
 	cardSection: {
@@ -167,9 +168,9 @@ export const fr: ThemePageContent = {
 			large: 'Grand'
 		},
 		colors: {
-			primary: 'Primaire',
-			accent: 'Accent',
-			secondary: 'Secondaire'
+			primary: commonLabels.primary,
+			accent: commonLabels.accent,
+			secondary: commonLabels.secondary
 		}
 	},
 	themeToggle: {
