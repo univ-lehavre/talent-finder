@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import 'swagger-ui-dist/swagger-ui.css';
 
 	interface Props {
 		data: {
@@ -13,7 +14,6 @@
 
 	onMount(async () => {
 		const { SwaggerUIBundle } = await import('swagger-ui-dist');
-		await import('swagger-ui-dist/swagger-ui.css');
 
 		SwaggerUIBundle({
 			spec: data.spec,
