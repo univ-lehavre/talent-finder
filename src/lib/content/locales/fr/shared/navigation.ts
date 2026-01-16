@@ -2,8 +2,8 @@
  * Navigation content - French.
  */
 
-import { brand, commonLabels } from '../../../core/brand';
-import type { NavigationContent } from '../../../types';
+import { brand, commonLabels } from '$lib/content/core/brand';
+import type { NavigationContent } from '$lib/content/types';
 
 /**
  * French navigation content.

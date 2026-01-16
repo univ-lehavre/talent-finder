@@ -3,8 +3,8 @@
  * Labels and messages used across multiple components.
  */
 
-import { commonLabels } from '../../../core/brand';
-import type { CommonContent } from '../../../types';
+import { commonLabels } from '$lib/content/core/brand';
+import type { CommonContent } from '$lib/content/types';
 
 /**
  * French common content.
