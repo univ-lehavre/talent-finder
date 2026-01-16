@@ -72,6 +72,15 @@ export { default as DropdownItem } from './DropdownItem.svelte';
 export { default as NavLink } from './NavLink.svelte';
 export { default as IconLink } from './IconLink.svelte';
 
+// Dashboard components
+export { default as ProfileCard } from './ProfileCard.svelte';
+export { default as ThemePreferencesCard } from './ThemePreferencesCard.svelte';
+export { default as ThemeToggleRow } from './ThemeToggleRow.svelte';
+export { default as DashboardLinkCard } from './DashboardLinkCard.svelte';
+export { default as ExternalLinkCard } from './ExternalLinkCard.svelte';
+export { default as ExternalLinksCard } from './ExternalLinksCard.svelte';
+export { default as ComingSoonSection } from './ComingSoonSection.svelte';
+
 // Domain-specific components
 export { default as ResearchOrganizationSearch } from './ResearchOrganizationSearch.svelte';
 export { default as ArticlesCountCard } from './ArticlesCountCard.svelte';
