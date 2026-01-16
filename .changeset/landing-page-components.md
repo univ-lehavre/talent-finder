@@ -1,5 +1,5 @@
 ---
-"talent-finder": minor
+'talent-finder': minor
 ---
 
 Add 9 new landing page UI components:

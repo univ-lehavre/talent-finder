@@ -35,10 +35,15 @@ export { default as Alert } from './Alert.svelte';
 export { default as Badge } from './Badge.svelte';
 export { default as LoadingSpinner } from './LoadingSpinner.svelte';
 export { default as AsyncContent } from './AsyncContent.svelte';
+export { default as ErrorState } from './ErrorState.svelte';
+
+// Action components
+export { default as ButtonGroup } from './ButtonGroup.svelte';
 
 // Interactive components
 export { default as Modal } from './Modal.svelte';
 export { default as Signup } from './Signup.svelte';
+export { default as LoginForm } from './LoginForm.svelte';
 export { default as ThemeSection } from './ThemeSection.svelte';
 export { default as ThemeToggle } from './ThemeToggle.svelte';
 

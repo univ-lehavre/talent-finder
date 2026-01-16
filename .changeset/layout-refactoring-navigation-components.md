@@ -5,6 +5,7 @@
 Add reusable navigation and layout components
 
 New UI components:
+
 - `Navbar`: Complete navigation bar with desktop/mobile views, logo, nav links, icon links, and user actions
 - `Footer`: Footer with partner logos and version info
 - `Drawer`: Slide-in side panel (offcanvas) with backdrop and keyboard support
