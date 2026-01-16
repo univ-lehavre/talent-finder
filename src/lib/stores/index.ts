@@ -29,3 +29,14 @@ export {
 	type FontName,
 	type FontPairing
 } from './fonts.svelte.ts';
+
+export {
+	createLocaleStore,
+	defaultLocale,
+	getLocale,
+	initLocale,
+	locales,
+	localeState,
+	setLocale,
+	type Locale
+} from './locale.svelte.ts';
