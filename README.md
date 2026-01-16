@@ -64,6 +64,7 @@ The European University of Islands, Ports and Coastal Territories, or **[EUNICoa
 - [Technical Documentation](./docs/technical-setup.md): installation and configuration
 - [Appwrite Setup](./docs/appwrite-setup.md): database configuration
 - [Design System](./docs/design-system.md): style guide and components
+- [CSS Architecture](./docs/css-architecture.md): CSS guidelines and best practices
 
 ## License
 
