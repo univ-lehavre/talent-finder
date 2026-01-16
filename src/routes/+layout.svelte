@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import favicon from '$lib/assets/favicon.svg';
 	import logo from '$lib/assets/logo.svg?raw';
-	import { Navbar, Footer, Signup, ConnectivityBanner } from '$lib/ui';
+	import { Navbar, Footer, Signup, ConnectivityBanner } from '$lib/components';
 	import { createThemeStore, initTheme, initLocale } from '$lib/stores';
 	import { i18n } from '$lib/content';
 

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { Dropdown, Modal, Signup, ThemeToggle } from '$lib/components';
 	import {
 		Alert,
 		Badge,
@@ -7,17 +8,13 @@
 		CodeExample,
 		ColorScaleRow,
 		ColorSwatch,
-		Dropdown,
 		DropdownCategory,
 		DropdownItem,
 		Icon,
 		LoadingSpinner,
-		Modal,
 		PageHero,
 		Section,
-		Signup,
-		StatCard,
-		ThemeToggle
+		StatCard
 	} from '$lib/ui';
 	import {
 		paletteCategories,
