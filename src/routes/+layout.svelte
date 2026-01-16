@@ -6,7 +6,8 @@
 	import { Icon, Signup, ThemeToggle, ConnectivityBanner } from '$lib/ui';
 	import { page } from '$app/stores';
 	import { createThemeStore, initTheme } from '$lib/stores';
-	import { version } from '../../package.json';
+
+	const version = __APP_VERSION__;
 
 	const themeStore = createThemeStore();
 
