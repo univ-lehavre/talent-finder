@@ -7,6 +7,7 @@
 		ButtonGroup,
 		LinkButton
 	} from '$lib/ui';
+	import { auth } from '$lib/content';
 
 	interface Props {
 		data: {
@@ -27,16 +28,16 @@
 </script>
 
 <svelte:head>
-	<title>Connexion - ECRIN | Talent finder</title>
-	<meta name="description" content="Connectez-vous à votre compte ECRIN Talent Finder" />
+	<title>{auth.login.title}</title>
+	<meta name="description" content={auth.login.description} />
 </svelte:head>
 
 <CenteredLayout>
 	{#if data.isMagicLinkCallback}
 		{#if data.error}
 			<ErrorState
-				title={data.message ?? 'Connexion échouée'}
-				message={data.cause ?? 'Le lien de connexion est invalide ou a expiré.'}
+				title={data.message ?? auth.login.error.title}
+				message={data.cause ?? auth.login.error.message}
 				icon="lucide:link-2-off"
 				variant="error"
 				size="md"
@@ -44,17 +45,16 @@
 				{#snippet actions()}
 					<ButtonGroup justify="center">
 						<LinkButton href="/login" variant="primary" icon="lucide:refresh-cw">
-							Réessayer
+							{auth.login.buttons.retry}
 						</LinkButton>
-						<LinkButton href="/" variant="secondary" icon="lucide:home">Accueil</LinkButton>
+						<LinkButton href="/" variant="secondary" icon="lucide:home"
+							>{auth.login.buttons.home}</LinkButton
+						>
 					</ButtonGroup>
 				{/snippet}
 			</ErrorState>
 		{:else}
-			<LoadingState
-				title="Connexion en cours..."
-				message="Veuillez patienter pendant la vérification de vos identifiants."
-			/>
+			<LoadingState title={auth.login.loading.title} message={auth.login.loading.message} />
 		{/if}
 	{:else}
 		<LoginForm {form} />

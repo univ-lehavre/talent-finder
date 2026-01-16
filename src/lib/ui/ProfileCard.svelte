@@ -2,6 +2,7 @@
 	import InfoCard from './InfoCard.svelte';
 	import KeyValue from './KeyValue.svelte';
 	import Badge from './Badge.svelte';
+	import { ui } from '$lib/content';
 
 	/**
 	 * ProfileCard - User profile summary card
@@ -26,12 +27,12 @@
 	let { email, isComplete = false, class: className = '' }: Props = $props();
 </script>
 
-<InfoCard title="Your Profile" icon="lucide:user" class={className}>
+<InfoCard title={ui.profile.title} icon="lucide:user" class={className}>
 	<div class="profile-content">
-		<KeyValue label="Email" value={email ?? 'Not logged in'} direction="vertical" />
+		<KeyValue label={ui.common.email} value={email ?? ui.common.notLoggedIn} direction="vertical" />
 		<div class="profile-status">
 			<Badge variant={isComplete ? 'success' : 'warning'}>
-				{isComplete ? 'Profile complete' : 'Profile incomplete'}
+				{isComplete ? ui.profile.complete : ui.profile.incomplete}
 			</Badge>
 		</div>
 	</div>

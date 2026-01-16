@@ -2,6 +2,7 @@
 	import { isEmail } from '$lib/validators';
 	import { enhance } from '$app/forms';
 	import Icon from './Icon.svelte';
+	import { auth } from '$lib/content';
 
 	interface Props {
 		form: {
@@ -76,13 +77,13 @@
 						id="signup-modal-title"
 						class="text-lg font-semibold text-secondary-900 dark:text-white"
 					>
-						Authentification à votre compte
+						{auth.modal.title}
 					</h2>
 					<button
 						type="button"
 						class="transition-colors p-1 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300"
 						onclick={closeModal}
-						aria-label="Fermer"
+						aria-label={auth.modal.closeLabel}
 					>
 						<Icon icon="lucide:x" width="20" height="20" />
 					</button>
@@ -91,9 +92,7 @@
 				<!-- Body -->
 				<div class="p-4">
 					<p class="text-sm mb-4 text-secondary-600 dark:text-secondary-400">
-						Pour accéder à mes demandes, je vais m'authentifier. Cette action déposera un cookie
-						nécessaire au bon fonctionnement du site dans votre navigateur. Pour le supprimer après
-						l'authentification, il suffira que je me déconnecte.
+						{auth.modal.description}
 					</p>
 
 					<form
@@ -110,18 +109,18 @@
 						}}
 					>
 						<div>
-							<label for="email" class="label">Courriel</label>
+							<label for="email" class="label">{auth.modal.emailLabel}</label>
 							<input
 								id="email"
 								name="email"
 								type="email"
 								class="input"
-								placeholder="prenom.nom@univ-lehavre.fr"
+								placeholder={auth.modal.emailPlaceholder}
 								aria-describedby="email-help"
 								bind:value={email}
 							/>
 							<p id="email-help" class="text-xs mt-1 text-secondary-500 dark:text-secondary-400">
-								Entrez votre adresse email universitaire
+								{auth.modal.emailHint}
 							</p>
 						</div>
 
@@ -131,10 +130,10 @@
 									<span
 										class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
 									></span>
-									Envoi en cours...
+									{auth.modal.submitting}
 								</span>
 							{:else}
-								S'authentifier
+								{auth.modal.submitButton}
 							{/if}
 						</button>
 					</form>
@@ -144,8 +143,8 @@
 						{#if form?.error}
 							<div class="alert-error mt-4 flex items-start justify-between" role="alert">
 								<span>
-									<strong>Erreur :</strong>
-									{form.message ?? 'Une erreur est survenue'}
+									<strong>{auth.modal.error.prefix}</strong>
+									{form.message ?? auth.modal.error.default}
 									{#if form.cause}
 										: {form.cause}
 									{/if}
@@ -154,7 +153,7 @@
 									type="button"
 									class="text-error-600 hover:text-error-700 ml-2 flex-shrink-0"
 									onclick={dismissAlert}
-									aria-label="Fermer l'alerte"
+									aria-label={auth.modal.closeAlert}
 								>
 									<Icon icon="lucide:x" width="16" height="16" />
 								</button>
@@ -164,14 +163,13 @@
 						{#if form?.success}
 							<div class="alert-success mt-4 flex items-start justify-between" role="alert">
 								<span>
-									Un courriel d'authentification vous a été envoyé. Veuillez vérifier votre boîte de
-									réception.
+									{auth.modal.success}
 								</span>
 								<button
 									type="button"
 									class="text-success-600 hover:text-success-700 ml-2 flex-shrink-0"
 									onclick={dismissAlert}
-									aria-label="Fermer l'alerte"
+									aria-label={auth.modal.closeAlert}
 								>
 									<Icon icon="lucide:x" width="16" height="16" />
 								</button>
@@ -185,7 +183,7 @@
 					class="p-4 border-t border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-900"
 				>
 					<p class="text-xs text-center text-secondary-500 dark:text-secondary-400">
-						En vous authentifiant, vous acceptez nos conditions d'utilisation.
+						{auth.modal.footer}
 					</p>
 				</div>
 			</div>

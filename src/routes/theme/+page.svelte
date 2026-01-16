@@ -34,6 +34,7 @@
 		setPalette,
 		setFont
 	} from '$lib/stores';
+	import { themePage } from '$lib/content';
 
 	const themeStore = createThemeStore();
 
@@ -82,23 +83,35 @@
 
 	// Color scale configuration
 	const fullScaleColors = [
-		{ name: 'Primary', cssPrefix: 'primary' },
-		{ name: 'Accent', cssPrefix: 'accent' },
-		{ name: 'Secondary', cssPrefix: 'secondary' }
+		{ name: themePage.colorScales.colorNames.primary, cssPrefix: 'primary' },
+		{ name: themePage.colorScales.colorNames.accent, cssPrefix: 'accent' },
+		{ name: themePage.colorScales.colorNames.secondary, cssPrefix: 'secondary' }
 	];
 
 	const sparseScaleColors = [
-		{ name: 'Success', cssPrefix: 'success', sparseShades: [50, 500, 600, 700] },
-		{ name: 'Warning', cssPrefix: 'warning', sparseShades: [50, 500, 600, 700] },
-		{ name: 'Error', cssPrefix: 'error', sparseShades: [50, 500, 600, 700] }
+		{
+			name: themePage.colorScales.colorNames.success,
+			cssPrefix: 'success',
+			sparseShades: [50, 500, 600, 700]
+		},
+		{
+			name: themePage.colorScales.colorNames.warning,
+			cssPrefix: 'warning',
+			sparseShades: [50, 500, 600, 700]
+		},
+		{
+			name: themePage.colorScales.colorNames.error,
+			cssPrefix: 'error',
+			sparseShades: [50, 500, 600, 700]
+		}
 	];
 
 	const shades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 </script>
 
 <svelte:head>
-	<title>Theme - ECRIN | Talent finder</title>
-	<meta name="description" content="ECRIN Talent finder theme customization and design system" />
+	<title>{themePage.meta.title}</title>
+	<meta name="description" content={themePage.meta.description} />
 </svelte:head>
 
 <!-- Theme Selector Bar -->
@@ -115,7 +128,7 @@
 					class="text-secondary-500 dark:text-secondary-400"
 				/>
 				<span class="text-sm font-medium text-secondary-500 dark:text-secondary-400">
-					Theme Customization
+					{themePage.selectorBar.title}
 				</span>
 			</div>
 			<div class="flex flex-wrap items-center gap-4">
@@ -147,7 +160,7 @@
 										<div class="flex flex-col">
 											<span
 												class="text-[10px] uppercase tracking-wider text-secondary-400 dark:text-secondary-500"
-												>Heading</span
+												>{themePage.selectorBar.fontLabels.heading}</span
 											>
 											<span
 												class="text-secondary-700 dark:text-secondary-300 truncate"
@@ -159,7 +172,7 @@
 										<div class="flex flex-col">
 											<span
 												class="text-[10px] uppercase tracking-wider text-secondary-400 dark:text-secondary-500"
-												>Body</span
+												>{themePage.selectorBar.fontLabels.body}</span
 											>
 											<span
 												class="text-secondary-700 dark:text-secondary-300 truncate"
@@ -171,7 +184,7 @@
 										<div class="flex flex-col">
 											<span
 												class="text-[10px] uppercase tracking-wider text-secondary-400 dark:text-secondary-500"
-												>Mono</span
+												>{themePage.selectorBar.fontLabels.mono}</span
 											>
 											<span
 												class="text-secondary-700 dark:text-secondary-300 truncate"
@@ -239,14 +252,13 @@
 							: 'btn-outline'}"
 						onclick={resetTheme}
 						disabled={resetFeedback}
-						title="Clear saved theme preferences and get new random values"
 					>
 						{#if resetFeedback}
 							<Icon icon="lucide:shuffle" width="16" height="16" />
-							Randomized!
+							{themePage.selectorBar.resetFeedback}
 						{:else}
 							<Icon icon="lucide:rotate-ccw" width="16" height="16" />
-							Reset
+							{themePage.selectorBar.resetButton}
 						{/if}
 					</button>
 				{/if}
@@ -259,14 +271,13 @@
 						: 'btn-primary'}"
 					onclick={setTheme}
 					disabled={appliedFeedback}
-					title="Save both palette and font as fixed preferences"
 				>
 					{#if appliedFeedback}
 						<Icon icon="lucide:check" width="16" height="16" />
-						Fixed!
+						{themePage.selectorBar.setFeedback}
 					{:else}
 						<Icon icon="lucide:lock" width="16" height="16" />
-						Set
+						{themePage.selectorBar.setButton}
 					{/if}
 				</button>
 			</div>
@@ -275,24 +286,48 @@
 </div>
 
 <!-- Hero Section -->
-<PageHero
-	title="Theme Customization"
-	description="Customize colors and fonts to preview how your application will look. Select a palette and font pairing to see the changes applied."
-/>
+<PageHero title={themePage.hero.title} description={themePage.hero.description} />
 
 <!-- Current Settings Section -->
-<Section title="Current Settings" icon="lucide:settings" variant="surface">
+<Section title={themePage.currentSettings.title} icon="lucide:settings" variant="surface">
 	<div class="grid md:grid-cols-2 gap-6">
 		<!-- Palette Colors -->
 		<div class="card">
-			<h3 class="text-lg font-semibold mb-4 capitalize">{themeStore.palette} Palette</h3>
+			<h3 class="text-lg font-semibold mb-4 capitalize">
+				{themeStore.palette}
+				{themePage.currentSettings.paletteTitle}
+			</h3>
 			<div class="grid grid-cols-3 gap-3">
-				<ColorSwatch color="var(--color-primary-500)" label="Primary" size="lg" />
-				<ColorSwatch color="var(--color-accent-500)" label="Accent" size="lg" />
-				<ColorSwatch color="var(--color-secondary-500)" label="Neutral" size="lg" />
-				<ColorSwatch color="var(--color-success-500)" label="Success" size="lg" />
-				<ColorSwatch color="var(--color-warning-500)" label="Warning" size="lg" />
-				<ColorSwatch color="var(--color-error-500)" label="Error" size="lg" />
+				<ColorSwatch
+					color="var(--color-primary-500)"
+					label={themePage.currentSettings.colorLabels.primary}
+					size="lg"
+				/>
+				<ColorSwatch
+					color="var(--color-accent-500)"
+					label={themePage.currentSettings.colorLabels.accent}
+					size="lg"
+				/>
+				<ColorSwatch
+					color="var(--color-secondary-500)"
+					label={themePage.currentSettings.colorLabels.neutral}
+					size="lg"
+				/>
+				<ColorSwatch
+					color="var(--color-success-500)"
+					label={themePage.currentSettings.colorLabels.success}
+					size="lg"
+				/>
+				<ColorSwatch
+					color="var(--color-warning-500)"
+					label={themePage.currentSettings.colorLabels.warning}
+					size="lg"
+				/>
+				<ColorSwatch
+					color="var(--color-error-500)"
+					label={themePage.currentSettings.colorLabels.error}
+					size="lg"
+				/>
 			</div>
 		</div>
 
@@ -305,21 +340,23 @@
 			<div class="space-y-3">
 				<div>
 					<span class="text-xs uppercase tracking-wide text-secondary-500 dark:text-secondary-400"
-						>Heading</span
+						>{themePage.currentSettings.fontLabels.heading}</span
 					>
-					<p class="text-xl font-semibold font-heading">The quick brown fox jumps</p>
+					<p class="text-xl font-semibold font-heading">
+						{themePage.currentSettings.fontDemo.headingText}
+					</p>
 				</div>
 				<div>
 					<span class="text-xs uppercase tracking-wide text-secondary-500 dark:text-secondary-400"
-						>Body</span
+						>{themePage.currentSettings.fontLabels.body}</span
 					>
-					<p>The quick brown fox jumps over the lazy dog. This text demonstrates the body font.</p>
+					<p>{themePage.currentSettings.fontDemo.bodyText}</p>
 				</div>
 				<div>
 					<span class="text-xs uppercase tracking-wide text-secondary-500 dark:text-secondary-400"
-						>Mono</span
+						>{themePage.currentSettings.fontLabels.mono}</span
 					>
-					<p class="font-mono">const example = "code";</p>
+					<p class="font-mono">{themePage.currentSettings.fontDemo.monoText}</p>
 				</div>
 			</div>
 		</div>
@@ -327,13 +364,13 @@
 </Section>
 
 <!-- Color Scale Section -->
-<Section title="Color Scales" icon="lucide:paintbrush">
+<Section title={themePage.colorScales.title} icon="lucide:paintbrush">
 	<div class="card overflow-x-auto">
 		<table class="w-full text-sm">
 			<thead>
 				<tr class="border-b border-secondary-200 dark:border-secondary-700">
 					<th class="py-3 px-2 text-left font-semibold text-secondary-700 dark:text-secondary-300"
-						>Scale</th
+						>{themePage.colorScales.scaleHeader}</th
 					>
 					{#each shades as shade (shade)}
 						<th
@@ -362,196 +399,226 @@
 		<!-- Usage Examples -->
 		<div class="mt-6 pt-6 border-t border-secondary-200 dark:border-secondary-700">
 			<h4 class="text-sm font-semibold mb-3 text-secondary-700 dark:text-secondary-300">
-				Usage Examples
+				{themePage.colorScales.usageExamples.title}
 			</h4>
 			<div class="grid md:grid-cols-2 gap-4">
-				<CodeExample comment="// Background" keyword="class" value="bg-primary-500" />
-				<CodeExample comment="// Text color" keyword="class" value="text-primary-600" />
-				<CodeExample comment="// Border" keyword="class" value="border-accent-300" />
-				<CodeExample comment="// CSS Variable" keyword="var" value="--color-primary-500" />
+				<CodeExample
+					comment={themePage.colorScales.usageExamples.background}
+					keyword="class"
+					value="bg-primary-500"
+				/>
+				<CodeExample
+					comment={themePage.colorScales.usageExamples.textColor}
+					keyword="class"
+					value="text-primary-600"
+				/>
+				<CodeExample
+					comment={themePage.colorScales.usageExamples.border}
+					keyword="class"
+					value="border-accent-300"
+				/>
+				<CodeExample
+					comment={themePage.colorScales.usageExamples.cssVariable}
+					keyword="var"
+					value="--color-primary-500"
+				/>
 			</div>
 		</div>
 	</div>
 </Section>
 
 <!-- Buttons Section -->
-<Section title="Buttons" icon="lucide:mouse-pointer-click" variant="surface">
+<Section title={themePage.buttons.title} icon="lucide:mouse-pointer-click" variant="surface">
 	<div class="card">
-		<h3 class="text-lg font-semibold mb-4">Variants</h3>
+		<h3 class="text-lg font-semibold mb-4">{themePage.buttons.variantsTitle}</h3>
 		<div class="flex flex-wrap gap-4 mb-6">
-			<button class="btn-primary">Primary</button>
-			<button class="btn-secondary">Secondary</button>
-			<button class="btn-accent">Accent</button>
-			<button class="btn-outline">Outline</button>
-			<button class="btn-ghost">Ghost</button>
+			<button class="btn-primary">{themePage.buttons.variants.primary}</button>
+			<button class="btn-secondary">{themePage.buttons.variants.secondary}</button>
+			<button class="btn-accent">{themePage.buttons.variants.accent}</button>
+			<button class="btn-outline">{themePage.buttons.variants.outline}</button>
+			<button class="btn-ghost">{themePage.buttons.variants.ghost}</button>
 		</div>
 
-		<h3 class="text-lg font-semibold mb-4">With Icons</h3>
+		<h3 class="text-lg font-semibold mb-4">{themePage.buttons.withIconsTitle}</h3>
 		<div class="flex flex-wrap items-center gap-4">
 			<button class="btn-primary">
 				<Icon icon="lucide:plus" width="16" height="16" />
-				Add Item
+				{themePage.buttons.iconButtons.addItem}
 			</button>
 			<button class="btn-secondary">
 				<Icon icon="lucide:download" width="16" height="16" />
-				Download
+				{themePage.buttons.iconButtons.download}
 			</button>
 			<button class="btn-outline">
 				<Icon icon="lucide:settings" width="16" height="16" />
-				Settings
+				{themePage.buttons.iconButtons.settings}
 			</button>
 		</div>
 	</div>
 </Section>
 
 <!-- Alerts Section -->
-<Section title="Alerts" icon="lucide:bell">
+<Section title={themePage.alerts.title} icon="lucide:bell">
 	<div class="space-y-4">
 		<Alert variant="info">
-			<strong>Info:</strong> This is an informational message using the theme colors.
+			<strong>{themePage.alerts.labels.info}</strong>
+			{themePage.alerts.info}
 		</Alert>
 		<Alert variant="success">
-			<strong>Success:</strong> Operation completed successfully!
+			<strong>{themePage.alerts.labels.success}</strong>
+			{themePage.alerts.success}
 		</Alert>
 		<Alert variant="warning">
-			<strong>Warning:</strong> Please review before proceeding.
+			<strong>{themePage.alerts.labels.warning}</strong>
+			{themePage.alerts.warning}
 		</Alert>
 		<Alert variant="error">
-			<strong>Error:</strong> An error occurred. Please try again.
+			<strong>{themePage.alerts.labels.error}</strong>
+			{themePage.alerts.error}
 		</Alert>
 	</div>
 </Section>
 
 <!-- Modal & Signup Section -->
-<Section title="Modal & Signup" icon="lucide:square" variant="surface">
+<Section title={themePage.modalSection.title} icon="lucide:square" variant="surface">
 	<div class="grid md:grid-cols-2 gap-6">
 		<div class="card">
-			<h3 class="text-lg font-semibold mb-4">Modal</h3>
+			<h3 class="text-lg font-semibold mb-4">{themePage.modalSection.modalCard.title}</h3>
 			<p class="mb-4 text-secondary-600 dark:text-secondary-400">
-				Click the button to open a modal dialog.
+				{themePage.modalSection.modalCard.description}
 			</p>
 			<button type="button" class="btn-primary" onclick={() => (modalOpen = true)}>
-				Open Modal
+				{themePage.modalSection.modalCard.openButton}
 			</button>
 		</div>
 		<div class="card">
-			<h3 class="text-lg font-semibold mb-4">Signup</h3>
+			<h3 class="text-lg font-semibold mb-4">{themePage.modalSection.signupCard.title}</h3>
 			<p class="mb-4 text-secondary-600 dark:text-secondary-400">
-				The Signup component is a modal form for user authentication.
+				{themePage.modalSection.signupCard.description}
 			</p>
 			<button type="button" class="btn-primary" onclick={() => (signupOpen = true)}>
-				Open Signup Modal
+				{themePage.modalSection.signupCard.openButton}
 			</button>
 		</div>
 	</div>
 </Section>
 
 <!-- Stat Cards Section -->
-<Section title="Stat Cards" icon="lucide:bar-chart-2">
+<Section title={themePage.statCards.title} icon="lucide:bar-chart-2">
 	<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-		<StatCard label="Default" value={42} />
-		<StatCard label="Success" value={128} variant="success" prefix="+" />
-		<StatCard label="Danger" value={23} variant="danger" prefix="-" />
-		<StatCard label="Net" value="1.2K" />
+		<StatCard label={themePage.statCards.labels.default} value={42} />
+		<StatCard label={themePage.statCards.labels.success} value={128} variant="success" prefix="+" />
+		<StatCard label={themePage.statCards.labels.danger} value={23} variant="danger" prefix="-" />
+		<StatCard label={themePage.statCards.labels.net} value="1.2K" />
 	</div>
 </Section>
 
 <!-- Badges Section -->
-<Section title="Badges" icon="lucide:tag" variant="surface">
+<Section title={themePage.badges.title} icon="lucide:tag" variant="surface">
 	<div class="card">
 		<div class="flex flex-wrap gap-3">
-			<Badge>Primary</Badge>
-			<Badge variant="accent">Accent</Badge>
-			<Badge variant="success">Success</Badge>
-			<Badge variant="warning">Warning</Badge>
-			<Badge variant="error">Error</Badge>
+			<Badge>{themePage.badges.labels.primary}</Badge>
+			<Badge variant="accent">{themePage.badges.labels.accent}</Badge>
+			<Badge variant="success">{themePage.badges.labels.success}</Badge>
+			<Badge variant="warning">{themePage.badges.labels.warning}</Badge>
+			<Badge variant="error">{themePage.badges.labels.error}</Badge>
 		</div>
 	</div>
 </Section>
 
 <!-- Card Section -->
-<Section title="Card" icon="lucide:square">
+<Section title={themePage.cardSection.title} icon="lucide:square">
 	<div class="grid md:grid-cols-2 gap-6">
 		<Card>
-			<h3 class="text-lg font-semibold mb-2">Card Component</h3>
+			<h3 class="text-lg font-semibold mb-2">{themePage.cardSection.card1.title}</h3>
 			<p class="text-secondary-600 dark:text-secondary-400 mb-4">
-				This is a reusable Card component with default shadow styling.
+				{themePage.cardSection.card1.description}
 			</p>
-			<button class="btn-primary">Action</button>
+			<button class="btn-primary">{themePage.cardSection.card1.button}</button>
 		</Card>
 		<Card class="border-2 border-primary-500">
-			<h3 class="text-lg font-semibold mb-2">Card with Custom Class</h3>
+			<h3 class="text-lg font-semibold mb-2">{themePage.cardSection.card2.title}</h3>
 			<p class="text-secondary-600 dark:text-secondary-400 mb-4">
-				Cards accept a <code class="px-1 bg-secondary-100 dark:bg-secondary-700 rounded">class</code
-				> prop for customization.
+				{themePage.cardSection.card2.description}
 			</p>
-			<button class="btn-accent">Custom Action</button>
+			<button class="btn-accent">{themePage.cardSection.card2.button}</button>
 		</Card>
 	</div>
 </Section>
 
 <!-- LoadingSpinner Section -->
-<Section title="Loading Spinner" icon="lucide:loader" variant="surface">
+<Section title={themePage.loadingSpinner.title} icon="lucide:loader" variant="surface">
 	<div class="card">
-		<h3 class="text-lg font-semibold mb-4">Size Variants</h3>
+		<h3 class="text-lg font-semibold mb-4">{themePage.loadingSpinner.sizeVariants}</h3>
 		<div class="flex flex-wrap items-center gap-8 mb-6">
 			<div class="flex flex-col items-center gap-2">
 				<LoadingSpinner size="sm" />
-				<span class="text-xs text-secondary-500 dark:text-secondary-400">Small</span>
+				<span class="text-xs text-secondary-500 dark:text-secondary-400"
+					>{themePage.loadingSpinner.sizes.small}</span
+				>
 			</div>
 			<div class="flex flex-col items-center gap-2">
 				<LoadingSpinner size="md" />
-				<span class="text-xs text-secondary-500 dark:text-secondary-400">Medium</span>
+				<span class="text-xs text-secondary-500 dark:text-secondary-400"
+					>{themePage.loadingSpinner.sizes.medium}</span
+				>
 			</div>
 			<div class="flex flex-col items-center gap-2">
 				<LoadingSpinner size="lg" />
-				<span class="text-xs text-secondary-500 dark:text-secondary-400">Large</span>
+				<span class="text-xs text-secondary-500 dark:text-secondary-400"
+					>{themePage.loadingSpinner.sizes.large}</span
+				>
 			</div>
 		</div>
 
-		<h3 class="text-lg font-semibold mb-4">Color Variants</h3>
+		<h3 class="text-lg font-semibold mb-4">{themePage.loadingSpinner.colorVariants}</h3>
 		<div class="flex flex-wrap items-center gap-8">
 			<div class="flex flex-col items-center gap-2">
 				<LoadingSpinner variant="primary" />
-				<span class="text-xs text-secondary-500 dark:text-secondary-400">Primary</span>
+				<span class="text-xs text-secondary-500 dark:text-secondary-400"
+					>{themePage.loadingSpinner.colors.primary}</span
+				>
 			</div>
 			<div class="flex flex-col items-center gap-2">
 				<LoadingSpinner variant="accent" />
-				<span class="text-xs text-secondary-500 dark:text-secondary-400">Accent</span>
+				<span class="text-xs text-secondary-500 dark:text-secondary-400"
+					>{themePage.loadingSpinner.colors.accent}</span
+				>
 			</div>
 			<div class="flex flex-col items-center gap-2">
 				<LoadingSpinner variant="secondary" />
-				<span class="text-xs text-secondary-500 dark:text-secondary-400">Secondary</span>
+				<span class="text-xs text-secondary-500 dark:text-secondary-400"
+					>{themePage.loadingSpinner.colors.secondary}</span
+				>
 			</div>
 		</div>
 	</div>
 </Section>
 
 <!-- ThemeToggle Section -->
-<Section title="Theme Toggle" icon="lucide:moon">
+<Section title={themePage.themeToggle.title} icon="lucide:moon">
 	<div class="card">
 		<p class="mb-4 text-secondary-600 dark:text-secondary-400">
-			The ThemeToggle component allows users to switch between light and dark modes. It persists the
-			selection in cookies.
+			{themePage.themeToggle.description}
 		</p>
 		<div class="flex items-center gap-4">
 			<ThemeToggle />
 			<span class="text-sm text-secondary-500 dark:text-secondary-400">
-				Click to toggle between light and dark modes
+				{themePage.themeToggle.hint}
 			</span>
 		</div>
 	</div>
 </Section>
 
 <!-- Demo Modal -->
-<Modal bind:open={modalOpen} title="Example Modal">
+<Modal bind:open={modalOpen} title={themePage.modalSection.modalContent.title}>
 	<p class="mb-4">
-		This is a reusable modal component. It handles backdrop click, escape key, and focus management.
+		{themePage.modalSection.modalContent.line1}
 	</p>
-	<p>You can pass any content as children and optionally provide a footer snippet.</p>
+	<p>{themePage.modalSection.modalContent.line2}</p>
 	{#snippet footer()}
 		<p class="text-xs text-center text-secondary-500 dark:text-secondary-400">
-			Press Escape or click outside to close.
+			{themePage.modalSection.modalContent.footer}
 		</p>
 	{/snippet}
 </Modal>

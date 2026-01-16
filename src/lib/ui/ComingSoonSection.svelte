@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Alert from './Alert.svelte';
 	import Icon from './Icon.svelte';
+	import { ui } from '$lib/content';
 
 	/**
 	 * ComingSoonSection - Section displaying upcoming features
@@ -28,8 +29,8 @@
 	}
 
 	let {
-		title = 'Coming Soon',
-		description = "We're working on new features to improve your experience.",
+		title = ui.comingSoon.defaultTitle,
+		description = ui.comingSoon.defaultDescription,
 		features,
 		class: className = ''
 	}: Props = $props();

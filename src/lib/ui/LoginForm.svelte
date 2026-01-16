@@ -3,6 +3,7 @@
 	import { enhance } from '$app/forms';
 	import Icon from './Icon.svelte';
 	import Alert from './Alert.svelte';
+	import { auth } from '$lib/content';
 
 	/**
 	 * LoginForm - Formulaire de connexion standalone
@@ -40,9 +41,9 @@
 		<div class="login-form-icon">
 			<Icon icon="lucide:mail" width="32" height="32" />
 		</div>
-		<h1 class="login-form-title">Connexion</h1>
+		<h1 class="login-form-title">{auth.form.title}</h1>
 		<p class="login-form-description">
-			Entrez votre adresse email professionnelle pour recevoir un lien de connexion sécurisé.
+			{auth.form.description}
 		</p>
 	</div>
 
@@ -59,19 +60,19 @@
 		}}
 	>
 		<div class="login-form-field">
-			<label for="email" class="label">Adresse email</label>
+			<label for="email" class="label">{auth.form.emailLabel}</label>
 			<input
 				id="email"
 				name="email"
 				type="email"
 				class="input"
-				placeholder="prenom.nom@universite.fr"
+				placeholder={auth.form.emailPlaceholder}
 				aria-describedby="email-help"
 				bind:value={email}
 				disabled={signuping}
 			/>
 			<p id="email-help" class="login-form-hint">
-				Seules les adresses email universitaires sont acceptées
+				{auth.form.emailHint}
 			</p>
 		</div>
 
@@ -80,18 +81,18 @@
 				<span class="inline-flex items-center gap-2">
 					<span class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
 					></span>
-					Envoi en cours...
+					{auth.form.submitting}
 				</span>
 			{:else}
 				<Icon icon="lucide:send" width="16" height="16" />
-				Envoyer le lien de connexion
+				{auth.form.submitButton}
 			{/if}
 		</button>
 
 		{#if form?.error}
 			<Alert variant="error" dismissible>
-				<strong>Erreur :</strong>
-				{form.message ?? 'Une erreur est survenue'}
+				<strong>{auth.form.error.prefix}</strong>
+				{form.message ?? auth.form.error.default}
 				{#if form.cause}
 					— {form.cause}
 				{/if}
@@ -100,16 +101,16 @@
 
 		{#if form?.success}
 			<Alert variant="success" dismissible>
-				<strong>Email envoyé !</strong> Un lien de connexion vous a été envoyé. Vérifiez votre boîte de
-				réception.
+				<strong>{auth.form.success.title}</strong>
+				{auth.form.success.message}
 			</Alert>
 		{/if}
 	</form>
 
 	<div class="login-form-footer">
 		<p>
-			En vous connectant, vous acceptez nos
-			<a href="/terms" class="login-form-link">conditions d'utilisation</a>.
+			{auth.form.footer}
+			<a href="/terms" class="login-form-link">{auth.form.termsLink}</a>.
 		</p>
 	</div>
 </div>

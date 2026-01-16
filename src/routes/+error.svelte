@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { ErrorState, ButtonGroup, LinkButton, Button } from '$lib/ui';
+	import { errors } from '$lib/content';
 
 	const getErrorInfo = (
 		status: number,
@@ -8,14 +9,14 @@
 	): { title: string; message: string; variant: 'default' | 'warning' | 'error' } => {
 		if (status === 404) {
 			return {
-				title: 'Page not found',
-				message: "The page you're looking for doesn't exist or has been moved.",
+				title: errors.notFound.title,
+				message: errors.notFound.message,
 				variant: 'default'
 			};
 		}
 		return {
-			title: 'Something went wrong',
-			message: errorMessage ?? 'An unexpected error occurred.',
+			title: errors.generic.title,
+			message: errorMessage ?? errors.generic.message,
 			variant: 'error'
 		};
 	};
@@ -24,7 +25,7 @@
 </script>
 
 <svelte:head>
-	<title>{$page.status} - ECRIN | Talent finder</title>
+	<title>{$page.status} {errors.titleSuffix}</title>
 	<meta name="description" content={errorInfo.title} />
 </svelte:head>
 
@@ -37,9 +38,11 @@
 	>
 		{#snippet actions()}
 			<ButtonGroup justify="center">
-				<LinkButton href="/" variant="primary" icon="lucide:home">Back to Home</LinkButton>
+				<LinkButton href="/" variant="primary" icon="lucide:home"
+					>{errors.buttons.backToHome}</LinkButton
+				>
 				<Button variant="outline" icon="lucide:arrow-left" onclick={() => history.back()}>
-					Go Back
+					{errors.buttons.goBack}
 				</Button>
 			</ButtonGroup>
 		{/snippet}

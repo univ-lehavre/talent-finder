@@ -5,6 +5,7 @@
 	import logo from '$lib/assets/logo.svg?raw';
 	import { Navbar, Footer, Signup, ConnectivityBanner } from '$lib/ui';
 	import { createThemeStore, initTheme } from '$lib/stores';
+	import { navigation, partners as partnersContent } from '$lib/content';
 
 	const version = __APP_VERSION__;
 
@@ -39,9 +40,9 @@
 
 	/** Navigation links for desktop and mobile */
 	const navLinks = $derived([
-		{ href: '/', label: 'Home', icon: 'lucide:home' },
+		{ href: '/', label: navigation.links.home, icon: 'lucide:home' },
 		...(data.user
-			? [{ href: '/dashboard', label: 'Dashboard', icon: 'lucide:layout-dashboard' }]
+			? [{ href: '/dashboard', label: navigation.links.dashboard, icon: 'lucide:layout-dashboard' }]
 			: [])
 	]);
 
@@ -50,8 +51,8 @@
 		{
 			href: 'https://github.com/univ-lehavre/talent-finder',
 			icon: 'mdi:github',
-			label: 'GitHub',
-			description: 'View source code',
+			label: navigation.external.github,
+			description: navigation.external.githubDescription,
 			external: true
 		}
 	];
@@ -60,7 +61,7 @@
 	const mobileExtraLinks = [
 		{
 			href: 'https://github.com/univ-lehavre/talent-finder',
-			label: 'GitHub',
+			label: navigation.external.github,
 			icon: 'mdi:github',
 			external: true
 		}
@@ -71,17 +72,17 @@
 		{
 			href: 'https://www.cptmp.fr/',
 			src: '/logos/cptmp.png',
-			alt: 'Campus Polytechnique des Territoires Maritimes et Portuaires'
+			alt: partnersContent.footer.cptmpAlt
 		},
 		{
 			href: 'https://www.univ-lehavre.fr/',
 			src: '/logos/ulhn.svg',
-			alt: 'Université Le Havre Normandie'
+			alt: partnersContent.footer.ulhnAlt
 		},
 		{
 			href: 'https://eunicoast.eu/',
 			src: '/logos/eunicoast.png',
-			alt: 'EUNICoast'
+			alt: partnersContent.footer.eunicoastAlt
 		}
 	];
 
@@ -102,13 +103,7 @@
 <!-- Font families are defined in CSS via [data-font="name"] selectors -->
 <div class="min-h-screen flex flex-col">
 	<!-- Navigation -->
-	<Navbar
-		brandName="ECRIN | Talent finder"
-		logoHtml={logo}
-		{navLinks}
-		{iconLinks}
-		{mobileExtraLinks}
-	>
+	<Navbar brandName={navigation.brand} logoHtml={logo} {navLinks} {iconLinks} {mobileExtraLinks}>
 		{#snippet actions()}
 			{#if data.user}
 				<span class="text-sm text-secondary-600 dark:text-secondary-300 hidden md:inline"
@@ -119,14 +114,14 @@
 				</p>
 				<form method="post" action="/?/logout">
 					<button type="submit" class="btn-secondary btn-sm md:btn-sm md:w-auto w-full"
-						>Déconnexion</button
+						>{navigation.actions.signOut}</button
 					>
 				</form>
 			{:else}
 				<button
 					type="button"
 					class="btn-primary btn-sm md:btn-sm md:w-auto w-full"
-					onclick={openSignup}>Sign In</button
+					onclick={openSignup}>{navigation.actions.signIn}</button
 				>
 			{/if}
 		{/snippet}
