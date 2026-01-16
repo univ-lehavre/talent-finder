@@ -1,6 +1,5 @@
 <script lang="ts" generics="T">
 	import type { Snippet } from 'svelte';
-	import Icon from './Icon.svelte';
 
 	/**
 	 * DataList - Liste avec snippets paramétrés pour personnalisation totale

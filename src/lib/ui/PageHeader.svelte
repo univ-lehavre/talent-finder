@@ -67,7 +67,7 @@
 	<div class="container-app">
 		{#if breadcrumbs && breadcrumbs.length > 0}
 			<nav class="breadcrumbs" aria-label="Fil d'Ariane">
-				{#each breadcrumbs as item, idx}
+				{#each breadcrumbs as item, idx (item.href ?? item.label)}
 					{#if idx > 0}
 						<Icon icon="lucide:chevron-right" width="16" height="16" class="breadcrumb-separator" />
 					{/if}

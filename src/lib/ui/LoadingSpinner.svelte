@@ -22,7 +22,12 @@
 		class?: string;
 	}
 
-	let { size = 'md', variant = 'primary', label = 'Chargement...', class: className = '' }: Props = $props();
+	let {
+		size = 'md',
+		variant = 'primary',
+		label = 'Chargement...',
+		class: className = ''
+	}: Props = $props();
 </script>
 
 <div class="spinner {className}" data-size={size} data-variant={variant} role="status">

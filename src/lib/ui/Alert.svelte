@@ -63,7 +63,12 @@
 			{@render children()}
 		</div>
 		{#if dismissible}
-			<button type="button" class="alert-dismiss" onclick={handleDismiss} aria-label="Fermer l'alerte">
+			<button
+				type="button"
+				class="alert-dismiss"
+				onclick={handleDismiss}
+				aria-label="Fermer l'alerte"
+			>
 				<Icon icon="lucide:x" width="16" height="16" />
 			</button>
 		{/if}
