@@ -46,7 +46,9 @@ export default defineConfig(
 			'**/routes/+error.svelte',
 			'**/routes/dashboard/+page.svelte',
 			'**/lib/ui/ConnectivityBanner.svelte',
-			'**/lib/ui/PageHeader.svelte'
+			'**/lib/ui/PageHeader.svelte',
+			'**/lib/ui/PartnerLogo.svelte',
+			'**/lib/ui/PartnerSection.svelte'
 		],
 		rules: {
 			// External links and static navigation don't need resolve()
