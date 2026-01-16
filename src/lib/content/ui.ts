@@ -56,7 +56,10 @@ export const fr: UIContent = {
 		title: 'Préférences de thème',
 		palette: 'Palette',
 		font: 'Police',
-		mode: 'Mode'
+		mode: 'Mode',
+		light: 'Clair',
+		dark: 'Sombre',
+		changeTheme: 'Changer le thème'
 	},
 	comingSoon: {
 		defaultTitle: 'Bientôt disponible',

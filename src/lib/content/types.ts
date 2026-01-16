@@ -4,6 +4,36 @@
  */
 
 /**
+ * Accessibility labels for UI components.
+ */
+export interface AccessibilityContent {
+	/** Modal close button */
+	closeModal: string;
+	/** Alert close button */
+	closeAlert: string;
+	/** Menu toggle button */
+	toggleMenu: string;
+	/** Close menu/drawer button */
+	closeMenu: string;
+	/** Breadcrumb navigation */
+	breadcrumbs: string;
+	/** Language selector */
+	languageSelector: string;
+	/** Change language */
+	changeLanguage: string;
+}
+
+/**
+ * Language selector content.
+ */
+export interface LanguageSelectorContent {
+	/** Current language label */
+	currentLanguage: string;
+	/** Select language label */
+	selectLanguage: string;
+}
+
+/**
  * Navigation content structure.
  */
 export interface NavigationContent {
@@ -278,6 +308,9 @@ export interface UIContent {
 		palette: string;
 		font: string;
 		mode: string;
+		light: string;
+		dark: string;
+		changeTheme: string;
 	};
 	/** Coming soon section */
 	comingSoon: {
