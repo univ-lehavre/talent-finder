@@ -12,6 +12,7 @@ export { default as Section } from './Section.svelte';
 export { default as Grid } from './Grid.svelte';
 export { default as PageHeader } from './PageHeader.svelte';
 export { default as PageHero } from './PageHero.svelte';
+export { default as PageLayout } from './PageLayout.svelte';
 export { default as Hero } from './Hero.svelte';
 export { default as CTASection } from './CTASection.svelte';
 export { default as PartnerSection } from './PartnerSection.svelte';
@@ -24,7 +25,9 @@ export { default as Drawer } from './Drawer.svelte';
 export { default as Card } from './Card.svelte';
 export { default as InfoCard } from './InfoCard.svelte';
 export { default as DataList } from './DataList.svelte';
+export { default as DataTable } from './DataTable.svelte';
 export { default as StatCard } from './StatCard.svelte';
+export { default as KeyValue } from './KeyValue.svelte';
 export { default as StepCard } from './StepCard.svelte';
 export { default as ChallengeCard } from './ChallengeCard.svelte';
 export { default as TagCard } from './TagCard.svelte';
@@ -40,6 +43,7 @@ export { default as ErrorState } from './ErrorState.svelte';
 
 // Action components
 export { default as ButtonGroup } from './ButtonGroup.svelte';
+export { default as LinkButton } from './LinkButton.svelte';
 
 // Interactive components
 export { default as Modal } from './Modal.svelte';
