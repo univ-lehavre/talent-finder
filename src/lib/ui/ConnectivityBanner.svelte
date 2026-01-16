@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { Icon } from '$lib/ui';
-	import { ui } from '$lib/content';
+	import { i18n } from '$lib/content';
+
+	const ui = $derived(i18n.ui);
 
 	interface Props {
 		/** Type of connectivity error */
@@ -9,7 +11,12 @@
 
 	let { error }: Props = $props();
 
-	const messages: Record<typeof error, { title: string; description: string; icon: string }> = {
+	const messages = $derived<
+		Record<
+			'appwrite_unavailable' | 'no_internet',
+			{ title: string; description: string; icon: string }
+		>
+	>({
 		appwrite_unavailable: {
 			title: ui.connectivity.appwriteUnavailable.title,
 			description: ui.connectivity.appwriteUnavailable.description,
@@ -20,7 +27,7 @@
 			description: ui.connectivity.noInternet.description,
 			icon: 'lucide:wifi-off'
 		}
-	};
+	});
 
 	const message = $derived(messages[error]);
 </script>

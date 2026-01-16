@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Icon from './Icon.svelte';
+	import { i18n } from '$lib/content';
 
 	interface Props {
 		open?: boolean;
@@ -11,6 +12,8 @@
 	}
 
 	let { open = $bindable(false), title, onclose, children, footer }: Props = $props();
+
+	const a11y = $derived(i18n.accessibility);
 
 	const closeModal = (): void => {
 		open = false;
@@ -34,7 +37,7 @@
 		onkeydown={(e) => e.key === 'Enter' && closeModal()}
 		role="button"
 		tabindex="-1"
-		aria-label="Close modal"
+		aria-label={a11y.closeModal}
 	></div>
 
 	<!-- Modal Container -->
@@ -64,7 +67,7 @@
 						type="button"
 						class="transition-colors p-1 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300"
 						onclick={closeModal}
-						aria-label="Fermer"
+						aria-label={a11y.closeModal}
 					>
 						<Icon icon="lucide:x" width="20" height="20" />
 					</button>

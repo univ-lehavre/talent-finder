@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Icon from './Icon.svelte';
+	import { i18n } from '$lib/content';
 
 	/**
 	 * Drawer (offcanvas) component with slide-in animation.
@@ -27,7 +28,7 @@
 
 	let {
 		open = $bindable(false),
-		title = 'Menu',
+		title,
 		position = 'right',
 		width = 'w-72',
 		onclose,
@@ -35,6 +36,9 @@
 		children,
 		class: className = ''
 	}: Props = $props();
+
+	const a11y = $derived(i18n.accessibility);
+	const drawerTitle = $derived(title ?? a11y.toggleMenu);
 
 	const closeDrawer = (): void => {
 		open = false;
@@ -58,7 +62,7 @@
 		type="button"
 		class="fixed inset-0 bg-black/50 z-40 md:hidden"
 		onclick={closeDrawer}
-		aria-label="Close menu"
+		aria-label={a11y.closeMenu}
 	></button>
 
 	<!-- Drawer Panel -->
@@ -72,13 +76,13 @@
 		"
 		role="dialog"
 		aria-modal="true"
-		aria-label={title}
+		aria-label={drawerTitle}
 	>
 		<!-- Header -->
 		<div
 			class="p-4 border-b border-secondary-200 dark:border-secondary-700 flex items-center justify-between"
 		>
-			<span class="text-lg font-bold text-primary-700 dark:text-primary-400">{title}</span>
+			<span class="text-lg font-bold text-primary-700 dark:text-primary-400">{drawerTitle}</span>
 			<div class="flex items-center gap-2">
 				{#if header}
 					{@render header()}
@@ -87,7 +91,7 @@
 					type="button"
 					class="p-2 text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400"
 					onclick={closeDrawer}
-					aria-label="Close menu"
+					aria-label={a11y.closeMenu}
 				>
 					<Icon icon="lucide:x" width="24" height="24" />
 				</button>

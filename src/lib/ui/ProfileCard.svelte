@@ -2,7 +2,9 @@
 	import InfoCard from './InfoCard.svelte';
 	import KeyValue from './KeyValue.svelte';
 	import Badge from './Badge.svelte';
-	import { ui } from '$lib/content';
+	import { i18n } from '$lib/content';
+
+	const ui = $derived(i18n.ui);
 
 	/**
 	 * ProfileCard - User profile summary card

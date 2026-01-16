@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import Icon from './Icon.svelte';
 	import { createThemeStore, setDarkMode, type DarkMode } from '$lib/stores';
+	import { i18n } from '$lib/content';
 
 	type DisplayMode = 'light' | 'dark';
 
@@ -12,16 +13,17 @@
 	let { class: className = '' }: Props = $props();
 
 	const themeStore = createThemeStore();
+	const themeContent = $derived(i18n.ui.theme);
 
 	const icons: Record<DisplayMode, string> = {
 		light: 'lucide:sun',
 		dark: 'lucide:moon'
 	};
 
-	const labels: Record<DisplayMode, string> = {
-		light: 'Clair',
-		dark: 'Sombre'
-	};
+	const labels = $derived({
+		light: themeContent.light,
+		dark: themeContent.dark
+	});
 
 	const getSystemTheme = (): DisplayMode => {
 		if (typeof window === 'undefined') return 'light';
@@ -63,7 +65,7 @@
 	type="button"
 	class="inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-secondary-200 dark:border-secondary-600 bg-white dark:bg-secondary-700 hover:bg-secondary-50 dark:hover:bg-secondary-600 transition-colors {className}"
 	onclick={toggleMode}
-	title="Changer le thème ({labels[displayMode]})"
+	title="{themeContent.changeTheme} ({labels[displayMode]})"
 >
 	<Icon
 		icon={icons[displayMode]}

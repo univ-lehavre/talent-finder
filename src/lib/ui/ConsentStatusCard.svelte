@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Icon, LoadingSpinner } from '$lib/ui';
-	import { ui } from '$lib/content';
+	import { i18n } from '$lib/content';
+
+	const ui = $derived(i18n.ui);
 
 	interface ConsentStatus {
 		consentType: string;

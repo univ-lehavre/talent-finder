@@ -3,7 +3,9 @@
 	import { enhance } from '$app/forms';
 	import Icon from './Icon.svelte';
 	import Alert from './Alert.svelte';
-	import { auth } from '$lib/content';
+	import { i18n } from '$lib/content';
+
+	const auth = $derived(i18n.auth);
 
 	/**
 	 * LoginForm - Formulaire de connexion standalone

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Icon from './Icon.svelte';
+	import { i18n } from '$lib/content';
 
 	/**
 	 * Alert - Message d'alerte avec variants sémantiques
@@ -40,6 +41,8 @@
 
 	let dismissed = $state(false);
 
+	const a11y = $derived(i18n.accessibility);
+
 	// Map des icônes par défaut (simple objet, pas de $derived)
 	const defaultIcons: Record<string, string> = {
 		info: 'lucide:info',
@@ -67,7 +70,7 @@
 				type="button"
 				class="alert-dismiss"
 				onclick={handleDismiss}
-				aria-label="Fermer l'alerte"
+				aria-label={a11y.closeAlert}
 			>
 				<Icon icon="lucide:x" width="16" height="16" />
 			</button>

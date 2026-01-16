@@ -2,7 +2,9 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { SvelteSet } from 'svelte/reactivity';
 	import { Icon, LoadingSpinner } from '$lib/ui';
-	import { ui } from '$lib/content';
+	import { i18n } from '$lib/content';
+
+	const ui = $derived(i18n.ui);
 
 	interface AttributeHealth {
 		name: string;
@@ -103,10 +105,9 @@
 		return 'bg-secondary-100 dark:bg-secondary-700/30';
 	};
 
-	const statusConfig: Record<
-		'healthy' | 'degraded' | 'unhealthy',
-		{ icon: string; color: string; label: string }
-	> = {
+	const statusConfig = $derived<
+		Record<'healthy' | 'degraded' | 'unhealthy', { icon: string; color: string; label: string }>
+	>({
 		healthy: {
 			icon: 'lucide:check-circle',
 			color: 'text-secondary-600 dark:text-secondary-400',
@@ -122,12 +123,12 @@
 			color: 'text-error-600 dark:text-error-400',
 			label: ui.health.status.unhealthy
 		}
-	};
+	});
 
-	const serviceLabels: Record<string, string> = {
+	const serviceLabels = $derived<Record<string, string>>({
 		appwrite: ui.health.services.appwrite,
 		internet: ui.health.services.internet
-	};
+	});
 
 	/** Track which services have their details expanded */
 	const expandedServices = new SvelteSet<string>();

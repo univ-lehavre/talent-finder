@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { Icon, LoadingSpinner, Alert, Badge } from '$lib/ui';
-	import { ui } from '$lib/content';
+	import { i18n } from '$lib/content';
 	import type { TInstitution } from '$lib/server/openalex';
+
+	const ui = $derived(i18n.ui);
 
 	/** Debounce delay in milliseconds */
 	const DEBOUNCE_MS = 300;
@@ -42,7 +44,7 @@
 	const isDisabled = $derived(!hasConsent);
 
 	/** Content labels */
-	const content = ui.researchOrganization;
+	const content = $derived(ui.researchOrganization);
 
 	/**
 	 * Searches for institutions using the API.

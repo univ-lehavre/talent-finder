@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Icon from './Icon.svelte';
+	import { i18n } from '$lib/content';
 
 	/**
 	 * PageHeader - En-tête de page avec composition flexible
@@ -61,12 +62,14 @@
 		filters,
 		class: className = ''
 	}: Props = $props();
+
+	const a11y = $derived(i18n.accessibility);
 </script>
 
 <header class="page-header {className}" data-variant={variant}>
 	<div class="container-app">
 		{#if breadcrumbs && breadcrumbs.length > 0}
-			<nav class="breadcrumbs" aria-label="Fil d'Ariane">
+			<nav class="breadcrumbs" aria-label={a11y.breadcrumbs}>
 				{#each breadcrumbs as item, idx (item.href ?? item.label)}
 					{#if idx > 0}
 						<Icon icon="lucide:chevron-right" width="16" height="16" class="breadcrumb-separator" />

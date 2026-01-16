@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { Icon, LoadingSpinner, Alert } from '$lib/ui';
-	import { ui } from '$lib/content';
+	import { i18n } from '$lib/content';
 	import type { TInstitution, TInstitutionStatsResponse } from '$lib/server/openalex';
+
+	const ui = $derived(i18n.ui);
 
 	interface Props {
 		/** Selected organizations to count articles for */
@@ -23,7 +25,7 @@
 	const isDisabled = $derived(!hasConsent);
 
 	/** Content labels */
-	const content = ui.researchOutput;
+	const content = $derived(ui.researchOutput);
 
 	/**
 	 * Formats a number for display using French locale.

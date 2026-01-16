@@ -2,7 +2,9 @@
 	import InfoCard from './InfoCard.svelte';
 	import ThemeToggleRow from './ThemeToggleRow.svelte';
 	import Icon from './Icon.svelte';
-	import { ui } from '$lib/content';
+	import { i18n } from '$lib/content';
+
+	const ui = $derived(i18n.ui);
 
 	/**
 	 * ThemePreferencesCard - Card displaying theme settings with toggles
