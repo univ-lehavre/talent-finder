@@ -64,7 +64,14 @@ export const commonLabels = {
 	submitting: 'Envoi en cours...',
 
 	/** Status labels */
-	net: 'Net'
+	net: 'Net',
+
+	/** Health status labels */
+	statusLabels: {
+		healthy: 'Opérationnel',
+		degraded: 'Dégradé',
+		unhealthy: 'Hors service'
+	}
 } as const;
 
 /**

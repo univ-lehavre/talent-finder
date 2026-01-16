@@ -22,7 +22,10 @@ export const fr: NavigationContent = {
 		signIn: 'Se connecter',
 		signOut: 'Déconnexion'
 	},
-	brand: brand.appNameFull
+	brand: brand.appNameFull,
+	footer: {
+		attribution: `Développé à ${brand.ulhn}`
+	}
 };
 
 /**
