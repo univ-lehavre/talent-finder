@@ -1,0 +1,23 @@
+# Gitleaks configuration
+# https://github.com/gitleaks/gitleaks
+
+title = "Talent Finder Gitleaks Config"
+
+[extend]
+# Use the default gitleaks config as a base
+useDefault = true
+
+# Allow specific patterns (false positives)
+[allowlist]
+description = "Allowed patterns"
+paths = [
+    '''pnpm-lock\.yaml''',
+    '''\.env\.example''',
+]
+
+# Custom rules can be added here if needed
+# [[rules]]
+# id = "custom-api-key"
+# description = "Custom API Key"
+# regex = '''custom_key_[a-zA-Z0-9]{32}'''
+# tags = ["key", "custom"]

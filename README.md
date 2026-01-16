@@ -60,6 +60,7 @@ The European University of Islands, Ports and Coastal Territories, or **[EUNICoa
 
 ## Documentation
 
+- [Contributing Guide](./CONTRIBUTING.md): development workflow and scripts
 - [Technical Documentation](./docs/technical-setup.md): installation and configuration
 - [Appwrite Setup](./docs/appwrite-setup.md): database configuration
 - [Design System](./docs/design-system.md): style guide and components
