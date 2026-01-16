@@ -2,8 +2,8 @@
  * Homepage content - English.
  */
 
-import { brand } from '../brand';
-import type { HomeContent } from '../../../types';
+import { brand } from '$lib/content/locales/en/brand';
+import type { HomeContent } from '$lib/content/types';
 
 /**
  * English content for the homepage.
