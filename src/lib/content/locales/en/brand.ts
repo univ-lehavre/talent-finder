@@ -3,7 +3,7 @@
  * Most brand names remain unchanged, only translated labels.
  */
 
-import { brand as brandBase } from '../../core/brand';
+import { brand as brandBase } from '$lib/content/core/brand';
 
 /**
  * Brand names (unchanged across locales).
