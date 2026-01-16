@@ -1,5 +1,5 @@
 ---
-"talent-finder": minor
+'talent-finder': minor
 ---
 
 feat(ui): add ErrorState, ButtonGroup, LoginForm components and fix login page

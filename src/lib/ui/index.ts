@@ -11,6 +11,7 @@
 export { default as Section } from './Section.svelte';
 export { default as Grid } from './Grid.svelte';
 export { default as PageHeader } from './PageHeader.svelte';
+export { default as PageHero } from './PageHero.svelte';
 export { default as Hero } from './Hero.svelte';
 export { default as CTASection } from './CTASection.svelte';
 export { default as PartnerSection } from './PartnerSection.svelte';
@@ -51,6 +52,14 @@ export { default as ThemeToggle } from './ThemeToggle.svelte';
 export { default as Icon } from './Icon.svelte';
 export { default as ConnectivityBanner } from './ConnectivityBanner.svelte';
 export { default as Tooltip } from './Tooltip.svelte';
+export { default as ColorSwatch } from './ColorSwatch.svelte';
+export { default as ColorScaleRow } from './ColorScaleRow.svelte';
+export { default as CodeExample } from './CodeExample.svelte';
+
+// Dropdown components
+export { default as Dropdown } from './Dropdown.svelte';
+export { default as DropdownCategory } from './DropdownCategory.svelte';
+export { default as DropdownItem } from './DropdownItem.svelte';
 
 // Navigation components
 export { default as NavLink } from './NavLink.svelte';
