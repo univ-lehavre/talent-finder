@@ -15,7 +15,7 @@ export const locales: Record<Locale, { name: string; flag: string }> = {
 };
 
 /** Default locale */
-export const defaultLocale: Locale = 'fr';
+const defaultLocale: Locale = 'fr';
 
 /** Cookie name for locale preference */
 const COOKIE_LOCALE = 'locale';
@@ -72,12 +72,6 @@ const isValidLocale = (value: string): value is Locale => {
 };
 
 /**
- * Get the current locale.
- * Use localeState.current in components for reactivity.
- */
-export const getLocale = (): Locale => localeState.current;
-
-/**
  * Set the current locale and persist to cookie.
  */
 export const setLocale = (locale: Locale): void => {
@@ -110,22 +104,4 @@ export const initLocale = (): Locale => {
 	}
 
 	return localeState.current;
-};
-
-/**
- * Create a reactive locale store for use in components.
- * Components using this store will re-render when locale changes.
- */
-export const createLocaleStore = () => {
-	return {
-		get current() {
-			return localeState.current;
-		},
-		set current(value: Locale) {
-			setLocale(value);
-		},
-		get locales() {
-			return locales;
-		}
-	};
 };

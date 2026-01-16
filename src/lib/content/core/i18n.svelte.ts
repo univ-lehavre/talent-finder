@@ -3,7 +3,7 @@
  * Provides reactive content access based on current locale.
  */
 
-import { localeState, type Locale } from '$lib/stores';
+import { localeState } from '$lib/stores';
 import type {
 	AccessibilityContent,
 	ApiDocsContent,
@@ -131,21 +131,10 @@ const translations = {
 } as const;
 
 /**
- * Get content for a specific locale.
- */
-const getTranslations = (locale: Locale) => translations[locale];
-
-/**
  * Reactive translations - $derived at module level.
  * This creates a reactive binding that updates when localeState.current changes.
  */
 const currentTranslations = $derived(translations[localeState.current]);
-
-/**
- * Get current translations based on locale.
- * Reads localeState.current directly for Svelte 5 reactivity.
- */
-export const t = () => getTranslations(localeState.current);
 
 /**
  * Reactive i18n object using module-level $derived.
@@ -207,75 +196,3 @@ export const i18n = {
 		return currentTranslations.theme;
 	}
 };
-
-/**
- * Get navigation content for current locale.
- * @deprecated Use i18n.navigation with $derived instead
- */
-export const getNavigation = (): NavigationContent => t().navigation;
-
-/**
- * Get authentication content for current locale.
- * @deprecated Use i18n.auth with $derived instead
- */
-export const getAuth = (): AuthContent => t().auth;
-
-/**
- * Get error content for current locale.
- * @deprecated Use i18n.errors with $derived instead
- */
-export const getErrors = (): ErrorContent => t().errors;
-
-/**
- * Get dashboard content for current locale.
- * @deprecated Use i18n.dashboard with $derived instead
- */
-export const getDashboard = (): DashboardContent => t().dashboard;
-
-/**
- * Get repository content for current locale.
- * @deprecated Use i18n.repository with $derived instead
- */
-export const getRepository = (): RepositoryContent => t().repository;
-
-/**
- * Get UI content for current locale.
- * @deprecated Use i18n.common, i18n.health, i18n.profile, i18n.research instead
- */
-export const getUI = (): UIContent => t().ui;
-
-/**
- * Get partners content for current locale.
- * @deprecated Use i18n.partners with $derived instead
- */
-export const getPartners = (): PartnersContent => t().partners;
-
-/**
- * Get theme page content for current locale.
- * @deprecated Use i18n.themePage with $derived instead
- */
-export const getThemePage = (): ThemePageContent => t().themePage;
-
-/**
- * Get API docs content for current locale.
- * @deprecated Use i18n.apiDocs with $derived instead
- */
-export const getApiDocs = (): ApiDocsContent => t().apiDocs;
-
-/**
- * Get home content for current locale.
- * @deprecated Use i18n.home with $derived instead
- */
-export const getHome = (): HomeContent => t().home;
-
-/**
- * Get accessibility content for current locale.
- * @deprecated Use i18n.accessibility with $derived instead
- */
-export const getAccessibility = (): AccessibilityContent => t().accessibility;
-
-/**
- * Get language selector content for current locale.
- * @deprecated Use i18n.languageSelector with $derived instead
- */
-export const getLanguageSelector = (): LanguageSelectorContent => t().languageSelector;

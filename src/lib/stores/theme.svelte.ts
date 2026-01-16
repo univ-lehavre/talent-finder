@@ -74,11 +74,6 @@ const applyDarkMode = (mode: DarkMode): void => {
 };
 
 /**
- * Get the current palette
- */
-export const getPalette = (): PaletteName => currentPalette;
-
-/**
  * Set the current palette and persist to cookie
  */
 export const setPalette = (palette: PaletteName): void => {
@@ -88,14 +83,9 @@ export const setPalette = (palette: PaletteName): void => {
 };
 
 /**
- * Get the current font name
- */
-export const getFontName = (): string => currentFontName;
-
-/**
  * Get the current font pairing object
  */
-export const getFont = (): FontPairing => {
+const getFont = (): FontPairing => {
 	return getFontByName(currentFontName) ?? fontPairings[0];
 };
 
@@ -110,11 +100,6 @@ export const setFont = (fontName: string): void => {
 	setCookie(COOKIE_FONT, fontName);
 	applyFont(fontName);
 };
-
-/**
- * Get the current dark mode setting
- */
-export const getDarkMode = (): DarkMode => currentDarkMode;
 
 /**
  * Set the dark mode preference and persist to cookie
