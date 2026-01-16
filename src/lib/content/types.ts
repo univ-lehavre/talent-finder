@@ -24,6 +24,10 @@ export interface NavigationContent {
 	};
 	/** Brand name */
 	brand: string;
+	/** Footer content */
+	footer: {
+		attribution: string;
+	};
 }
 
 /**
@@ -300,6 +304,32 @@ export interface UIContent {
 		notFound: string;
 		missing: string;
 	};
+	/** Research organization search */
+	researchOrganization: {
+		title: string;
+		consentRequired: string;
+		consentMessage: string;
+		searchPlaceholder: string;
+		maxReached: string;
+		noResults: string;
+		selectedTitle: string;
+		maxLabel: string;
+		noSelection: string;
+		works: string;
+		citations: string;
+		removeLabel: string;
+	};
+	/** Research output card */
+	researchOutput: {
+		title: string;
+		consentMessage: string;
+		selectOrganizations: string;
+		loading: string;
+		articlesByYear: string;
+		before: string;
+		affiliatedAuthors: string;
+		total: string;
+	};
 }
 
 /**
@@ -538,5 +568,62 @@ export interface PartnersContent {
 		title: string;
 		description: string;
 		tags: string[];
+	};
+}
+
+/**
+ * Challenge item for homepage.
+ */
+export interface Challenge {
+	/** Challenge title */
+	title: string;
+	/** Problem description */
+	problem: string;
+	/** Solution description */
+	solution: string;
+}
+
+/**
+ * Step item for homepage how-it-works section.
+ */
+export interface Step {
+	/** Step number */
+	number: string;
+	/** Step title */
+	title: string;
+	/** Step description */
+	description: string;
+}
+
+/**
+ * Homepage content structure.
+ */
+export interface HomeContent {
+	/** Hero section */
+	hero: {
+		title: string;
+		subtitle: string;
+		ctaLoggedIn: string;
+		ctaLoggedOut: string;
+		learnMore: string;
+	};
+	/** How it works section */
+	howItWorks: {
+		title: string;
+		subtitle: string;
+		steps: Step[];
+	};
+	/** Challenges section */
+	challenges: {
+		title: string;
+		subtitle: string;
+		items: Challenge[];
+	};
+	/** Call to action section */
+	cta: {
+		title: string;
+		subtitle: string;
+		buttonLoggedIn: string;
+		buttonLoggedOut: string;
 	};
 }

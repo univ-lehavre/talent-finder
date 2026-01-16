@@ -17,7 +17,8 @@
 export { brand, commonLabels, pageTitle } from './brand';
 
 // Home page content
-export * from './home';
+export { content } from './home';
+export type { HomeContent, Challenge, Step } from './types';
 
 // Navigation content
 export { navigation } from './navigation';
