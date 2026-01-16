@@ -1,41 +1,59 @@
 ---
-"talent-finder": minor
+'talent-finder': minor
 ---
 
-## Restructuration du module `$lib/content`
+## Découplage des modules `$lib/ui` et `$lib/content`
 
-### Nouvelle structure par domaine métier
+### Architecture à deux niveaux
 
-Le module content est réorganisé avec une structure hiérarchique claire :
+**M0 (`$lib/ui`)** - Design system pur :
+- Composants génériques sans dépendance i18n
+- Props de contenu obligatoires (plus d'optionnels)
+- Interfaces définies inline dans chaque composant
+- Peut être extrait comme package npm externe
 
+**M1 (`$lib/components`)** - Wrappers applicatifs :
+- Import des composants de base depuis `$lib/ui`
+- Injection du contenu i18n via `$derived` réactif
+- Props simplifiées (pas besoin de passer le contenu)
+
+### Composants refactorisés
+
+UI purs (`$lib/ui`) :
+- Alert, ArticlesCountCard, ComingSoonSection
+- ConnectivityBanner, ConsentStatusCard, Drawer
+- Dropdown, Footer, HealthStatusCard
+- LanguageSelector, LoginForm, Modal
+- Navbar, PageHeader, ProfileCard
+- ResearchOrganizationSearch, Signup
+- ThemePreferencesCard, ThemeToggle
+
+Wrappers avec i18n (`$lib/components`) :
+- Même liste, importent depuis `$lib/ui` + injectent i18n
+
+### Migration des routes
+
+Les pages importent maintenant depuis `$lib/components` :
+- `+layout.svelte` : Navbar, Footer, Signup, ConnectivityBanner
+- `dashboard/+page.svelte` : ProfileCard, ThemePreferencesCard, etc.
+- `login/+page.svelte` : LoginForm
+- `theme/+page.svelte` : Dropdown, Modal, ThemeToggle
+
+### Utilisation
+
+Pour les pages/routes (avec i18n automatique) :
+```svelte
+import { Navbar, Footer } from '$lib/components';
+<Navbar brandName="MyApp" />
 ```
-content/
-├── index.ts              # Hub d'export central
-├── types.ts              # Définitions TypeScript
-├── core/                 # Logique partagée
-│   ├── brand.ts          # Constantes de marque
-│   └── i18n.svelte.ts    # Système i18n réactif
-└── locales/
-    ├── fr/
-    │   ├── marketing/    # home, partners
-    │   ├── app/          # dashboard, repository, research, profile
-    │   ├── system/       # auth, errors, health, accessibility
-    │   └── shared/       # navigation, common, theme
-    └── en/               # Structure miroir
-```
 
-### Nouveaux types modulaires
-
-Nouveaux types pour remplacer `UIContent` monolithique :
-- `CommonContent` : labels communs, temps relatif
-- `HealthContent` : santé système, connectivité
-- `ProfileContent` : profil utilisateur, consentement
-- `ResearchContent` : recherche d'organismes
-- `ThemeContent` : préférences thème (card + page)
-
-### Rétrocompatibilité
-
-L'API publique reste inchangée. Les imports existants continuent de fonctionner :
-```typescript
-import { i18n, brand, navigation } from '$lib/content';
+Pour les tests ou contenu custom (sans i18n) :
+```svelte
+import { Navbar } from '$lib/ui';
+<Navbar
+  brandName="MyApp"
+  toggleMenuLabel="Menu"
+  mobileMenuTitle="Navigation"
+  mobileMenuCloseLabel="Fermer"
+/>
 ```
