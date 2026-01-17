@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Footer as BaseFooter } from '$lib/ui';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 
 	/**
 	 * Footer - Pre-configured footer with i18n labels.
@@ -32,6 +32,7 @@
 
 	let { partners = [], version, children, class: className = '' }: Props = $props();
 
+	const i18n = useI18n();
 	const navigation = $derived(i18n.navigation);
 </script>
 

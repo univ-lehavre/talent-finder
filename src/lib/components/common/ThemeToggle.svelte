@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ThemeToggle as BaseThemeToggle } from '$lib/ui';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 
 	/**
 	 * ThemeToggle - Pre-configured theme toggle button with i18n labels.
@@ -19,6 +19,7 @@
 
 	let { class: className = '' }: Props = $props();
 
+	const i18n = useI18n();
 	const ui = $derived(i18n.ui);
 
 	const content = $derived({

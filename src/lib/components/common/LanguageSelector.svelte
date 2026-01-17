@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { LanguageSelector as BaseLanguageSelector } from '$lib/ui';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 
 	/**
 	 * LanguageSelector - Pre-configured language selector with i18n labels.
@@ -22,6 +22,7 @@
 
 	let { compact = false, class: className = '' }: Props = $props();
 
+	const i18n = useI18n();
 	const a11y = $derived(i18n.accessibility);
 </script>
 

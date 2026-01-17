@@ -2,12 +2,14 @@
  * Content exports for internationalization.
  * All user-facing text content is centralized here for easy translation.
  *
- * @example Using i18n object (recommended for reactive content)
- * ```typescript
- * import { i18n } from '$lib/content';
+ * @example Using i18n Context API (recommended for SSR-safe reactive content)
+ * ```svelte
+ * <script>
+ *   import { useI18n } from '$lib/content';
  *
- * // In components, access reactive content directly
- * const title = i18n.navigation.links.home;
+ *   const i18n = useI18n();
+ *   const navigation = $derived(i18n.navigation);
+ * </script>
  * ```
  *
  * @example Using static exports (for non-reactive contexts)
@@ -21,8 +23,8 @@
 // Brand constants (locale-independent)
 export { brand, commonLabels, pageTitle } from './core/brand';
 
-// i18n reactive object
-export { i18n } from './core/i18n.svelte';
+// i18n context API (recommended for SSR-safe state)
+export { setI18nContext, useI18n, hasI18nContext } from './core/i18n-context.svelte';
 
 // Static exports (French default - for backwards compatibility)
 export { fr as content } from './locales/fr/marketing/home';

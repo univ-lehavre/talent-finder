@@ -266,3 +266,41 @@ describe('apiDocs', () => {
 		expect(apiDocs.meta.title).toBeDefined();
 	});
 });
+
+/**
+ * Tests for i18n Context API.
+ * Note: Full context tests require Svelte component rendering.
+ * These tests verify the static exports and type consistency.
+ */
+describe('i18n context exports', () => {
+	it('should export setI18nContext function', async () => {
+		const { setI18nContext } = await import('./index');
+		expect(typeof setI18nContext).toBe('function');
+	});
+
+	it('should export useI18n function', async () => {
+		const { useI18n } = await import('./index');
+		expect(typeof useI18n).toBe('function');
+	});
+
+	it('should export hasI18nContext function', async () => {
+		const { hasI18nContext } = await import('./index');
+		expect(typeof hasI18nContext).toBe('function');
+	});
+
+	it('should export all i18n context functions', async () => {
+		const mod = await import('./index');
+		expect(mod).toHaveProperty('setI18nContext');
+		expect(mod).toHaveProperty('useI18n');
+		expect(mod).toHaveProperty('hasI18nContext');
+	});
+});
+
+describe('i18n context module', () => {
+	it('should have all expected exports from i18n-context.svelte', async () => {
+		const context = await import('./core/i18n-context.svelte');
+		expect(context).toHaveProperty('setI18nContext');
+		expect(context).toHaveProperty('useI18n');
+		expect(context).toHaveProperty('hasI18nContext');
+	});
+});

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ComingSoonSection as BaseComingSoonSection } from '$lib/ui';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 
 	/**
 	 * ComingSoonSection - Pre-configured coming soon section with i18n labels.
@@ -25,6 +25,7 @@
 
 	let { title, description, features, class: className = '' }: Props = $props();
 
+	const i18n = useI18n();
 	const ui = $derived(i18n.ui);
 
 	const derivedTitle = $derived(title ?? ui.comingSoon.defaultTitle);

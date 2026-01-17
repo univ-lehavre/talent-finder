@@ -5,11 +5,17 @@
 	import logo from '$lib/assets/logo.svg?raw';
 	import { Navbar, Footer, Signup, ConnectivityBanner } from '$lib/components';
 	import { createThemeStore, initTheme, initLocale } from '$lib/stores';
-	import { i18n } from '$lib/content';
+	import { setI18nContext, useI18n } from '$lib/content';
 
 	const version = __APP_VERSION__;
 
 	const themeStore = createThemeStore();
+
+	// Initialize i18n context for the entire app
+	setI18nContext();
+
+	// Get i18n from context
+	const i18n = useI18n();
 
 	onMount(() => {
 		initTheme();

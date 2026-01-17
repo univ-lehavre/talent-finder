@@ -7,9 +7,10 @@
 		ButtonGroup,
 		LinkButton
 	} from '$lib/components';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 	import type { AuthContent } from '$lib/content/types';
 
+	const i18n = useI18n();
 	const auth = $derived(i18n.auth);
 
 	interface Props {

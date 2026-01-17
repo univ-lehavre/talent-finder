@@ -13,8 +13,9 @@
 		PageLayout,
 		StatCard
 	} from '$lib/components';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 
+	const i18n = useI18n();
 	const repository = $derived(i18n.repository);
 
 	interface Props {

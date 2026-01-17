@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { Modal as BaseModal } from '$lib/ui';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 
 	/**
 	 * Modal - Pre-configured modal with i18n labels.
@@ -30,6 +30,7 @@
 
 	let { open = $bindable(false), title, onclose, children, footer }: Props = $props();
 
+	const i18n = useI18n();
 	const a11y = $derived(i18n.accessibility);
 </script>
 

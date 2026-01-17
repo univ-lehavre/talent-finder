@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { HealthStatusCard as BaseHealthStatusCard } from '$lib/ui';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 
 	/**
 	 * HealthStatusCard - Pre-configured health status card with i18n labels.
@@ -13,6 +13,7 @@
 	 * ```
 	 */
 
+	const i18n = useI18n();
 	const ui = $derived(i18n.ui);
 
 	const content = $derived({

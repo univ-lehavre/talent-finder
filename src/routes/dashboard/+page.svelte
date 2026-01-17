@@ -21,9 +21,10 @@
 		setFont
 	} from '$lib/stores';
 	import type { TInstitution } from '$lib/server/openalex';
-	import { i18n } from '$lib/content';
+	import { useI18n } from '$lib/content';
 
 	const themeStore = createThemeStore();
+	const i18n = useI18n();
 	const dashboard = $derived(i18n.dashboard);
 
 	let savedPreferences = $state({ palette: false, font: false });
