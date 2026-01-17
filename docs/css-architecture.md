@@ -441,6 +441,10 @@ pnpm lint
 pnpm build
 ```
 
+## Audit et qualité
+
+- [CSS Audit Report](./audit/css-audit-report.md) - Rapport d'audit détaillé (Issue #41)
+
 ## Ressources
 
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
