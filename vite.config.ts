@@ -20,6 +20,25 @@ export default defineConfig({
 	test: {
 		expect: { requireAssertions: true },
 
+		coverage: {
+			provider: 'v8',
+			reporter: ['text', 'html', 'lcov'],
+			reportsDirectory: './coverage',
+			include: ['src/lib/**/*.ts'],
+			exclude: [
+				'src/lib/**/*.test.ts',
+				'src/lib/**/*.spec.ts',
+				'src/lib/**/index.ts',
+				'src/lib/**/*.d.ts'
+			],
+			thresholds: {
+				statements: 50,
+				branches: 40,
+				functions: 35,
+				lines: 50
+			}
+		},
+
 		projects: [
 			{
 				extends: './vite.config.ts',
@@ -28,7 +47,16 @@ export default defineConfig({
 					name: 'server',
 					environment: 'node',
 					include: ['src/**/*.{test,spec}.{js,ts}'],
-					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
+					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}', 'src/**/*.a11y.{test,spec}.{js,ts}']
+				}
+			},
+			{
+				extends: './vite.config.ts',
+
+				test: {
+					name: 'a11y',
+					environment: 'jsdom',
+					include: ['src/**/*.a11y.{test,spec}.{js,ts}']
 				}
 			}
 		]
