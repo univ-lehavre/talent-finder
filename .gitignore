@@ -12,7 +12,7 @@ node_modules
 /coverage
 
 # Generated API docs (TypeDoc)
-/api-docs
+/docs/api
 
 # OS
 .DS_Store
