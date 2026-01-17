@@ -1,0 +1,20 @@
+{
+	"threshold": 5,
+	"reporters": ["console"],
+	"ignore": [
+		"**/node_modules/**",
+		"**/.svelte-kit/**",
+		"**/build/**",
+		"**/dist/**",
+		"**/*.min.js",
+		"**/coverage/**",
+		"**/*.test.ts",
+		"**/*.spec.ts"
+	],
+	"format": ["typescript", "javascript", "svelte", "css"],
+	"absolute": false,
+	"gitignore": true,
+	"minLines": 5,
+	"minTokens": 50,
+	"skipLocal": false
+}
