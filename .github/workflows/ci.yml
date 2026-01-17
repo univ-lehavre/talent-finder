@@ -83,6 +83,12 @@ jobs:
       - name: Check unused code (Knip)
         run: pnpm knip
 
+      - name: Check code duplication (CPD)
+        run: pnpm cpd
+
+      - name: Check licenses
+        run: pnpm license-audit:check
+
   test:
     name: Tests
     runs-on: ubuntu-latest
