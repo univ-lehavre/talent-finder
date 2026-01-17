@@ -22,7 +22,7 @@
 		"cpd": "jscpd src",
 		"license-audit": "license-checker --summary --excludePackages 'talent-finder@0.5.0'",
 		"license-audit:check": "license-checker --excludePackages 'talent-finder@0.5.0' --onlyAllow 'MIT;ISC;Apache-2.0;BSD-2-Clause;BSD-3-Clause;0BSD;CC0-1.0;CC-BY-4.0;Python-2.0;Unlicense;BlueOak-1.0.0;LGPL-3.0-only'",
-		"ready": "pnpm run format && pnpm run type-check && pnpm run check && pnpm run lint && pnpm run knip && pnpm run cpd && pnpm run license-audit:check && pnpm run audit && pnpm run test && pnpm run build",
+		"ready": "pnpm run type-check && pnpm run check && pnpm run lint && pnpm run knip && pnpm run cpd && pnpm run license-audit:check && pnpm run audit && pnpm run test && pnpm run build",
 		"changeset": "pnpm @changesets/cli",
 		"bump": "pnpm dlx @changesets/cli version"
 	},
